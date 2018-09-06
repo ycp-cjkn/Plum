@@ -1,0 +1,20 @@
+﻿@model ToBeRenamed.Models.SignInViewModel
+
+@{
+    ViewBag.Title = "Sign In";
+}
+
+<div class="jumbotron">
+    <h1>Sign In</h1>
+    <p class="lead text-left">Authenticate using one of these external providers:</p>
+
+    @foreach (var scheme in Model.AuthenticationSchemes)
+    {
+        <form asp-area="" asp-controller="Authentication" asp-action="SignIn" method="post">
+            <input type="hidden" name="Provider" value="@scheme.Name" />
+            <input type="hidden" asp-for="ReturnUrl" />
+
+            <button class="btn btn-lg btn-success" type="submit">Connect using @scheme.DisplayName</button>
+        </form>
+    }
+</div>
