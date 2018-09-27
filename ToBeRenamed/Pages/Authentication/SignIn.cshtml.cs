@@ -5,16 +5,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ToBeRenamed.Extensions;
+using ToBeRenamed.Services;
 
 namespace ToBeRenamed.Pages.Authentication
 {
     public class SignInModel : PageModel
     {
         private readonly IAuthenticationSchemeProvider _schemeProvider;
+        private readonly UserService _userService;
 
-        public SignInModel(IAuthenticationSchemeProvider schemeProvider)
+        public SignInModel(IAuthenticationSchemeProvider schemeProvider, UserService userService)
         {
             _schemeProvider = schemeProvider;
+            _userService = userService;
         }
 
         [BindProperty(SupportsGet = true)]
@@ -25,9 +28,18 @@ namespace ToBeRenamed.Pages.Authentication
 
         public IEnumerable<AuthenticationScheme> AuthenticationSchemes { get; set; }
 
-        public async Task OnGetAsync()
+        public async Task<IActionResult> OnGetAsync()
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                _userService.EnsureUserIsPersisted(User);
+
+                return Redirect(ReturnUrl);
+            }
+
             AuthenticationSchemes = await GetExternalProvidersAsync().ConfigureAwait(false);
+
+            return Page();
         }
 
         public async Task<IActionResult> OnPostAsync()
@@ -42,7 +54,9 @@ namespace ToBeRenamed.Pages.Authentication
                 return BadRequest();
             }
 
-            var properties = new AuthenticationProperties { RedirectUri = ReturnUrl ?? "/" };
+            var redirectUrl = Url.Page("/Authentication/SignIn", new { ReturnUrl });
+
+            var properties = new AuthenticationProperties { RedirectUri = redirectUrl };
 
             return Challenge(properties, Provider);
         }
