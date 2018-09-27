@@ -4,20 +4,21 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MediatR;
+using ToBeRenamed.Commands;
 using ToBeRenamed.Extensions;
-using ToBeRenamed.Services;
 
 namespace ToBeRenamed.Pages.Authentication
 {
     public class SignInModel : PageModel
     {
         private readonly IAuthenticationSchemeProvider _schemeProvider;
-        private readonly UserService _userService;
+        private readonly IMediator _mediator;
 
-        public SignInModel(IAuthenticationSchemeProvider schemeProvider, UserService userService)
+        public SignInModel(IAuthenticationSchemeProvider schemeProvider, IMediator mediator)
         {
             _schemeProvider = schemeProvider;
-            _userService = userService;
+            _mediator = mediator;
         }
 
         [BindProperty(SupportsGet = true)]
@@ -32,7 +33,7 @@ namespace ToBeRenamed.Pages.Authentication
         {
             if (User.Identity.IsAuthenticated)
             {
-                _userService.EnsureUserIsPersisted(User);
+                await _mediator.Send(new EnsureUserIsPersisted(User));
 
                 return Redirect(ReturnUrl);
             }

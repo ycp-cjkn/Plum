@@ -1,24 +1,27 @@
-﻿using Dapper;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Threading;
+using System.Threading.Tasks;
+using Dapper;
+using MediatR;
 using ToBeRenamed.Factories;
 
-namespace ToBeRenamed.Services
+namespace ToBeRenamed.Commands
 {
-    public class UserService
+    public class EnsureUserIsPersistedHandler : IRequestHandler<EnsureUserIsPersisted>
     {
         private readonly SqlConnectionFactory _sqlConnectionFactory;
 
-        public UserService(SqlConnectionFactory sqlConnectionFactory)
+        public EnsureUserIsPersistedHandler(SqlConnectionFactory sqlConnectionFactory)
         {
             _sqlConnectionFactory = sqlConnectionFactory;
         }
 
-        public void EnsureUserIsPersisted(ClaimsPrincipal user)
+        public async Task<Unit> Handle(EnsureUserIsPersisted request, CancellationToken cancellationToken)
         {
-            var name = ClaimEndsWith(user.Claims, "/name");
-            var nameidentifier = ClaimEndsWith(user.Claims, "/nameidentifier");
+            var name = ClaimEndsWith(request.User.Claims, "/name");
+            var nameidentifier = ClaimEndsWith(request.User.Claims, "/nameidentifier");
 
             const string sql = @"
                 INSERT INTO plum.users (display_name, google_claim_nameidentifier)
@@ -27,8 +30,10 @@ namespace ToBeRenamed.Services
 
             using (var cnn = _sqlConnectionFactory.GetSqlConnection())
             {
-                cnn.Execute(sql, new { name, nameidentifier });
+                await cnn.ExecuteAsync(sql, new { name, nameidentifier });
             }
+
+            return Unit.Value;
         }
 
         private static string ClaimEndsWith(IEnumerable<Claim> claims, string endsWith)
