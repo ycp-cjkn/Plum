@@ -1,0 +1,20 @@
+﻿@page
+@model ToBeRenamed.Pages.IndexModel
+@{
+    ViewData["Title"] = "Home Page";
+    
+}
+
+<h2>@ViewData["Title"]</h2>
+
+@if (User?.Identity?.IsAuthenticated ?? false)
+{
+    <h1>Welcome, @User.Identity.Name</h1>
+
+    <p>
+        @foreach (var claim in User.Claims)
+        {
+            <div>@claim.Type: <b>@claim.Value</b></div>
+        }
+    </p>
+}
