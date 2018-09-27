@@ -35,7 +35,7 @@ namespace ToBeRenamed.Pages.Authentication
             {
                 await _mediator.Send(new EnsureUserIsPersisted(User));
 
-                return Redirect(ReturnUrl);
+                return Redirect(ReturnUrl ?? "/");
             }
 
             AuthenticationSchemes = await GetExternalProvidersAsync().ConfigureAwait(false);

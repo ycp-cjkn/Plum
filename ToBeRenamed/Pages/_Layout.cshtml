@@ -31,6 +31,10 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li><a asp-page="/Index">Home</a></li>
+                    @if (User?.Identity?.IsAuthenticated ?? false)
+                    {
+                        <li><a asp-page="/Libraries">Libraries</a></li>
+                    }
                     <li><a asp-page="/About">About</a></li>
                     <li><a asp-page="/Contact">Contact</a></li>
                 </ul>

@@ -46,6 +46,8 @@ namespace ToBeRenamed
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
+
             services.AddMediatR(typeof(Startup));
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
