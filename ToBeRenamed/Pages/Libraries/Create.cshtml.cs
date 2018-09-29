@@ -1,8 +1,11 @@
+using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using ToBeRenamed.Commands;
 using ToBeRenamed.Dtos;
+using ToBeRenamed.Queries;
 
 namespace ToBeRenamed.Pages.Libraries
 {
@@ -19,13 +22,13 @@ namespace ToBeRenamed.Pages.Libraries
             _mediator = mediator;
         }
 
-//            public IEnumerable<LibraryDto> Libraries { get; set; }
+        public async Task<IActionResult> OnPostAsync()
+        {
+            var userDto = _mediator.Send(new GetSignedInUserDto(User)).GetAwaiter().GetResult();
 
-//            public void OnGet()
-//            {
-//                var userDto = _mediator.Send(new GetSignedInUserDto(User)).GetAwaiter().GetResult();
-//
-//                Libraries = _mediator.Send(new GetLibrariesCreatedByUserId(userDto.Id)).GetAwaiter().GetResult();
-//            }
+            await _mediator.Send(new CreateLibrary(userDto.Id, Library));
+            
+            return RedirectToPage("/Libraries/Index");
+        }
     }
 }
