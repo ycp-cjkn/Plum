@@ -6,13 +6,15 @@ namespace ToBeRenamed.Commands
     public class CreateLibrary : IRequest
     {
         public int UserId { get; }
-        
-        public LibraryDto Library { get; }
+        public string Title { get; }
+        public string Description { get; }
 
-        public CreateLibrary(int userId, LibraryDto library)
+
+        public CreateLibrary(int userId, string title, string description)
         {
             UserId = userId;
-            Library = library;
+            Title = title;
+            Description = description;
         }
     }
 }

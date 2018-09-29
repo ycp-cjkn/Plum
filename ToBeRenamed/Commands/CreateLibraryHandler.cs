@@ -18,8 +18,8 @@ namespace ToBeRenamed.Commands
         public async Task<Unit> Handle(CreateLibrary request, CancellationToken cancellationToken)
         {
             var userId = request.UserId;
-            var title = request.Library.Title;
-            var description = request.Library.Description;
+            var title = request.Title;
+            var description = request.Description;
 
             const string sql = @"
                 INSERT INTO plum.libraries (title, description, created_by, created_at)

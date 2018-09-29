@@ -14,20 +14,23 @@ namespace ToBeRenamed.Pages.Libraries
     {
         private readonly IMediator _mediator;
 
-        [BindProperty]
-        public LibraryDto Library { get; set; }
-
         public CreateModel(IMediator mediator)
         {
             _mediator = mediator;
         }
+        
+        [BindProperty]
+        public string Title { get; set; }
+        
+        [BindProperty]
+        public string Description { get; set; }
 
         public async Task<IActionResult> OnPostAsync()
         {
-            var userDto = _mediator.Send(new GetSignedInUserDto(User)).GetAwaiter().GetResult();
+            var userDto = await _mediator.Send(new GetSignedInUserDto(User));
 
-            await _mediator.Send(new CreateLibrary(userDto.Id, Library));
-            
+            await _mediator.Send(new CreateLibrary(userDto.Id, Title, Description));
+
             return RedirectToPage("/Libraries/Index");
         }
     }
