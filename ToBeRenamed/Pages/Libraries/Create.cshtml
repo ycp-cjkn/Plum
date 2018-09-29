@@ -1,0 +1,18 @@
+@page
+@model ToBeRenamed.Pages.Libraries.CreateModel
+@{
+    ViewData["Title"] = "Create a Library";
+}
+
+<h2>Create a Library</h2>
+
+<form method="POST">
+    <div class="form-group">
+        <label asp-for="Title"></label>
+        <input asp-for="Title" class="form-control"/>
+        <label asp-for="Description"></label>
+        <input asp-for="Description" class="form-control"/>
+        
+        <button type="submit" class="btn btn-success">Create</button>
+    </div>
+</form>

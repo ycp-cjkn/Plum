@@ -5,14 +5,14 @@ using MediatR;
 using ToBeRenamed.Dtos;
 using ToBeRenamed.Queries;
 
-namespace ToBeRenamed.Pages
+namespace ToBeRenamed.Pages.Libraries
 {
     [Authorize]
-    public class LibrariesModel : PageModel
+    public class IndexModel : PageModel
     {
         private readonly IMediator _mediator;
 
-        public LibrariesModel(IMediator mediator)
+        public IndexModel(IMediator mediator)
         {
             _mediator = mediator;
         }
