@@ -23,4 +23,8 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.1.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ToBeRenamed\ToBeRenamed.csproj" />
+  </ItemGroup>
+
 </Project>
