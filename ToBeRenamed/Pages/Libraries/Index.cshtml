@@ -1,0 +1,16 @@
+﻿@page
+@model ToBeRenamed.Pages.Libraries.IndexModel
+@{
+    ViewData["Title"] = "Libraries";
+}
+
+<h2>Libraries</h2>
+
+<a class="btn btn-default" asp-page="Create">Create</a>
+
+<ul>
+    @foreach (var library in Model.Libraries)
+    {
+        <li><a asp-page="/Library" asp-route-id="@library.Id">@library.Title</a></li>
+    }
+</ul>

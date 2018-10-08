@@ -1,0 +1,33 @@
+@page
+@model CreateModel
+@{
+    ViewData["Title"] = "Create a Library";
+}
+
+<h2>Create a Library</h2>
+
+<form method="POST">
+    <div class="form-group">
+        <label asp-for="Title"></label>
+        <input asp-for="Title" class="form-control" />
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Description"></label>
+        <input asp-for="Description" class="form-control" />
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+    
+    <div class="form-group">
+        <button type="submit" class="btn btn-default">Create</button>
+    </div>
+</form>
+
+<div>
+    <a asp-page="/Libraries/Index">Back to my libraries</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

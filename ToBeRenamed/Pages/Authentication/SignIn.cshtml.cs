@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using MediatR;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ToBeRenamed.Commands;
 using ToBeRenamed.Extensions;
 
 namespace ToBeRenamed.Pages.Authentication
@@ -11,10 +13,12 @@ namespace ToBeRenamed.Pages.Authentication
     public class SignInModel : PageModel
     {
         private readonly IAuthenticationSchemeProvider _schemeProvider;
+        private readonly IMediator _mediator;
 
-        public SignInModel(IAuthenticationSchemeProvider schemeProvider)
+        public SignInModel(IAuthenticationSchemeProvider schemeProvider, IMediator mediator)
         {
             _schemeProvider = schemeProvider;
+            _mediator = mediator;
         }
 
         [BindProperty(SupportsGet = true)]
@@ -30,6 +34,18 @@ namespace ToBeRenamed.Pages.Authentication
             AuthenticationSchemes = await GetExternalProvidersAsync().ConfigureAwait(false);
         }
 
+        public async Task<IActionResult> OnGetGoogleSignInAsync()
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return BadRequest();
+            }
+
+            await _mediator.Send(new EnsureUserIsPersisted(User));
+
+            return Redirect(ReturnUrl ?? "/");
+        }
+
         public async Task<IActionResult> OnPostAsync()
         {
             if (string.IsNullOrWhiteSpace(Provider))
@@ -42,7 +58,9 @@ namespace ToBeRenamed.Pages.Authentication
                 return BadRequest();
             }
 
-            var properties = new AuthenticationProperties { RedirectUri = ReturnUrl ?? "/" };
+            var redirectUrl = Url.Page("/Authentication/SignIn", new { ReturnUrl, Handler = "GoogleSignIn" });
+
+            var properties = new AuthenticationProperties { RedirectUri = redirectUrl };
 
             return Challenge(properties, Provider);
         }
