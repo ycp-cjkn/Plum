@@ -11,6 +11,6 @@
 <ul>
     @foreach (var library in Model.Libraries)
     {
-        <li>@library.Id - @library.Title</li>
+        <li><a asp-page="/Library" asp-route-id="@library.Id">@library.Title</a></li>
     }
 </ul>
