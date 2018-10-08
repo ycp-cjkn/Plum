@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MediatR;
+using ToBeRenamed.Commands;
 using ToBeRenamed.Extensions;
 
 namespace ToBeRenamed.Pages.Authentication
@@ -11,10 +13,12 @@ namespace ToBeRenamed.Pages.Authentication
     public class SignInModel : PageModel
     {
         private readonly IAuthenticationSchemeProvider _schemeProvider;
+        private readonly IMediator _mediator;
 
-        public SignInModel(IAuthenticationSchemeProvider schemeProvider)
+        public SignInModel(IAuthenticationSchemeProvider schemeProvider, IMediator mediator)
         {
             _schemeProvider = schemeProvider;
+            _mediator = mediator;
         }
 
         [BindProperty(SupportsGet = true)]
@@ -25,9 +29,18 @@ namespace ToBeRenamed.Pages.Authentication
 
         public IEnumerable<AuthenticationScheme> AuthenticationSchemes { get; set; }
 
-        public async Task OnGetAsync()
+        public async Task<IActionResult> OnGetAsync()
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                await _mediator.Send(new EnsureUserIsPersisted(User));
+
+                return Redirect(ReturnUrl ?? "/");
+            }
+
             AuthenticationSchemes = await GetExternalProvidersAsync().ConfigureAwait(false);
+
+            return Page();
         }
 
         public async Task<IActionResult> OnPostAsync()
@@ -42,7 +55,9 @@ namespace ToBeRenamed.Pages.Authentication
                 return BadRequest();
             }
 
-            var properties = new AuthenticationProperties { RedirectUri = ReturnUrl ?? "/" };
+            var redirectUrl = Url.Page("/Authentication/SignIn", new { ReturnUrl });
+
+            var properties = new AuthenticationProperties { RedirectUri = redirectUrl };
 
             return Challenge(properties, Provider);
         }

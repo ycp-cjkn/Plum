@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using MediatR;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -45,6 +46,10 @@ namespace ToBeRenamed
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
+
+            services.AddMediatR(typeof(Startup));
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddTransient<SqlConnectionFactory>();
@@ -59,7 +64,7 @@ namespace ToBeRenamed
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionHandler("/Error");
             }
 
             app.UseStaticFiles();
