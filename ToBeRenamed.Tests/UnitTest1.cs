@@ -11,8 +11,15 @@ using Xunit;
 
 namespace ToBeRenamed.Tests
 {
+    [Collection("Database collection")]
     public class UnitTest1
     {
+        DatabaseFixture fixture;
+
+        public UnitTest1(DatabaseFixture fixture)
+        {
+            this.fixture = fixture;
+        }
         private static Checkpoint checkpoint = new Checkpoint
         {
             SchemasToInclude = new[]
