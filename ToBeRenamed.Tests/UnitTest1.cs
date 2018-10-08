@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Dapper;
 using Microsoft.Extensions.Configuration;
+using Respawn;
 using ToBeRenamed.Dtos;
 using Xunit;
 
@@ -11,6 +13,20 @@ namespace ToBeRenamed.Tests
 {
     public class UnitTest1
     {
+        private static Checkpoint checkpoint = new Checkpoint
+        {
+            SchemasToInclude = new[]
+            {
+                "plum",
+                "public"
+            },TablesToIgnore = new[]
+            {
+                "users"
+            },
+            DbAdapter = DbAdapter.Postgres
+            
+        };
+            
         [Fact]
         public void Test1()
         {
@@ -49,6 +65,13 @@ namespace ToBeRenamed.Tests
             using (var cnn = connFactory.GetSqlConnection())
             {
                 cnn.Execute(insertLibrarySql, new { userId, title, description });
+            }
+            
+            using (var cnn = connFactory.GetSqlConnection())
+            {
+                // run synchronously
+                Task.Run(() => cnn.Open()).Wait();
+                Task.Run(() => checkpoint.Reset(cnn)).Wait();
             }
         }
     }
