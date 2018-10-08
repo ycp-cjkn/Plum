@@ -31,7 +31,7 @@ namespace ToBeRenamed.Tests
             {
                 // Insert new user, then get the user id
                 conn.Execute(insertUserSql);
-//                return conn.Query<UserDto>(selectUserIdSql); // TODO - Replace UserDto with something in the ToBeRenamed.Tests namespace
+                var results = conn.Query<UserDto>(selectUserIdSql); // TODO - Replace UserDto with something in the ToBeRenamed.Tests namespace
             }
         }
     }
