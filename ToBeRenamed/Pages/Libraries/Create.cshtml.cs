@@ -1,10 +1,10 @@
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ToBeRenamed.Commands;
-using ToBeRenamed.Dtos;
 using ToBeRenamed.Queries;
 
 namespace ToBeRenamed.Pages.Libraries
@@ -20,13 +20,20 @@ namespace ToBeRenamed.Pages.Libraries
         }
         
         [BindProperty]
+        [Required]
         public string Title { get; set; }
         
         [BindProperty]
+        [Required]
         public string Description { get; set; }
 
         public async Task<IActionResult> OnPostAsync()
         {
+            if (!ModelState.IsValid)
+            {
+                return Page();
+            }
+
             var userDto = await _mediator.Send(new GetSignedInUserDto(User));
 
             await _mediator.Send(new CreateLibrary(userDto.Id, Title, Description));
