@@ -12,11 +12,11 @@ using Xunit;
 namespace ToBeRenamed.Tests
 {
     [Collection("Database collection")]
-    public class UnitTest1
+    public class UnitTest2
     {
         DatabaseFixture fixture;
 
-        public UnitTest1(DatabaseFixture fixture)
+        public UnitTest2(DatabaseFixture fixture)
         {
             this.fixture = fixture;
         }
@@ -36,7 +36,7 @@ namespace ToBeRenamed.Tests
         };
             
         [Fact]
-        public void Test1()
+        public void Test2()
         {
             using (var cnn = fixture.ConnFactory.GetSqlConnection())
             {
