@@ -20,7 +20,17 @@ namespace ToBeRenamed.Tests
                 .AddJsonFile("appsettings.json")
                 .Build();
             
+            fullResetCheckpoint = new Checkpoint
+            {
+                SchemasToInclude = new[]
+                {
+                    "plum",
+                    "public"
+                },
+                DbAdapter = DbAdapter.Postgres
+            };
             ConnFactory = new TestSqlConnectionFactory(configuration);
+            resetDatabase(fullResetCheckpoint);
             User = insertUser();
         }
         
@@ -31,18 +41,8 @@ namespace ToBeRenamed.Tests
         public void Dispose()
         {
             // ... clean up test data from the database ...
-            Checkpoint disposeCheckpoint = new Checkpoint
-            {
-                SchemasToInclude = new[]
-                {
-                    "plum",
-                    "public"
-                },
-                DbAdapter = DbAdapter.Postgres
-            };
-            
             // Remove initial user
-            resetDatabase(disposeCheckpoint);
+            resetDatabase(fullResetCheckpoint);
         }
 
         /// <summary>
