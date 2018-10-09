@@ -8,9 +8,9 @@ namespace ToBeRenamed.Commands
 {
     public class CreateLibraryHandler : IRequestHandler<CreateLibrary>
     {
-        private readonly SqlConnectionFactory _sqlConnectionFactory;
+        private readonly ISqlConnectionFactory _sqlConnectionFactory;
 
-        public CreateLibraryHandler(SqlConnectionFactory sqlConnectionFactory)
+        public CreateLibraryHandler(ISqlConnectionFactory sqlConnectionFactory)
         {
             _sqlConnectionFactory = sqlConnectionFactory;
         }
