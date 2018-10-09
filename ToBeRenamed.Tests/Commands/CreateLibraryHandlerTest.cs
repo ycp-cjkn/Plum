@@ -61,7 +61,7 @@ namespace ToBeRenamed.Tests.Commands
                 results = cnn.Query<LibraryDto>(selectLibrarySql, new { userId, title, description });
             }
             
-            Assert.Equal(1, results.Count());
+            Assert.Single(results);
         }
     }
 }
