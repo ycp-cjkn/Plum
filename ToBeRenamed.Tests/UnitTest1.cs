@@ -1,12 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using Dapper;
-using Microsoft.Extensions.Configuration;
 using Respawn;
-using ToBeRenamed.Dtos;
 using Xunit;
 
 namespace ToBeRenamed.Tests
