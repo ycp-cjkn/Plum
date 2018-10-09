@@ -15,21 +15,22 @@ namespace ToBeRenamed.Tests
         public DatabaseFixture()
         {
             // ... initialize data in the test database ...
-            User = insertUser();
-        }
-        
-        public UserDto User;
-
-        public void Dispose()
-        {
-            // ... clean up test data from the database ...
             var configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json")
                 .Build();
             
-            var connFactory = new TestSqlConnectionFactory(configuration);
-            
+            ConnFactory = new TestSqlConnectionFactory(configuration);
+            User = insertUser();
+        }
+        
+        public UserDto User;
+
+        public TestSqlConnectionFactory ConnFactory;
+
+        public void Dispose()
+        {
+            // ... clean up test data from the database ...
             Checkpoint checkpoint = new Checkpoint
             {
                 SchemasToInclude = new[]
@@ -41,7 +42,7 @@ namespace ToBeRenamed.Tests
             };
             
             // Remove initial user
-            using (var cnn = connFactory.GetSqlConnection())
+            using (var cnn = ConnFactory.GetSqlConnection())
             {
                 // run synchronously
                 Task.Run(() => cnn.Open()).Wait();
@@ -51,13 +52,6 @@ namespace ToBeRenamed.Tests
 
         private UserDto insertUser()
         {
-            var configuration = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json")
-                .Build();
-            
-            var connFactory = new TestSqlConnectionFactory(configuration);
-            
             // Insert new user
             const string insertUserSql = @"
                 INSERT INTO plum.users (display_name, google_claim_nameidentifier)
@@ -68,7 +62,7 @@ namespace ToBeRenamed.Tests
 
             IEnumerable<UserDto> results;
             
-            using (var conn = connFactory.GetSqlConnection())
+            using (var conn = ConnFactory.GetSqlConnection())
             {
                 // Insert new user, then get the user id
                 conn.Execute(insertUserSql);

@@ -38,13 +38,6 @@ namespace ToBeRenamed.Tests
         [Fact]
         public void Test1()
         {
-            var configuration = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json")
-                .Build();
-            
-            var connFactory = new TestSqlConnectionFactory(configuration);
-
             var userId = fixture.User.Id;
             string title = "xUnitTitle";
             var description = "xUnitDesc";
@@ -53,12 +46,12 @@ namespace ToBeRenamed.Tests
                 INSERT INTO plum.libraries (title, description, created_by)
                 VALUES (@title, @description, @userId)";
             
-            using (var cnn = connFactory.GetSqlConnection())
+            using (var cnn = fixture.ConnFactory.GetSqlConnection())
             {
                 cnn.Execute(insertLibrarySql, new { userId, title, description });
             }
             
-            using (var cnn = connFactory.GetSqlConnection())
+            using (var cnn = fixture.ConnFactory.GetSqlConnection())
             {
                 // run synchronously
                 Task.Run(() => cnn.Open()).Wait();
