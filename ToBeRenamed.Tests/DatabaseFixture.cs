@@ -33,11 +33,21 @@ namespace ToBeRenamed.Tests
             resetDatabase(fullResetCheckpoint);
             User = insertUser();
         }
-        
+        /// <summary>
+        /// Used by all tests as the test user
+        /// </summary>
         public UserDto User;
 
+        /// <summary>
+        /// Used by all tests to get database connections
+        /// </summary>
         public TestSqlConnectionFactory ConnFactory;
 
+        /// <summary>
+        /// Checkpoint that will fully clear all database tables
+        /// </summary>
+        private Checkpoint fullResetCheckpoint;
+        
         public void Dispose()
         {
             // ... clean up test data from the database ...
