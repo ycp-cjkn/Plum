@@ -31,7 +31,7 @@ namespace ToBeRenamed.Tests
         public void Dispose()
         {
             // ... clean up test data from the database ...
-            Checkpoint checkpoint = new Checkpoint
+            Checkpoint disposeCheckpoint = new Checkpoint
             {
                 SchemasToInclude = new[]
                 {
@@ -42,14 +42,13 @@ namespace ToBeRenamed.Tests
             };
             
             // Remove initial user
-            using (var cnn = ConnFactory.GetSqlConnection())
-            {
-                // run synchronously
-                Task.Run(() => cnn.Open()).Wait();
-                Task.Run(() => checkpoint.Reset(cnn)).Wait();
-            }
+            resetDatabase(disposeCheckpoint);
         }
 
+        /// <summary>
+        /// Inserts a user into the database to be used with tests
+        /// </summary>
+        /// <returns>The user's data in a UserDto</returns>
         private UserDto insertUser()
         {
             // Insert new user
@@ -70,6 +69,20 @@ namespace ToBeRenamed.Tests
             }
 
             return results.First();
+        }
+
+        /// <summary>
+        /// Resets the database's tables using the parameters given by the checkpoint
+        /// </summary>
+        /// <param name="checkpoint">Contains info about how the database should reset</param>
+        public void resetDatabase(Checkpoint checkpoint)
+        {
+            using (var cnn = ConnFactory.GetSqlConnection())
+            {
+                // run synchronously
+                Task.Run(() => cnn.Open()).Wait();
+                Task.Run(() => checkpoint.Reset(cnn)).Wait();
+            }
         }
     }
 

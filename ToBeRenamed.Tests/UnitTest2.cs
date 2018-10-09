@@ -38,12 +38,7 @@ namespace ToBeRenamed.Tests
         [Fact]
         public void Test2()
         {
-            using (var cnn = fixture.ConnFactory.GetSqlConnection())
-            {
-                // run synchronously
-                Task.Run(() => cnn.Open()).Wait();
-                Task.Run(() => checkpoint.Reset(cnn)).Wait();
-            }
+            fixture.resetDatabase(checkpoint);
             
             var userId = fixture.User.Id;
             string title = "xUnitTitle";
