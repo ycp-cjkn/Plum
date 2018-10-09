@@ -20,6 +20,7 @@ namespace ToBeRenamed.Tests
         {
             this.fixture = fixture;
         }
+        
         private static Checkpoint checkpoint = new Checkpoint
         {
             SchemasToInclude = new[]
@@ -43,25 +44,8 @@ namespace ToBeRenamed.Tests
                 .Build();
             
             var connFactory = new TestSqlConnectionFactory(configuration);
-            
-            // Insert new user
-            const string insertUserSql = @"
-                INSERT INTO plum.users (display_name, google_claim_nameidentifier)
-                VALUES ('testUser', 1)";
-            
-            const string selectUserIdSql = @"
-                SELECT id FROM plum.users WHERE display_name = 'testUser'";
 
-            IEnumerable<UserDto> results;
-            
-            using (var conn = connFactory.GetSqlConnection())
-            {
-                // Insert new user, then get the user id
-                conn.Execute(insertUserSql);
-                results = conn.Query<UserDto>(selectUserIdSql); // TODO - Replace UserDto with something in the ToBeRenamed.Tests namespace
-            }
-
-            var userId = results.First().Id;
+            var userId = fixture.User.Id;
             string title = "xUnitTitle";
             var description = "xUnitDesc";
             
