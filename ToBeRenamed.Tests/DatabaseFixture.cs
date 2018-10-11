@@ -1,11 +1,11 @@
+using Dapper;
+using Microsoft.Extensions.Configuration;
+using Respawn;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Dapper;
-using Microsoft.Extensions.Configuration;
-using Respawn;
 using ToBeRenamed.Dtos;
 
 namespace ToBeRenamed.Tests
@@ -19,8 +19,8 @@ namespace ToBeRenamed.Tests
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json")
                 .Build();
-            
-            fullResetCheckpoint = new Checkpoint
+
+            _fullResetCheckpoint = new Checkpoint
             {
                 SchemasToInclude = new[]
                 {
@@ -29,10 +29,12 @@ namespace ToBeRenamed.Tests
                 },
                 DbAdapter = DbAdapter.Postgres
             };
+
             ConnFactory = new TestSqlConnectionFactory(configuration);
-            resetDatabase(fullResetCheckpoint);
-            User = insertUser();
+            ResetDatabase(_fullResetCheckpoint);
+            User = InsertUser();
         }
+
         /// <summary>
         /// Used by all tests as the test user
         /// </summary>
@@ -46,31 +48,31 @@ namespace ToBeRenamed.Tests
         /// <summary>
         /// Checkpoint that will fully clear all database tables
         /// </summary>
-        private Checkpoint fullResetCheckpoint;
-        
+        private readonly Checkpoint _fullResetCheckpoint;
+
         public void Dispose()
         {
             // ... clean up test data from the database ...
             // Remove initial user
-            resetDatabase(fullResetCheckpoint);
+            ResetDatabase(_fullResetCheckpoint);
         }
 
         /// <summary>
         /// Inserts a user into the database to be used with tests
         /// </summary>
         /// <returns>The user's data in a UserDto</returns>
-        private UserDto insertUser()
+        private UserDto InsertUser()
         {
             // Insert new user
             const string insertUserSql = @"
                 INSERT INTO plum.users (display_name, google_claim_nameidentifier)
                 VALUES ('testUser', 1)";
-            
+
             const string selectUserIdSql = @"
                 SELECT id FROM plum.users WHERE display_name = 'testUser'";
 
             IEnumerable<UserDto> results;
-            
+
             using (var conn = ConnFactory.GetSqlConnection())
             {
                 // Insert new user, then get the user id
@@ -85,7 +87,7 @@ namespace ToBeRenamed.Tests
         /// Resets the database's tables using the parameters given by the checkpoint
         /// </summary>
         /// <param name="checkpoint">Contains info about how the database should reset</param>
-        public void resetDatabase(Checkpoint checkpoint)
+        public void ResetDatabase(Checkpoint checkpoint)
         {
             using (var cnn = ConnFactory.GetSqlConnection())
             {
@@ -95,5 +97,4 @@ namespace ToBeRenamed.Tests
             }
         }
     }
-
 }

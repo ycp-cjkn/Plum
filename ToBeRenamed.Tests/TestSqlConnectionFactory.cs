@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Configuration;
-using System.Data.Common;
 using Npgsql;
+using System.Data.Common;
 using ToBeRenamed.Factories;
 
 namespace ToBeRenamed.Tests
