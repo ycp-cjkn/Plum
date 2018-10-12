@@ -18,12 +18,16 @@ namespace ToBeRenamed.Pages
 
         public LibraryDto Library { get; set; }
         public IEnumerable<MemberDto> Members { get; set; }
+        
+        public MembershipDto Membership;
 
         public async Task OnGetAsync(int id)
         {
             var libraryTask = _mediator.Send(new GetLibraryDtoById(id));
+            var userDto = await _mediator.Send(new GetSignedInUserDto(User));
             var membersTask = _mediator.Send(new GetMembersOfLibrary(id));
 
+            Membership = await _mediator.Send(new GetMembershipDto(userDto.Id, Library.Id));
             Library = await libraryTask.ConfigureAwait(false);
             Members = await membersTask.ConfigureAwait(false);
         }
