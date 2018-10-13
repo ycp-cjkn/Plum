@@ -6,16 +6,16 @@ using ToBeRenamed.Factories;
 
 namespace ToBeRenamed.Commands
 {
-    public class ChangeDisplayNameHandler : IRequestHandler<ChangeDisplayName>
+    public class UpdateDisplayNameHandler : IRequestHandler<UpdateDisplayName>
     {
         private readonly SqlConnectionFactory _sqlConnectionFactory;
 
-        public ChangeDisplayNameHandler(SqlConnectionFactory sqlConnectionFactory)
+        public UpdateDisplayNameHandler(SqlConnectionFactory sqlConnectionFactory)
         {
             _sqlConnectionFactory = sqlConnectionFactory;
         }
 
-        public async Task<Unit> Handle(ChangeDisplayName request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(UpdateDisplayName request, CancellationToken cancellationToken)
         {
             var newDisplayName = request.NewDisplayName;
             var membershipId = request.MembershipId;
