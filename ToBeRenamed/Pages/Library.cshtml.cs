@@ -31,5 +31,18 @@ namespace ToBeRenamed.Pages
             Library = await libraryTask.ConfigureAwait(false);
             Members = await membersTask.ConfigureAwait(false);
         }
+
+        [BindProperty]
+        public string NewDisplayName { get; set; }
+        
+        public async Task<IActionResult> OnPostDisplayNameAsync(string newDisplayName, int libraryId)
+        {
+            var userDto = await _mediator.Send(new GetSignedInUserDto(User));
+            Membership = await _mediator.Send(new GetMembershipDto(userDto.Id, libraryId));
+            
+            await _mediator.Send(new UpdateDisplayName(Membership.Id, newDisplayName));
+
+            return RedirectToPage();
+        }
     }
 }
