@@ -1,19 +1,28 @@
 ﻿@page
+
+@{var claimProperties = new List<string>()
+    {
+        "Name ID",
+        "Full Name",
+        "First",
+        "Last",
+        "Email"
+    };
+    int i = 0;
+}
 @model ToBeRenamed.Pages.ProfileModel
 @{
     ViewData["Title"] = "Profile";
 }
-
 <h2>@ViewData["Title"]</h2>
 
 @if (User?.Identity?.IsAuthenticated ?? false)
 {
-    <h1>Welcome, @User.Identity.Name</h1>
-
     <p>
         @foreach (var claim in User.Claims)
         {
-            <div>@claim.Type: <b>@claim.Value</b></div>
+            <div>@claimProperties[i]: <b>@claim.Value</b></div>
+            i++;
         }
     </p>
 }
