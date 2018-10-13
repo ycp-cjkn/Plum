@@ -1,7 +1,13 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using ToBeRenamed.Commands;
 using ToBeRenamed.Dtos;
 using ToBeRenamed.Queries;
 
@@ -33,6 +39,9 @@ namespace ToBeRenamed.Pages
         }
 
         [BindProperty]
+        [StringLength(64, MinimumLength = 1)]
+        [Display(Name = "Change Display Name")]
+        [Required]
         public string NewDisplayName { get; set; }
         
         public async Task<IActionResult> OnPostDisplayNameAsync(string newDisplayName, int libraryId)
