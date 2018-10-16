@@ -11,9 +11,9 @@ namespace ToBeRenamed.Queries
 {
     public class GetSignedInUserDtoHandler : IRequestHandler<GetSignedInUserDto, UserDto>
     {
-        private readonly SqlConnectionFactory _sqlConnectionFactory;
+        private readonly ISqlConnectionFactory _sqlConnectionFactory;
 
-        public GetSignedInUserDtoHandler(SqlConnectionFactory sqlConnectionFactory)
+        public GetSignedInUserDtoHandler(ISqlConnectionFactory sqlConnectionFactory)
         {
             _sqlConnectionFactory = sqlConnectionFactory;
         }
