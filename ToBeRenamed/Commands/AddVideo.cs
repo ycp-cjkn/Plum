@@ -3,7 +3,7 @@ using ToBeRenamed.Dtos;
 
 namespace ToBeRenamed.Commands
 {
-    public class CreateLibrary : IRequest
+    public class AddVideo : IRequest
     {
         public int UserId { get; }
         public string Title { get; }
@@ -11,10 +11,11 @@ namespace ToBeRenamed.Commands
         public string Description { get; }
 
 
-        public CreateLibrary(int userId, string title, string description)
+        public AddVideo(int userId, string title, string link, string description)
         {
             UserId = userId;
             Title = title;
+            Link = link;
             Description = description;
         }
     }
