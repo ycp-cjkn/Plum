@@ -17,7 +17,8 @@ namespace ToBeRenamed.Tests
             // ... initialize data in the test database ...
             var configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json")
+                .AddJsonFile("appsettings.json", optional: true)
+                .AddUserSecrets<DatabaseFixture>()
                 .Build();
 
             _fullResetCheckpoint = new Checkpoint

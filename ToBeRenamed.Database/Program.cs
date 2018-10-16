@@ -14,7 +14,8 @@ namespace ToBeRenamed.Database
         {
             var configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json")
+                .AddJsonFile("appsettings.json", optional: true)
+                .AddUserSecrets<Program>()
                 .Build();
             
             if (args.Length != 0 && !string.IsNullOrEmpty(args[0]) && args[0].Equals("delete"))
