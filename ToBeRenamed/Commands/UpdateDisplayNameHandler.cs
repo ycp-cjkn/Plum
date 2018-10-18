@@ -8,9 +8,9 @@ namespace ToBeRenamed.Commands
 {
     public class UpdateDisplayNameHandler : IRequestHandler<UpdateDisplayName>
     {
-        private readonly SqlConnectionFactory _sqlConnectionFactory;
+        private readonly ISqlConnectionFactory _sqlConnectionFactory;
 
-        public UpdateDisplayNameHandler(SqlConnectionFactory sqlConnectionFactory)
+        public UpdateDisplayNameHandler(ISqlConnectionFactory sqlConnectionFactory)
         {
             _sqlConnectionFactory = sqlConnectionFactory;
         }
@@ -27,7 +27,7 @@ namespace ToBeRenamed.Commands
 
             using (var cnn = _sqlConnectionFactory.GetSqlConnection())
             {
-                await cnn.QueryAsync(updateDisplayNameSql, new {newDisplayName, membershipId});
+                await cnn.QueryAsync(updateDisplayNameSql, new { newDisplayName, membershipId });
             }
 
             return Unit.Value;

@@ -1,6 +1,5 @@
 using Dapper;
 using MediatR;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,18 +10,18 @@ namespace ToBeRenamed.Queries
 {
     public class GetMembershipDtoHandler : IRequestHandler<GetMembershipDto, MembershipDto>
     {
-        private readonly SqlConnectionFactory _sqlConnectionFactory;
+        private readonly ISqlConnectionFactory _sqlConnectionFactory;
 
-        public GetMembershipDtoHandler(SqlConnectionFactory sqlConnectionFactory)
+        public GetMembershipDtoHandler(ISqlConnectionFactory sqlConnectionFactory)
         {
             _sqlConnectionFactory = sqlConnectionFactory;
         }
-        
+
         public async Task<MembershipDto> Handle(GetMembershipDto request, CancellationToken cancellationToken)
         {
-            int userId = request.UserId;
-            int libraryId = request.LibraryId;
-            
+            var userId = request.UserId;
+            var libraryId = request.LibraryId;
+
             const string sql = @"
                 SELECT id, user_id, library_id, created_at, deleted_at, display_name
                 FROM plum.memberships
