@@ -1,7 +1,7 @@
 ﻿@page "{id:int}"
 @model LibraryModel
 @{
-    ViewData["Title"] = "Library";
+    ViewData["Title"] = @Model.Library.Title;
     ViewData["Description"] = "Description";
 }
 
