@@ -5,9 +5,11 @@ namespace ToBeRenamed.Tests
 {
     public class ResetDatabaseAttribute : BeforeAfterTestAttribute
     {
-        public override async void Before(MethodInfo methodUnderTest)
+        public override void Before(MethodInfo methodUnderTest)
         {
-            await DatabaseFixture.ResetDatabase(DatabaseFixture.FullResetCheckpoint);
+            // Must be called synchronously. Otherwise, the test will start then
+            // ResetDatabase() may complete in the middle of the test.
+            DatabaseFixture.ResetDatabase(DatabaseFixture.FullResetCheckpoint).GetAwaiter().GetResult();
         }
     }
 }
