@@ -1,9 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using ToBeRenamed.Commands;
 using ToBeRenamed.Dtos;
 using ToBeRenamed.Queries;
 
@@ -18,11 +16,16 @@ namespace ToBeRenamed.Pages
             _mediator = mediator;
         }
 
-        public LibraryDto Library;
+        public LibraryDto Library { get; set; }
+        public IEnumerable<MemberDto> Members { get; set; }
 
         public async Task OnGetAsync(int id)
         {
-            Library = await _mediator.Send(new GetLibraryDtoById(id));
+            var libraryTask = _mediator.Send(new GetLibraryDtoById(id));
+            var membersTask = _mediator.Send(new GetMembersOfLibrary(id));
+
+            Library = await libraryTask.ConfigureAwait(false);
+            Members = await membersTask.ConfigureAwait(false);
         }
     }
 }

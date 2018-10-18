@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using MediatR;
 using ToBeRenamed.Dtos;
 using ToBeRenamed.Queries;
@@ -19,11 +20,10 @@ namespace ToBeRenamed.Pages.Libraries
 
         public IEnumerable<LibraryDto> Libraries { get; set; }
 
-        public void OnGet()
+        public async Task OnGet()
         {
-            var userDto = _mediator.Send(new GetSignedInUserDto(User)).GetAwaiter().GetResult();
-
-            Libraries = _mediator.Send(new GetLibrariesCreatedByUserId(userDto.Id)).GetAwaiter().GetResult();
+            var userDto = await _mediator.Send(new GetSignedInUserDto(User));
+            Libraries = await _mediator.Send(new GetLibrariesForUser(userDto.Id));
         }
     }
 }
