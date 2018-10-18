@@ -27,9 +27,8 @@ namespace ToBeRenamed.Commands
                     VALUES (@title, @description, @userId)
                     RETURNING id, created_by
                 )
-                INSERT INTO plum.memberships (library_id, user_id, display_name)
-                SELECT libraries.id, created_by, display_name FROM libraries
-                INNER JOIN plum.users ON users.id = libraries.created_by;";
+                INSERT INTO plum.memberships (library_id, user_id)
+                SELECT id, created_by FROM libraries";
 
             using (var cnn = _sqlConnectionFactory.GetSqlConnection())
             {
