@@ -1,16 +1,51 @@
 ﻿@page
-@model ToBeRenamed.Pages.Libraries.IndexModel
+@model IndexModel
 @{
     ViewData["Title"] = "Libraries";
 }
 
-<h2>Libraries</h2>
+<div class="row">
+    <div class="col-md-12">
+        <div class="page-header">
+            <h1>My Libraries</h1>
+        </div>
+    </div>
+</div>
 
-<a class="btn btn-default" asp-page="Create">Create</a>
-
-<ul>
-    @foreach (var library in Model.Libraries)
-    {
-        <li><a asp-page="/Library" asp-route-id="@library.Id">@library.Title</a></li>
-    }
-</ul>
+<div class="row">
+    <div class="col-md-3">
+        <div class="panel panel-default">
+            <div class="panel-heading"><h3 class="panel-title">Actions</h3></div>
+            <div class="panel-body">
+                <a asp-page="Create">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                    Create a library
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-9">
+        <div class="panel panel-default">
+            <div class="panel-heading"><h3 class="panel-title">Libraries</h3></div>
+            <div class="panel-body">
+                @foreach (var library in Model.Libraries)
+                {
+                    <div class="media">
+                        <div class="media-left">
+                            <a href="#">
+                                <img height="64" width="64" class="media-object" 
+                                     src="http://identicon.rmhdev.net/@(Uri.EscapeDataString(library.Title)).png" alt="">
+                            </a>
+                        </div>
+                        <div class="media-body">
+                            <h4 class="media-heading">
+                                <a asp-page="/Library" asp-route-id="@library.Id">@library.Title</a>
+                            </h4>
+                            @library.Description
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
