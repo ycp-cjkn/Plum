@@ -25,15 +25,20 @@
         </div>
     </div>
     <div class="col-md-9">
-        <div class="panel panel-default">
+        <div class="panel panel-info">
             <div class="panel-heading"><h3 class="panel-title">Libraries</h3></div>
             <div class="panel-body">
+                @if (!Model.Libraries.Any())
+                {
+                    <p>You are not a member of any libraries!</p>
+                }
+
                 @foreach (var library in Model.Libraries)
                 {
                     <div class="media">
                         <div class="media-left">
-                            <a href="#">
-                                <img height="64" width="64" class="media-object" 
+                            <a asp-page="/Library" asp-route-id="@library.Id">
+                                <img height="64" width="64" class="media-object"
                                      src="http://identicon.rmhdev.net/@(Uri.EscapeDataString(library.Title)).png" alt="">
                             </a>
                         </div>
