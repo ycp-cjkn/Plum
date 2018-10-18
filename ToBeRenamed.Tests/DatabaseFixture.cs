@@ -6,12 +6,18 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 using ToBeRenamed.Dtos;
+using ToBeRenamed.Factories;
 
 namespace ToBeRenamed.Tests
 {
     public class DatabaseFixture : IDisposable
     {
+        private readonly IServiceProvider _rootContainer;
+        private readonly IServiceScopeFactory _scopeFactory;
+
         public DatabaseFixture()
         {
             // ... initialize data in the test database ...
@@ -34,6 +40,27 @@ namespace ToBeRenamed.Tests
             ConnFactory = new TestSqlConnectionFactory(configuration);
             ResetDatabase(_fullResetCheckpoint);
             User = InsertUser();
+            DefaultTypeMap.MatchNamesWithUnderscores = true;
+
+            // Use the Tests project config to initialize our Startup.cs
+            // We might want to consider using main project's config
+            var startup = new Startup(configuration);
+            var services = new ServiceCollection();
+            startup.ConfigureServices(services);
+            services.AddTransient<IConfiguration>(a => configuration);
+            services.AddTransient<ISqlConnectionFactory, TestSqlConnectionFactory>();
+            _rootContainer = services.BuildServiceProvider();
+            _scopeFactory = _rootContainer.GetService<IServiceScopeFactory>();
+        }
+
+        public async Task<TResponse> SendAsync<TResponse>(IRequest<TResponse> request)
+        {
+            using (var scope = _scopeFactory.CreateScope())
+            {
+                var mediator = scope.ServiceProvider.GetService<IMediator>();
+
+                return await mediator.Send(request);
+            }
         }
 
         /// <summary>
@@ -82,6 +109,11 @@ namespace ToBeRenamed.Tests
             }
 
             return results.First();
+        }
+
+        public void ResetDatabase()
+        {
+            ResetDatabase(_fullResetCheckpoint);
         }
 
         /// <summary>
