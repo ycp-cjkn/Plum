@@ -16,10 +16,9 @@ namespace ToBeRenamed.Tests.Commands
         }
 
         [Fact]
+        [ResetDatabase]
         public async Task ItRunsAndCreatesLibrary()
         {
-            _fixture.ResetDatabase();
-
             const string title = "My Fantastic Library";
             const string description = "A suitable description.";
 

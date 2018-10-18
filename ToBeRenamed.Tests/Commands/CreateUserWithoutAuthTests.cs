@@ -14,10 +14,9 @@ namespace ToBeRenamed.Tests.Commands
         }
 
         [Fact]
+        [ResetDatabase]
         public async Task ItRuns()
         {
-            _fixture.ResetDatabase();
-
             var request = new CreateUserWithoutAuth("Alice");
             var result = await _fixture.SendAsync(request);
 
