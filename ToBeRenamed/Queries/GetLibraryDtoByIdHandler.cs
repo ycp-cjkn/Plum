@@ -11,9 +11,9 @@ namespace ToBeRenamed.Queries
 {
     public class GetLibraryDtoByIdHandler : IRequestHandler<GetLibraryDtoById, LibraryDto>
     {
-        private readonly SqlConnectionFactory _sqlConnectionFactory;
+        private readonly ISqlConnectionFactory _sqlConnectionFactory;
 
-        public GetLibraryDtoByIdHandler(SqlConnectionFactory sqlConnectionFactory)
+        public GetLibraryDtoByIdHandler(ISqlConnectionFactory sqlConnectionFactory)
         {
             _sqlConnectionFactory = sqlConnectionFactory;
         }

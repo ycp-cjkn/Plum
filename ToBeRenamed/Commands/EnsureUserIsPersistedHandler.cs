@@ -9,9 +9,9 @@ namespace ToBeRenamed.Commands
 {
     public class EnsureUserIsPersistedHandler : IRequestHandler<EnsureUserIsPersisted>
     {
-        private readonly SqlConnectionFactory _sqlConnectionFactory;
+        private readonly ISqlConnectionFactory _sqlConnectionFactory;
 
-        public EnsureUserIsPersistedHandler(SqlConnectionFactory sqlConnectionFactory)
+        public EnsureUserIsPersistedHandler(ISqlConnectionFactory sqlConnectionFactory)
         {
             _sqlConnectionFactory = sqlConnectionFactory;
         }
