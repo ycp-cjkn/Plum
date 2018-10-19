@@ -22,8 +22,13 @@ namespace ToBeRenamed.Commands
             var description = request.Description;
 
             const string sql = @"
-                INSERT INTO plum.libraries (title, description, created_by)
-                VALUES (@title, @description, @userId)";
+                WITH libraries AS (
+                    INSERT INTO plum.libraries (title, description, created_by)
+                    VALUES (@title, @description, @userId)
+                    RETURNING id, created_by
+                )
+                INSERT INTO plum.memberships (library_id, user_id)
+                SELECT id, created_by FROM libraries";
 
             using (var cnn = _sqlConnectionFactory.GetSqlConnection())
             {
