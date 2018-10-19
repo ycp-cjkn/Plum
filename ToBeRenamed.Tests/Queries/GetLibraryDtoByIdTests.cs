@@ -43,7 +43,7 @@ namespace ToBeRenamed.Tests.Queries
             var getLibraryRequest = new GetLibraryDtoById(library.Id);
             var libraryDtoFromRequest = await _fixture.SendAsync(getLibraryRequest);
             
-            // Make sure that retrieved library matches created one
+            // Make sure that the retrieved library matches the one retrieved using GetLibrariesCreatedByUserId()
             Assert.Equal(library.Id, libraryDtoFromRequest.Id);
             Assert.Equal(library.Description, libraryDtoFromRequest.Description);
             Assert.Equal(library.CreatedAt, libraryDtoFromRequest.CreatedAt);
