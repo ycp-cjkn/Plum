@@ -7,7 +7,6 @@ namespace ToBeRenamed.Commands
     {
         public int UserId { get; }
         public string Title { get; }
-        public string Link { get; }
         public string Description { get; }
 
 
