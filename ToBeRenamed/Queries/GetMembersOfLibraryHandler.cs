@@ -24,7 +24,6 @@ namespace ToBeRenamed.Queries
 	                mem.id,
 	                usr.id AS user_id,
 	                lib.id AS library_id,
-	                mem.display_name,
                     (CASE WHEN (mem.display_name = '') THEN usr.display_name ELSE mem.display_name END),
 	                usr.id = lib.created_by AS is_creator
                 FROM plum.users usr
