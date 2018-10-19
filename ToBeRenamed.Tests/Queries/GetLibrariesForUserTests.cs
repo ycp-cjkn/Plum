@@ -31,10 +31,6 @@ namespace ToBeRenamed.Tests.Queries
             Assert.Empty(libraries);
         }
 
-        // These tests currently fail.
-        // Right now users don't get added to the memberships table when they create a library,
-        // but once they do, these tests should pass.
-        // TODO - Uncomment these tests when users get added to memberships table when they create a library
         [Fact]
         [ResetDatabase]
         public async Task Should_ReturnCorrectNumberOfLibraries_When_UserCreatesLibraries()
