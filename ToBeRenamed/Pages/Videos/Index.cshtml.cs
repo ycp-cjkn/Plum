@@ -5,7 +5,7 @@ using MediatR;
 using ToBeRenamed.Dtos;
 using ToBeRenamed.Queries;
 
-namespace ToBeRenamed.Pages.Libraries
+namespace ToBeRenamed.Pages.Videos
 {
     [Authorize]
     public class IndexModel : PageModel
@@ -19,4 +19,11 @@ namespace ToBeRenamed.Pages.Libraries
 
         public IEnumerable<LibraryDto> Libraries { get; set; }
 
+        public void OnGet()
+        {
+            var userDto = _mediator.Send(new GetSignedInUserDto(User)).GetAwaiter().GetResult();
+
+            Libraries = _mediator.Send(new GetLibrariesCreatedByUserId(userDto.Id)).GetAwaiter().GetResult();
+        }
+    }
 }

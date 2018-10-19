@@ -1,7 +1,17 @@
 ﻿@page
 @model ToBeRenamed.Pages.Videos.IndexModel
 @{
-    ViewData["Title"] = "Videos";
+    ViewData["Title"] = "Libraries";
 }
-
-<h2>Videos</h2>
+<h2>Add Video To Library</h2>
+<form method="POST">
+    <div class="form-group">
+        <label asp-for="Title"></label>
+        <input asp-for="Title" class="form-control" />
+        <label asp-for="Link"></label>
+        <input asp-for="Link" class="form-control" />
+        <label asp-for="Description"></label>
+        <input asp-for="Description" class="form-control" />
+    </div>
+</form>
+<a class="btn btn-default" asp-page="Add Video">Add Video</a>

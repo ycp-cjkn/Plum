@@ -17,9 +17,9 @@
   <ItemGroup>
     <Compile Remove="Pages\Videos\EmptyClass.cs" />
     <Compile Remove="Pages\Videos\Index.cshtml.cs" />
-    <Compile Remove="Pages\Videos\Index.cshtml.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Remove="Pages\Videos\Create.cshtml" />
     <Content Remove="Pages\Videos\Index.cshtml" />
   </ItemGroup>
 </Project>

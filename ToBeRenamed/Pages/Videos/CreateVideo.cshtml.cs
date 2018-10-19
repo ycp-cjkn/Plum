@@ -34,7 +34,7 @@ namespace ToBeRenamed.Pages.Videos
 
             await _mediator.Send(new AddVideo(userDto.Id, Title, Link, Description));
 
-            return RedirectToPage("/Libraries/Index");
+            return RedirectToPage("/Videos/Add Video");
         }
     }
 }
