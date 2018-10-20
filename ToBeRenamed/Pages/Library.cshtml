@@ -1,15 +1,144 @@
 ﻿@page "{id:int}"
-@model ToBeRenamed.Pages.LibraryModel
+@model LibraryModel
 @{
-    ViewData["Title"] = "Library";
+    ViewData["Title"] = @Model.Library.Title;
     ViewData["Description"] = "Description";
 }
 
-<h2>@Model.Library.Title</h2>
-<p>@Model.Library.Description</p>
+@*TODO: Fix this hacky af solution*@
+<style>
+    .thumbnail {
+        min-height: 300px;
+    }
+</style>
 
-<div class="form-group">
-    @*<button type="submit" class="btn btn-default">Edit</button>*@
-    <a class="btn btn-default" asp-page="/Videos/CreateVideo" asp-route-id="@Model.Library.Id">Add Video</a>
+<div class="row">
+    <div class="col-md-12">
+        <div class="page-header">
+            <h1>@Model.Library.Title <small>subtitle</small></h1>
+        </div>
+    </div>
 </div>
 
+<div class="row">
+    <div class="col-md-4">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    Members
+                    <a href="#"><span class="glyphicon glyphicon-plus-sign pull-right" aria-hidden="true"></span></a>
+                </h3>
+            </div>
+            <div class="panel-body">
+                <div class="list-group">
+                    @foreach (var member in Model.Members)
+                    {
+                        <a href="#" class="list-group-item">
+                            <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                            @if (member.IsCreator)
+                            {
+                                <span class="badge">creator</span>
+                            }
+                            @member.DisplayName
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Display Name</h3>
+            </div>
+            <div class="panel-body">
+                <form method="POST" class="form-inline">
+                    <div class="form-horizontal">
+                        <span asp-validation-for="NewDisplayName" class="text-danger"></span>
+                        <label class="sr-only" asp-for="NewDisplayName"></label>
+                        <input class="form-control" type="text" asp-for="NewDisplayName" placeholder="" />
+                        <input type="hidden" asp-for="MembershipId" value="@Model.Membership.Id" />
+                        <button type="submit" class="btn btn-default" asp-page-handler="DisplayName">Update</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="alert alert-warning alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <strong>Warning!</strong> Better check yourself, you're not looking too good.
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    Description
+                    <a href="#"><span class="glyphicon glyphicon-edit pull-right" aria-hidden="true"></span></a>
+                </h3>
+            </div>
+            <div class="panel-body">
+                <p>@Model.Library.Description</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="panel panel-info">
+            <div class="panel-heading"><h3 class="panel-title">Videos</h3></div>
+            <div class="panel-body">
+                <div class="row">
+                    @*style="display:flex; flex-wrap: wrap;"*@
+                    <div class="col-md-4">
+                        <a class="thumbnail" href="#">
+                            <img src="~/images/example_video_1.jpg">
+                            <div class="caption">
+                                <h4>
+                                    Essence of calculus, chapter 1
+                                </h4>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-4">
+                        <a class="thumbnail" href="#">
+                            <img src="~/images/example_video_2.jpg">
+                            <div class="caption">
+                                <h4>The paradox of the derivative | Essence of calculus, chapter 2</h4>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-4">
+                        <a class="thumbnail" href="#">
+                            <img src="~/images/example_video_3.jpg">
+                            <div class="caption">
+                                <h4>
+                                    Derivative formulas through geometry | Essence of calculus, chapter 3
+                                </h4>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-4">
+                        <a class="thumbnail" href="#">
+                            <img src="~/images/example_video_4.jpg">
+                            <div class="caption">
+                                <h4>
+                                    Visualizing the chain rule and product rule | Essence of calculus, chapter 4
+                                </h4>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-4">
+                        <a class="thumbnail" href="#">
+                            <img src="~/images/example_video_5.jpg">
+                            <div class="caption">
+                                <h4>
+                                    Derivatives of exponentials | Essence of calculus, chapter 5
+                                </h4>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

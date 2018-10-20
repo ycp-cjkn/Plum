@@ -8,21 +8,23 @@ using ToBeRenamed.Factories;
 
 namespace ToBeRenamed.Queries
 {
-    public class GetLibrariesCreatedByUserIdHandler : IRequestHandler<GetLibrariesCreatedByUserId, IEnumerable<LibraryDto>>
+    public class GetLibrariesForUserHandler : IRequestHandler<GetLibrariesForUser, IEnumerable<LibraryDto>>
     {
         private readonly ISqlConnectionFactory _sqlConnectionFactory;
 
-        public GetLibrariesCreatedByUserIdHandler(ISqlConnectionFactory sqlConnectionFactory)
+        public GetLibrariesForUserHandler(ISqlConnectionFactory sqlConnectionFactory)
         {
             _sqlConnectionFactory = sqlConnectionFactory;
         }
 
-        public async Task<IEnumerable<LibraryDto>> Handle(GetLibrariesCreatedByUserId request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<LibraryDto>> Handle(GetLibrariesForUser request, CancellationToken cancellationToken)
         {
             const string sql = @"
-                SELECT id, title, description, created_by, created_at
-                FROM plum.libraries
-                WHERE created_by = @UserId";
+                SELECT lib.id, lib.title, lib.description, lib.created_by, lib.created_at
+                FROM plum.libraries lib
+                INNER JOIN plum.memberships mem
+                ON lib.id = mem.library_id
+                WHERE mem.user_id = @UserId";
 
             using (var cnn = _sqlConnectionFactory.GetSqlConnection())
             {

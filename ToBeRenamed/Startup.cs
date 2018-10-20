@@ -52,7 +52,7 @@ namespace ToBeRenamed
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            services.AddTransient<SqlConnectionFactory>();
+            services.AddTransient<ISqlConnectionFactory, SqlConnectionFactory>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

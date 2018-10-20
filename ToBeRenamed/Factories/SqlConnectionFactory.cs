@@ -1,10 +1,10 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Npgsql;
-using System.Data;
+using System.Data.Common;
 
 namespace ToBeRenamed.Factories
 {
-    public class SqlConnectionFactory
+    public class SqlConnectionFactory : ISqlConnectionFactory
     {
         private readonly string _connectionString;
 
@@ -13,7 +13,7 @@ namespace ToBeRenamed.Factories
             _connectionString = configuration["ConnectionStrings:DefaultConnection"];
         }
 
-        public IDbConnection GetSqlConnection()
+        public DbConnection GetSqlConnection()
         {
             return new NpgsqlConnection(_connectionString);
         }
