@@ -18,7 +18,7 @@ namespace ToBeRenamed.Commands
         public async Task<Unit> Handle(AddVideo request, CancellationToken cancellationToken)
         {
             var userId = request.UserId;
-            var lib_Id = request.LibraryId;
+            var libraryId = request.LibraryId;
             var title = request.Title;
             var link = request.Link;
             var description = request.Description;
@@ -30,11 +30,11 @@ namespace ToBeRenamed.Commands
                 RETURNING id, url
             )
             INSERT INTO plum.videos (title, description, video_url_id, library_id)
-            SELECT @title, @description, id, @LibraryId FROM videoURLS"; 
+            SELECT @title, @description, id, @libraryId FROM videoURLS"; 
 
             using (var cnn = _sqlConnectionFactory.GetSqlConnection())
             {
-                await cnn.ExecuteAsync(sql, new { userId, title, link, description });
+                await cnn.ExecuteAsync(sql, new { userId, libraryId, title, link, description });
             }
 
             return Unit.Value;

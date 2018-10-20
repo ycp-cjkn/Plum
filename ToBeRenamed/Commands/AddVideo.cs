@@ -6,7 +6,7 @@ namespace ToBeRenamed.Commands
     public class AddVideo : IRequest
     {
         public int UserId { get; }
-        public int LibraryId { get;  }
+        public int LibraryId { get; }
         public string Title { get; }
         public string Link { get; }
         public string Description { get; }
