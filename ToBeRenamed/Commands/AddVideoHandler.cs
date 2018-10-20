@@ -8,9 +8,9 @@ namespace ToBeRenamed.Commands
 {
     public class AddVideoHandler : IRequestHandler<AddVideo>
     {
-        private readonly SqlConnectionFactory _sqlConnectionFactory;
+        private readonly ISqlConnectionFactory _sqlConnectionFactory;
 
-        public AddVideoHandler(SqlConnectionFactory sqlConnectionFactory)
+        public AddVideoHandler(ISqlConnectionFactory sqlConnectionFactory)
         {
             _sqlConnectionFactory = sqlConnectionFactory;
         }
