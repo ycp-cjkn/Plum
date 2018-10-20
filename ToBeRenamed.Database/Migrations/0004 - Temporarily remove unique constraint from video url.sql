@@ -1,0 +1,2 @@
+ALTER TABLE plum.video_urls
+DROP CONSTRAINT video_urls_url_key

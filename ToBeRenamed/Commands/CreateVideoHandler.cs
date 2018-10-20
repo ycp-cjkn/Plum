@@ -6,16 +6,16 @@ using ToBeRenamed.Factories;
 
 namespace ToBeRenamed.Commands
 {
-    public class AddVideoHandler : IRequestHandler<AddVideo>
+    public class CreateVideoHandler : IRequestHandler<CreateVideo>
     {
         private readonly ISqlConnectionFactory _sqlConnectionFactory;
 
-        public AddVideoHandler(ISqlConnectionFactory sqlConnectionFactory)
+        public CreateVideoHandler(ISqlConnectionFactory sqlConnectionFactory)
         {
             _sqlConnectionFactory = sqlConnectionFactory;
         }
 
-        public async Task<Unit> Handle(AddVideo request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(CreateVideo request, CancellationToken cancellationToken)
         {
             var userId = request.UserId;
             var libraryId = request.LibraryId;
