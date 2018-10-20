@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.DependencyModel;
 using ToBeRenamed.Commands;
 using ToBeRenamed.Dtos;
 using ToBeRenamed.Queries;
@@ -18,7 +19,7 @@ namespace ToBeRenamed.Pages.Videos
         {
             _mediator = mediator;
         }
-
+    
         [BindProperty]
         public string Title { get; set; }
 
@@ -28,13 +29,16 @@ namespace ToBeRenamed.Pages.Videos
         [BindProperty]
         public string Description { get; set; }
 
-        public async Task<IActionResult> OnPostAsync()
+
+        public async Task<IActionResult> OnPostAsync(int id)
         {
             var userDto = await _mediator.Send(new GetSignedInUserDto(User));
 
-            //await _mediator.Send(new AddVideo(userDto.Id, libraryDto.Id, Title, Link, Description));
+            var libraryDto = await _mediator.Send(new GetLibraryDtoById(id));
 
-            return RedirectToPage("/Videos/Add Video");
+            await _mediator.Send(new AddVideo(userDto.Id, libraryDto.Id ,Title, Link, Description));
+
+            return RedirectToPage("/Libraries/Index");
         }
     }
 }
