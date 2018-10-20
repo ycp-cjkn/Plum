@@ -32,7 +32,7 @@ namespace ToBeRenamed.Pages.Videos
         {
             var userDto = await _mediator.Send(new GetSignedInUserDto(User));
 
-            await _mediator.Send(new AddVideo(userDto.Id, Title, Link, Description));
+            //await _mediator.Send(new AddVideo(userDto.Id, libraryDto.Id, Title, Link, Description));
 
             return RedirectToPage("/Videos/Add Video");
         }

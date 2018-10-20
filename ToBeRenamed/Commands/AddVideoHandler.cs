@@ -18,11 +18,19 @@ namespace ToBeRenamed.Commands
         public async Task<Unit> Handle(AddVideo request, CancellationToken cancellationToken)
         {
             var userId = request.UserId;
+            var lib_Id = request.LibraryId;
             var title = request.Title;
             var link = request.Link;
             var description = request.Description;
 
-            const string sql = @""; //need to find query to add video to two databases 
+            const string sql = @"
+            WITH videoURLS AS (
+                INSERT INTO plum.video_urls (url)
+                VALUES (@link)
+                RETURNING id, url
+            )
+            INSERT INTO plum.videos (title, description, video_url_id, library_id)
+            SELECT @title, @description, id, @LibraryId FROM videoURLS"; 
 
             using (var cnn = _sqlConnectionFactory.GetSqlConnection())
             {
