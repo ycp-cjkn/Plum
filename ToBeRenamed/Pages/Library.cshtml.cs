@@ -21,6 +21,7 @@ namespace ToBeRenamed.Pages
 
         public LibraryDto Library { get; set; }
         public IEnumerable<MemberDto> Members { get; set; }
+        public IEnumerable<VideoDto> Videos { get; set; }
         public MembershipDto Membership;
 
         [BindProperty]
@@ -60,9 +61,11 @@ namespace ToBeRenamed.Pages
             var libraryTask = _mediator.Send(new GetLibraryDtoById(Id));
             var membersTask = _mediator.Send(new GetMembersOfLibrary(Id));
             var userTask = _mediator.Send(new GetSignedInUserDto(User));
+            var videosTask = _mediator.Send(new GetVideosOfLibrary(Id));
 
             Library = await libraryTask.ConfigureAwait(false);
             Members = await membersTask.ConfigureAwait(false);
+            Videos = await videosTask.ConfigureAwait(false);
 
             var user = await userTask.ConfigureAwait(false);
             Membership = await _mediator.Send(new GetMembershipDto(user.Id, Library.Id));

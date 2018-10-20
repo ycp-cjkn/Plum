@@ -84,55 +84,20 @@
             <div class="panel-heading"><h3 class="panel-title">Videos</h3></div>
             <div class="panel-body">
                 <div class="row">
-                    @*style="display:flex; flex-wrap: wrap;"*@
-                    <div class="col-md-4">
-                        <a class="thumbnail" href="#">
-                            <img src="~/images/example_video_1.jpg">
-                            <div class="caption">
-                                <h4>
-                                    Essence of calculus, chapter 1
-                                </h4>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-md-4">
-                        <a class="thumbnail" href="#">
-                            <img src="~/images/example_video_2.jpg">
-                            <div class="caption">
-                                <h4>The paradox of the derivative | Essence of calculus, chapter 2</h4>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-md-4">
-                        <a class="thumbnail" href="#">
-                            <img src="~/images/example_video_3.jpg">
-                            <div class="caption">
-                                <h4>
-                                    Derivative formulas through geometry | Essence of calculus, chapter 3
-                                </h4>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-md-4">
-                        <a class="thumbnail" href="#">
-                            <img src="~/images/example_video_4.jpg">
-                            <div class="caption">
-                                <h4>
-                                    Visualizing the chain rule and product rule | Essence of calculus, chapter 4
-                                </h4>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-md-4">
-                        <a class="thumbnail" href="#">
-                            <img src="~/images/example_video_5.jpg">
-                            <div class="caption">
-                                <h4>
-                                    Derivatives of exponentials | Essence of calculus, chapter 5
-                                </h4>
-                            </div>
-                        </a>
-                    </div>
+                    @foreach (var video in Model.Videos)
+                    {
+                        <div class="col-md-4">
+                            <a class="thumbnail" href="#">
+                                <img class="media-object"
+                                     src="http://identicon.rmhdev.net/@(Uri.EscapeDataString(video.Title)).png" alt="">
+                                <div class="caption">
+                                    <h4>
+                                        @video.Title
+                                    </h4>
+                                </div>
+                            </a>
+                        </div>
+                    }
                 </div>
             </div>
         </div>
