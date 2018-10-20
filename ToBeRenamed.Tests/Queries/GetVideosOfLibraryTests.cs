@@ -17,7 +17,7 @@ namespace ToBeRenamed.Tests.Queries
 
         [Fact]
         [ResetDatabase]
-        public async Task Should_ReturnTwoVideos_When_UserCreatesTwoVideos()
+        public async Task Should_ReturnNone_When_LibraryHasNoVideos()
         {
             // Create a test user
             var userRequest = new CreateUserWithoutAuth("Alice");
@@ -41,33 +41,13 @@ namespace ToBeRenamed.Tests.Queries
             // Get id of the single library
             var libraryId = libraryDtos.ToList().ElementAt(0).Id;
             
-            // Create two videos for library
-            const string vidTitle = "Video Title";
-            const string videoUrl = "Video URL";
-            const string videoUrl2 = "Video URL2";
-            const string vidDescription = "Video description";
-            
-            var createVideosRequest1 = new AddVideo(user.Id, libraryId, vidTitle, videoUrl, vidDescription);
-            var createVideosRequest2 = new AddVideo(user.Id, libraryId, vidTitle, videoUrl2, vidDescription);
-            
-            await _fixture.SendAsync(createVideosRequest1);
-            await _fixture.SendAsync(createVideosRequest2);
-            
             // Get videos for library
             var getVideosRequest = new GetVideosOfLibrary(libraryId);
             var videos = await _fixture.SendAsync(getVideosRequest);
             
             // Make sure correct number of videos returned
             var videoDtos = videos.ToList();
-            Assert.Equal(2, videoDtos.Count);
-            
-            // Make sure the videos have the same content
-            foreach (var video in videoDtos)
-            {
-                Assert.Equal(vidTitle, video.Title);
-                Assert.Equal(vidDescription, video.Description);
-            }
-
+            Assert.Empty(videoDtos);
         }
     }
 }
