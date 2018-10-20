@@ -27,7 +27,7 @@ namespace ToBeRenamed.Queries
                 INNER JOIN plum.memberships mem
                 ON videos.library_id = mem.library_id
                 WHERE videos.library_id = @LibraryId
-                ORDER BY videos.created_at";
+                ORDER BY videos.created_at DESC";
 
             using (var cnn = _sqlConnectionFactory.GetSqlConnection())
             {
