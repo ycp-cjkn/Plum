@@ -15,4 +15,15 @@
     <PackageReference Include="Npgsql" Version="4.0.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Remove="Pages\Videos\EmptyClass.cs" />
+    <Compile Remove="Pages\Videos\Index.cshtml.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Remove="Pages\Videos\Create.cshtml" />
+    <Content Remove="Pages\Videos\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Pages\Videos\" />
+  </ItemGroup>
 </Project>
