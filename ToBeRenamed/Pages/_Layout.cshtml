@@ -47,7 +47,7 @@
                                 @User.Claims.First().Subject.Name <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a asp-page="/Profile" asp-route-returnUrl="@Context.Request.Path">Profile</a></li>
+                                <li><a asp-page="/Profile">Profile</a></li>
                                 <li><a href="#">Settings</a></li>
                                 <li role="separator" class="divider"></li>
                                 <li><a asp-page="/Authentication/SignOut" asp-route-returnUrl="@Context.Request.Path">Sign Out</a></li>

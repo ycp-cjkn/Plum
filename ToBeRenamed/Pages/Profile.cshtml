@@ -22,12 +22,12 @@
 
 <h2>@ViewData["Title"]</h2>
 
+<div>Display Name: <b>@Model.UserDto.DisplayName</b></div>
+<div>User ID: <b>@Model.UserDto.Id</b></div>
+<div>Account Created: <b>@Model.UserDto.CreatedAt</b></div>
+
 @if (User?.Identity?.IsAuthenticated ?? false)
 {
-    <div>Display Name: <b>@Model.UserDto.DisplayName</b></div>
-    <div>User ID: <b>@Model.UserDto.Id</b></div>
-    <div>Account Created: <b>@Model.UserDto.CreatedAt</b></div>
-
     <p>
         @foreach (var claim in User.Claims)
         {

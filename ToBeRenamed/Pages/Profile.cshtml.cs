@@ -20,7 +20,7 @@ namespace ToBeRenamed.Pages
             _mediator = mediator;
         }
 
-        public async Task OnGetAsync(int? id)
+        public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null)
             {
@@ -28,8 +28,16 @@ namespace ToBeRenamed.Pages
             }
             else
             {
-                UserDto = await _mediator.Send(new GetUserByUserId(id.Value));
+                try
+                {
+                    UserDto = await _mediator.Send(new GetUserByUserId(id.Value));
+                }
+                catch (InvalidOperationException)
+                {
+                    return NotFound();
+                }
             }
+            return Page();
         }
     }
 }
