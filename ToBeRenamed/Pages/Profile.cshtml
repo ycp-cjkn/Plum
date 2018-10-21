@@ -1,0 +1,38 @@
+@page "{id:int?}"
+@model ToBeRenamed.Pages.ProfileModel
+
+@{
+    ViewData["Title"] = "Profile";
+
+    var claimProperties = new List<string>()
+{
+"Name ID",
+"Full Name",
+"First",
+"Last",
+"Email"
+};
+
+    int i = 0;
+}
+
+@{
+    ViewData["Title"] = "Profile";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div>Display Name: <b>@Model.UserDto.DisplayName</b></div>
+<div>User ID: <b>@Model.UserDto.Id</b></div>
+<div>Account Created: <b>@Model.UserDto.CreatedAt</b></div>
+
+@if (User?.Identity?.IsAuthenticated ?? false)
+{
+    <p>
+        @foreach (var claim in User.Claims)
+        {
+            <div>@claimProperties[i]: <b>@claim.Value</b></div>
+            i++;
+        }
+    </p>
+}
