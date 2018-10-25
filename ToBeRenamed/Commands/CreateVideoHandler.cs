@@ -23,7 +23,12 @@ namespace ToBeRenamed.Commands
             var link = request.Link;
             var description = request.Description;
 
-            var parsedUrl = link.Substring(32, 11);
+            // TODO - Remove this and add validation to make sure only valid youtube urls can get added
+            var parsedUrl = link;
+            if (link.Length == 43)
+            {
+                parsedUrl = link.Substring(32, 11);
+            }
             
             const string sql = @"
             WITH videoURLS AS (
