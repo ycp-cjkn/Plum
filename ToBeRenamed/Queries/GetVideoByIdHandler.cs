@@ -20,9 +20,11 @@ namespace ToBeRenamed.Queries
         public async Task<VideoDto> Handle(GetVideoById request, CancellationToken cancellationToken)
         {
             const string getVideoSql = @"
-                SELECT title, description
+                SELECT videos.title, videos.description, video_urls.url
                 FROM plum.videos
-                WHERE id = @Id";
+                INNER JOIN plum.video_urls
+                ON videos.video_url_id = video_urls.id
+                WHERE videos.id = @Id";
 
             using (var conn = _sqlConnectionFactory.GetSqlConnection())
             {
