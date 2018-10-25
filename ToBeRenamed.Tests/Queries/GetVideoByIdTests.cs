@@ -44,7 +44,7 @@ namespace ToBeRenamed.Tests.Queries
             
             // Create two videos for library
             const string videoTitle = "Video Title";
-            const string videoUrl = "Video URL";
+            const string videoUrl = "https://www.youtube.com/watch?v=-O5kNPlUV7w";
             const string videoDescription = "Video Description";
             
             var createVideosRequest1 = new CreateVideo(user.Id, libraryId, videoTitle, videoUrl, videoDescription);
@@ -99,7 +99,7 @@ namespace ToBeRenamed.Tests.Queries
             
             // Create two videos for library
             const string videoTitle = "Video Title";
-            const string videoUrl = "Video URL";
+            const string videoUrl = "https://www.youtube.com/watch?v=-O5kNPlUV7w";
             const string videoDescription = "Video Description";
             
             var createVideosRequest1 = new CreateVideo(user.Id, libraryId, videoTitle, videoUrl, videoDescription);

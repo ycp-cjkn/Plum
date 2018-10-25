@@ -43,8 +43,8 @@ namespace ToBeRenamed.Tests.Commands
             
             // Create two videos for library
             const string vidTitle = "Video Title";
-            const string videoUrl = "Video URL";
-            const string videoUrl2 = "Video URL2";
+            const string videoUrl = "https://www.youtube.com/watch?v=-O5kNPlUV7w";
+            const string videoUrl2 = "https://www.youtube.com/watch?v=-O5kNPlUV7a";
             const string vidDescription = "Video description";
             
             var createVideosRequest1 = new CreateVideo(user.Id, libraryId, vidTitle, videoUrl, vidDescription);
