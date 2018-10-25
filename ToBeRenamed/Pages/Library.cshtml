@@ -100,7 +100,7 @@
                     @foreach (var video in Model.Videos)
                     {
                         <div class="col-md-4">
-                            <a class="thumbnail" href="#">
+                            <a class="thumbnail" asp-page="/Videos/Index" asp-route-id="@video.Id">
                                 <img class="media-object"
                                      src="http://identicon.rmhdev.net/@(Uri.EscapeDataString(video.Title)).png" alt="">
                                 <div class="caption">
