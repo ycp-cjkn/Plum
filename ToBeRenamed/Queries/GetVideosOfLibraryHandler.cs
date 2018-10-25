@@ -22,7 +22,8 @@ namespace ToBeRenamed.Queries
             const string sql = @"
                 SELECT
                     videos.title,
-                    videos.description
+                    videos.description,
+                    videos.id
                 FROM plum.videos
                 INNER JOIN plum.memberships mem
                 ON videos.library_id = mem.library_id
