@@ -1,7 +1,13 @@
 .annotations {
+    margin-top: 15px;
     max-height: 500px;
     overflow-x: auto;
     overflow-y: auto;
+    border-left: solid lightgrey thin;
+}
+
+.annotations hr {
+    border-top: 1px solid lightgrey;
 }
 
 .annotation-body {
@@ -31,4 +37,24 @@
 
 .annotation-options {
     margin-left: 5px;
+}
+
+#annotations-header-text {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.annotations-header {
+    margin: 10px 10px;
+}
+
+.create-annotation-container textarea {
+    width: 100%;
+    max-width: 100%;
+}
+
+.create-annotation-container .panel-heading {
+    background-color: #337ab7;
+    border-color: #2e6da4;
+    color: white;
 }

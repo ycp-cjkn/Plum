@@ -15,8 +15,30 @@
 
             </div>
         </div>
-        <div class="annotations col-md-offset-1 col-md-4">
-            <h3 class="text-center">Annotations</h3>
+        <div class="annotations col-md-5">
+            <div class="annotations-header">
+                <span id="annotations-header-text">Annotations</span>
+                <button type="button" class="btn btn-primary" id="create-annotation-btn" style="float: right">Create</button>
+            </div>
+            <div class="create-annotation-container">
+                <div class="panel panel-default annotation-wrapper">
+                    <div class="panel panel-heading annotation-header">
+                        <span class="annotation-options glyphicon glyphicon-option-horizontal" aria-hidden="true"></span>
+                        <span class="annotation-author-time block">
+                            @* TODO - Use membership display name instead of user display name *@
+                            @User.Identity.Name @@ <a class="timestamp" href="#"></a>
+                        </span>
+                    </div>
+                    <div class="panel-body annotation-body">
+                        <div class="annotation-text-wrapper row">
+                            <textarea></textarea>
+                            <button type="button" class="btn btn-success btn-sm">Submit</button>
+                            <button type="button" class="btn btn-secondary btn-sm">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+            </div>
             @foreach (var annotation in Model.Annotations)
             {
                 <div class="panel panel-default annotation-wrapper" data-id="@annotation.Id">
@@ -24,7 +46,7 @@
                         <span class="annotation-options glyphicon glyphicon-option-horizontal" aria-hidden="true"></span>
                         <span class="annotation-options glyphicon glyphicon glyphicon-comment" aria-hidden="true"></span>
                         <span class="annotation-author-time block">
-                            @annotation.UserDisplayName @@ <a class="timestamp" href="#" data-timestamp="@annotation.Timestamp">@annotation.TimestampDisplay</a>
+                            @annotation.DisplayName @@ <a class="timestamp" href="#" data-timestamp="@annotation.Timestamp">@annotation.TimestampDisplay</a>
                         </span>
                     </div>
                     <div class="panel-body annotation-body">
