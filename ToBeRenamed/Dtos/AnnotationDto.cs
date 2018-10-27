@@ -4,7 +4,7 @@ namespace ToBeRenamed.Dtos
     {
         public int Id { get; set; }
         public string Comment { get; set; }
-        public string UserDisplayName { get; set; }
+        public string DisplayName { get; set; }
         public string TimestampDisplay { get; set; }
         public double Timestamp { get; set; }
 //        public int VideoId { get; set; }
