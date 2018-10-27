@@ -17,22 +17,25 @@
         </div>
         <div class="annotations col-md-offset-1 col-md-4">
             <h3 class="text-center">Annotations</h3>
-            <div class="panel panel-default annotation-wrapper">
-                <div class="panel panel-heading annotation-header">
-                    <span class="annotation-options glyphicon glyphicon-option-horizontal" aria-hidden="true"></span>
-                    <span class="annotation-options glyphicon glyphicon glyphicon-comment" aria-hidden="true"></span>
-                    <span class="annotation-author-time block">
-                        Kyle Jones @@ <a href="#">2:17</a>
-                    </span>
-                </div>
-                <div class="panel-body annotation-body">
-                    <div class="annotation-text-wrapper row">
-                        <span class="annotation-text">
-                            This is an example of an annotation, this is what the annotation is going to look like as it gets longer and longer
+            @foreach (var annotation in Model.Annotations)
+            {
+                <div class="panel panel-default annotation-wrapper" data-id="@annotation.Id">
+                    <div class="panel panel-heading annotation-header">
+                        <span class="annotation-options glyphicon glyphicon-option-horizontal" aria-hidden="true"></span>
+                        <span class="annotation-options glyphicon glyphicon glyphicon-comment" aria-hidden="true"></span>
+                        <span class="annotation-author-time block">
+                            @annotation.UserDisplayName @@ <a class="timestamp" href="#" data-timestamp="@annotation.Timestamp">@annotation.TimestampDisplay</a>
                         </span>
                     </div>
+                    <div class="panel-body annotation-body">
+                        <div class="annotation-text-wrapper row">
+                            <span class="annotation-text">
+                                @annotation.Comment
+                            </span>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            }
         </div>
     </div>
 </div>
@@ -78,6 +81,18 @@
     function stopVideo() {
         player.stopVideo();
     }
+</script>
+
+<script>
+    var annotationsElement = document.querySelector(".annotations");
+    annotationsElement.addEventListener('click', function(e) {
+        var targetElement = e.target;
+        
+        if (targetElement.classList.contains('timestamp')) {
+            var time = parseFloat(targetElement.dataset.timestamp);
+            player.seekTo(time);
+        }
+    });
 </script>
 
 <link rel="stylesheet" href="~/css/video.css" />
