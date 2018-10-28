@@ -27,7 +27,7 @@
                         <span class="annotation-options glyphicon glyphicon-option-horizontal" aria-hidden="true"></span>
                         <span class="annotation-author-time block">
                             @* TODO - Use membership display name instead of user display name *@
-                            @User.Identity.Name @@ <a class="timestamp" href="#"></a>
+                            @User.Identity.Name @@ <span class="timestamp"></span>
                         </span>
                     </div>
                     <div class="panel-body annotation-body">
@@ -40,19 +40,27 @@
                 </div>
                 <hr>
             </div>
-            @foreach (var annotation in Model.Annotations)
-            {
-                @await Html.PartialAsync("partials/_Annotation", annotation);
-            }
+            <div id="annotations-body">
+                @if (!Model.Annotations.Any())
+                {
+                    <div id="no-annotation-text" class="text-center">
+                        <p>No annotations to show</p>
+                    </div>
+                }
+                @foreach (var annotation in Model.Annotations)
+                {
+                    @await Html.PartialAsync("partials/_Annotation", annotation);
+                }
+            </div>
         </div>
     </div>
 </div>
 
 @* TODO - Remove this and use the jQuery in lib/jquery/dist *@
-@* <script *@
-@*     src="https://code.jquery.com/jquery-3.3.1.js" *@
-@*     integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" *@
-@*     crossorigin="anonymous"></script> *@
+<script
+    src="https://code.jquery.com/jquery-3.3.1.js"
+    integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+    crossorigin="anonymous"></script>
 
 <script>
     // 2. This code loads the IFrame Player API code asynchronously.
@@ -83,17 +91,10 @@
     }
 
     // 5. The API calls this function when the player's state changes.
-    //    The function indicates that when playing a video (state=1),
-    //    the player should play for six seconds and then stop.
     var done = false;
     function onPlayerStateChange(event) {
-        if (event.data == YT.PlayerState.PLAYING && !done) {
-            setTimeout(stopVideo, 6000);
-            done = true;
-        }
     }
     function stopVideo() {
-        player.stopVideo();
     }
 </script>
 
@@ -117,27 +118,17 @@
     var createAnnotationButtonElement = document.querySelector('#create-annotation-btn');
     var createAnnotationTextarea = document.querySelector('.create-annotation-container textarea');
     var createAnnotationCancelButton = document.querySelector('.cancel-annotation');
+    var newAnnotationTimestampElement = document.querySelector('.timestamp');
+    var noAnnotationTextElement = document.getElementById('no-annotation-text');
     
     createAnnotationButtonElement.addEventListener('click', function(e) {
-        var videoId = $('.video-id').val(); 
-        var comment = 'example comment'; 
-        var url = '/Videos/' + videoId + '?handler=CreateAnnotation'; 
-        
-        $.ajax({ 
-            url: url, 
-            data: {comment: comment}, 
-            method: 'POST', 
-            dataType: 'html', 
-            beforeSend: function (xhr) { 
-             xhr.setRequestHeader("RequestVerificationToken", 
-                 $('input:hidden[name="__RequestVerificationToken"]').val()); 
-            },
-            success: function(data) {
-                $('.annotations').html(data);
-            }
-        }); 
-        
         if (createAnnotationElement.classList.contains('hidden')) {
+            // pause video
+            player.pauseVideo();
+            
+            // Set up controls
+            newAnnotationTimestampElement.innerText = getTimestampToDisplay(player.getCurrentTime());
+            
             // Create annotation controls are hidden, so display them
             createAnnotationElement.classList.remove('hidden');
         } else {
@@ -155,6 +146,56 @@
         createAnnotationElement.classList.add('hidden');
         createAnnotationTextarea.value = '';
     }
+    
+    function getTimestampToDisplay(timestampNumber) {
+        var totalSeconds = Math.floor(timestampNumber);
+        var minutes = (totalSeconds / 60 < 10) ? "0" + Math.floor(totalSeconds / 60).toString() : Math.floor(totalSeconds / 60).toString()
+        var seconds = (totalSeconds % 60 < 10) ? "0" + (totalSeconds % 60).toString() : (totalSeconds % 60).toString()
+
+        return minutes+ ":" + seconds;
+    }
+</script>
+
+<script>
+    var createAnnotationElement = document.querySelector('.create-annotation-container');
+    createAnnotationElement.addEventListener('click', function(e) {
+        var target = e.target;
+        
+        if (target.classList.contains('submit-annotation')) {
+            // submit annotation
+            var videoId = $('.video-id').val(); 
+            var comment = $('.annotation-text-wrapper textarea').val(); 
+            var url = '/Videos/' + videoId + '?handler=CreateAnnotation';
+            
+            $.ajax({
+                url: url,
+                data: {
+                    comment: comment,
+                    timestamp: player.getCurrentTime(),
+                    videoId: videoId
+                },
+                method: 'POST',
+                dataType: 'html',
+                beforeSend: function(xhr) {
+                    // Set header for security
+                    xhr.setRequestHeader("RequestVerificationToken",
+                        $('input:hidden[name="__RequestVerificationToken"]').val());
+                },
+                success: function(data) {
+                    $('#annotations-body').prepend(data);
+                    hideCreateAnnotationControls();
+                    
+                    if (noAnnotationTextElement !== null) {
+                        // Remove element, since there is now annotations to show
+                        noAnnotationTextElement.parentElement.removeChild(noAnnotationTextElement);
+                    }
+                    
+                    // Continue playing video
+                    player.playVideo();
+                }
+            });
+        }
+    });
 </script>
 
 <link rel="stylesheet" href="~/css/video.css" />

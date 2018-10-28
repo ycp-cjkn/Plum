@@ -35,26 +35,36 @@ namespace ToBeRenamed.Pages.Videos
             var count = Annotations.Count();
             for (int i = 0; i < count; i++)
             {
-                var timestampNumber = Annotations.ElementAt(i).Timestamp;
-                var totalSeconds = Convert.ToInt32(Math.Floor(timestampNumber));
-                var minutes = (totalSeconds / 60 < 10) ? "0" + Convert.ToString(totalSeconds / 60) : Convert.ToString(totalSeconds / 60);
-                var seconds = (totalSeconds % 60 < 10) ? "0" + Convert.ToString(totalSeconds % 60) : Convert.ToString(totalSeconds % 60);
-
-                var timeStamp = minutes+ ":" + seconds;
-                Annotations.ElementAt(i).TimestampDisplay = timeStamp;
+                var displayTimestamp = generateTimestampDisplay(Annotations.ElementAt(i).Timestamp);
+                Annotations.ElementAt(i).TimestampDisplay = displayTimestamp;
             }
             
             return Page();
         }
 
-        public PartialViewResult OnPostCreateAnnotation(string comment)
+        public async Task<PartialViewResult> OnPostCreateAnnotation(int videoId, string comment, string timestamp)
         {
-            // TODO - Get annotation
+            var userDto = await _mediator.Send(new GetSignedInUserDto(User));
+            
+            var annotation =
+                _mediator.Send(new CreateAnnotation(userDto.Id, comment, videoId, Double.Parse(timestamp))).GetAwaiter().GetResult();
+            annotation.TimestampDisplay = generateTimestampDisplay(annotation.Timestamp);
+            
             return new PartialViewResult
             {
                 ViewName = "partials/_Annotation",
-                ViewData = new ViewDataDictionary<AnnotationDto>(ViewData, new AnnotationDto())
+                ViewData = new ViewDataDictionary<AnnotationDto>(ViewData, annotation)
             };
+        }
+
+        private string generateTimestampDisplay(double timestampNumber)
+        {
+            
+            var totalSeconds = Convert.ToInt32(Math.Floor(timestampNumber));
+            var minutes = (totalSeconds / 60 < 10) ? "0" + Convert.ToString(totalSeconds / 60) : Convert.ToString(totalSeconds / 60);
+            var seconds = (totalSeconds % 60 < 10) ? "0" + Convert.ToString(totalSeconds % 60) : Convert.ToString(totalSeconds % 60);
+
+            return minutes+ ":" + seconds;
         }
     }
 }
