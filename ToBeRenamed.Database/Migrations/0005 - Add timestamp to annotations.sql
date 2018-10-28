@@ -1,2 +1,2 @@
 ALTER TABLE plum.annotations
-  ADD COLUMN timestamp NUMERIC(20,15);
+  ADD COLUMN timestamp NUMERIC(7,2);
