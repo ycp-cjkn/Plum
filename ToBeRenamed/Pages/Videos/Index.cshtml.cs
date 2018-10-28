@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using ToBeRenamed.Dtos;
 using ToBeRenamed.Queries;
 
@@ -44,6 +45,16 @@ namespace ToBeRenamed.Pages.Videos
             }
             
             return Page();
+        }
+
+        public PartialViewResult OnPostCreateAnnotation(string comment)
+        {
+            // TODO - Get annotation
+            return new PartialViewResult
+            {
+                ViewName = "partials/_Annotation",
+                ViewData = new ViewDataDictionary<AnnotationDto>(ViewData, new AnnotationDto())
+            };
         }
     }
 }

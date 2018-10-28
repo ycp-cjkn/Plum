@@ -3,7 +3,8 @@
 @{
     ViewData["Title"] = @Model.Video.Title;
 }
-
+@Html.AntiForgeryToken()
+<input class="video-id" type="hidden" value="@Model.Id"/>
 <div class="container">
     <div class="row">
         <div class="col-md-7">
@@ -20,7 +21,7 @@
                 <span id="annotations-header-text">Annotations</span>
                 <button type="button" class="btn btn-primary" id="create-annotation-btn" style="float: right">Create</button>
             </div>
-            <div class="create-annotation-container">
+            <div class="create-annotation-container hidden">
                 <div class="panel panel-default annotation-wrapper">
                     <div class="panel panel-heading annotation-header">
                         <span class="annotation-options glyphicon glyphicon-option-horizontal" aria-hidden="true"></span>
@@ -32,8 +33,8 @@
                     <div class="panel-body annotation-body">
                         <div class="annotation-text-wrapper row">
                             <textarea></textarea>
-                            <button type="button" class="btn btn-success btn-sm">Submit</button>
-                            <button type="button" class="btn btn-secondary btn-sm">Cancel</button>
+                            <button type="button" class="submit-annotation btn btn-success btn-sm">Submit</button>
+                            <button type="button" class="cancel-annotation btn btn-secondary btn-sm">Cancel</button>
                         </div>
                     </div>
                 </div>
@@ -41,26 +42,17 @@
             </div>
             @foreach (var annotation in Model.Annotations)
             {
-                <div class="panel panel-default annotation-wrapper" data-id="@annotation.Id">
-                    <div class="panel panel-heading annotation-header">
-                        <span class="annotation-options glyphicon glyphicon-option-horizontal" aria-hidden="true"></span>
-                        <span class="annotation-options glyphicon glyphicon glyphicon-comment" aria-hidden="true"></span>
-                        <span class="annotation-author-time block">
-                            @annotation.DisplayName @@ <a class="timestamp" href="#" data-timestamp="@annotation.Timestamp">@annotation.TimestampDisplay</a>
-                        </span>
-                    </div>
-                    <div class="panel-body annotation-body">
-                        <div class="annotation-text-wrapper row">
-                            <span class="annotation-text">
-                                @annotation.Comment
-                            </span>
-                        </div>
-                    </div>
-                </div>
+                @await Html.PartialAsync("partials/_Annotation", annotation);
             }
         </div>
     </div>
 </div>
+
+@* TODO - Remove this and use the jQuery in lib/jquery/dist *@
+@* <script *@
+@*     src="https://code.jquery.com/jquery-3.3.1.js" *@
+@*     integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" *@
+@*     crossorigin="anonymous"></script> *@
 
 <script>
     // 2. This code loads the IFrame Player API code asynchronously.
@@ -105,7 +97,9 @@
     }
 </script>
 
+
 <script>
+    // Handles clicking timestamp to go to a time in video
     var annotationsElement = document.querySelector(".annotations");
     annotationsElement.addEventListener('click', function(e) {
         var targetElement = e.target;
@@ -115,6 +109,52 @@
             player.seekTo(time);
         }
     });
+</script>
+
+<script>
+    // Handles displaying and hiding the create annotation controls
+    var createAnnotationElement = document.querySelector('.create-annotation-container');
+    var createAnnotationButtonElement = document.querySelector('#create-annotation-btn');
+    var createAnnotationTextarea = document.querySelector('.create-annotation-container textarea');
+    var createAnnotationCancelButton = document.querySelector('.cancel-annotation');
+    
+    createAnnotationButtonElement.addEventListener('click', function(e) {
+        var videoId = $('.video-id').val(); 
+        var comment = 'example comment'; 
+        var url = '/Videos/' + videoId + '?handler=CreateAnnotation'; 
+        
+        $.ajax({ 
+            url: url, 
+            data: {comment: comment}, 
+            method: 'POST', 
+            dataType: 'html', 
+            beforeSend: function (xhr) { 
+             xhr.setRequestHeader("RequestVerificationToken", 
+                 $('input:hidden[name="__RequestVerificationToken"]').val()); 
+            },
+            success: function(data) {
+                $('.annotations').html(data);
+            }
+        }); 
+        
+        if (createAnnotationElement.classList.contains('hidden')) {
+            // Create annotation controls are hidden, so display them
+            createAnnotationElement.classList.remove('hidden');
+        } else {
+            // Create annotation controls are displayed, so hide them
+            hideCreateAnnotationControls();
+        }
+    });
+    
+    createAnnotationCancelButton.addEventListener('click', function(e) {
+            hideCreateAnnotationControls();
+        }
+    );
+    
+    function hideCreateAnnotationControls() {
+        createAnnotationElement.classList.add('hidden');
+        createAnnotationTextarea.value = '';
+    }
 </script>
 
 <link rel="stylesheet" href="~/css/video.css" />
