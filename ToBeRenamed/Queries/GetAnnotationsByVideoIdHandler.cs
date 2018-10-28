@@ -30,7 +30,7 @@ namespace ToBeRenamed.Queries
                 INNER JOIN plum.users
                 ON annotations.user_id = users.id
                 WHERE annotations.video_id = @Id
-                ORDER BY annotations.timestamp";
+                ORDER BY annotations.timestamp DESC";
 
             using (var conn = _sqlConnectionFactory.GetSqlConnection())
             {
