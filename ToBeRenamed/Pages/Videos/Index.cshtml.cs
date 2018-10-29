@@ -49,6 +49,7 @@ namespace ToBeRenamed.Pages.Videos
             var annotation =
                 _mediator.Send(new CreateAnnotation(userDto.Id, comment, videoId, Double.Parse(timestamp))).GetAwaiter().GetResult();
             annotation.TimestampDisplay = generateTimestampDisplay(annotation.Timestamp);
+            annotation.DisplayName = userDto.DisplayName; // TODO - Use membership display name instead of users table display name
             
             return new PartialViewResult
             {
