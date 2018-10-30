@@ -7,8 +7,5 @@ namespace ToBeRenamed.Dtos
         public string DisplayName { get; set; }
         public string TimestampDisplay { get; set; }
         public double Timestamp { get; set; }
-//        public int VideoId { get; set; }
-//        public int UserId { get; set; }
-//        public DateTime CreatedAt { get; set; }
     }
 }
