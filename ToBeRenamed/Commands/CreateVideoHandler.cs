@@ -23,10 +23,17 @@ namespace ToBeRenamed.Commands
             var link = request.Link;
             var description = request.Description;
 
+            // TODO - Remove this and add validation to make sure only valid youtube urls can get added
+            var parsedUrl = link;
+            if (link.Length == 43)
+            {
+                parsedUrl = link.Substring(32, 11);
+            }
+            
             const string sql = @"
             WITH videoURLS AS (
                 INSERT INTO plum.video_urls (url)
-                VALUES (@link)
+                VALUES (@parsedUrl)
                 RETURNING id, url
             )
             INSERT INTO plum.videos (title, description, video_url_id, library_id)
@@ -34,7 +41,7 @@ namespace ToBeRenamed.Commands
 
             using (var cnn = _sqlConnectionFactory.GetSqlConnection())
             {
-                await cnn.ExecuteAsync(sql, new { userId, libraryId, title, link, description });
+                await cnn.ExecuteAsync(sql, new { userId, libraryId, title, parsedUrl, description });
             }
 
             return Unit.Value;

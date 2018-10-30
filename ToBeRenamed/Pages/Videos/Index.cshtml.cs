@@ -19,16 +19,11 @@ namespace ToBeRenamed.Pages.Videos
         [BindProperty(SupportsGet = true)]
         public int Id { get; set; }
         
-        public string Title { get; set; }
-        
-        public string Description { get; set; }
+        public VideoDto Video { get; set; }
         
         public async Task<IActionResult> OnGetAsync()
         {
-            var video = await _mediator.Send(new GetVideoById(Id));
-
-            Title = video.Title;
-            Description = video.Description;
+            Video = await _mediator.Send(new GetVideoById(Id));
             
             return Page();
         }
