@@ -1,0 +1,60 @@
+.annotations {
+    margin-top: 15px;
+    max-height: 500px;
+    overflow-x: auto;
+    overflow-y: auto;
+    border-left: solid lightgrey thin;
+}
+
+.annotations hr {
+    border-top: 1px solid lightgrey;
+}
+
+.annotation-body {
+    padding-top: 7px;
+}
+
+.annotation-author-time {
+    font-size: smaller;
+    font-style: italic;
+    float: right;
+    margin-right: 5px;
+}
+
+.annotation-header {
+    padding: 2.5px 2.5px;
+    margin-bottom: 0px;
+}
+
+.annotation-text {
+    font-size: 13px;
+}
+
+.annotation-text-wrapper {
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
+.annotation-options {
+    margin-left: 5px;
+}
+
+#annotations-header-text {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.annotations-header {
+    margin: 10px 10px;
+}
+
+.create-annotation-container textarea {
+    width: 100%;
+    max-width: 100%;
+}
+
+.create-annotation-container .panel-heading {
+    background-color: #337ab7;
+    border-color: #2e6da4;
+    color: white;
+}

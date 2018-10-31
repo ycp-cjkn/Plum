@@ -1,0 +1,18 @@
+@model Dtos.AnnotationDto
+
+<div class="panel panel-default annotation-wrapper" data-id="@Model.Id">
+    <div class="panel panel-heading annotation-header">
+        <span class="annotation-options glyphicon glyphicon-option-horizontal" aria-hidden="true"></span>
+        <span class="annotation-options glyphicon glyphicon glyphicon-comment" aria-hidden="true"></span>
+        <span class="annotation-author-time block">
+            @Model.DisplayName @@ <a class="timestamp" href="#" data-timestamp="@Model.Timestamp">@Model.TimestampDisplay</a>
+        </span>
+    </div>
+    <div class="panel-body annotation-body">
+        <div class="annotation-text-wrapper row">
+            <span class="annotation-text">
+                @Model.Comment
+            </span>
+        </div>
+    </div>
+</div>
