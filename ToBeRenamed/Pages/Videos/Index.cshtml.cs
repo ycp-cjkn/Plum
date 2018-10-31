@@ -33,11 +33,8 @@ namespace ToBeRenamed.Pages.Videos
         {
             var userDto = await _mediator.Send(new GetSignedInUserDto(User));
 
-            var createAnnotation = new CreateAnnotation(userDto.Id, comment, videoId, double.Parse(timestamp));
-            var annotation = await _mediator.Send(createAnnotation);
-
-            // TODO - Use membership display name instead of users table display name
-            annotation.DisplayName = userDto.DisplayName;
+            var request = new CreateAnnotation(userDto.Id, comment, videoId, double.Parse(timestamp));
+            var annotation = await _mediator.Send(request);
 
             return new PartialViewResult
             {

@@ -1,9 +1,8 @@
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Dapper;
 using MediatR;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using ToBeRenamed.Dtos;
 using ToBeRenamed.Factories;
 
@@ -12,7 +11,7 @@ namespace ToBeRenamed.Queries
     public class GetAnnotationsByVideoIdHandler : IRequestHandler<GetAnnotationsByVideoId, IEnumerable<AnnotationDto>>
     {
         private readonly ISqlConnectionFactory _sqlConnectionFactory;
-        
+
         public GetAnnotationsByVideoIdHandler(ISqlConnectionFactory sqlConnectionFactory)
         {
             _sqlConnectionFactory = sqlConnectionFactory;
@@ -20,21 +19,26 @@ namespace ToBeRenamed.Queries
 
         public async Task<IEnumerable<AnnotationDto>> Handle(GetAnnotationsByVideoId request, CancellationToken cancellationToken)
         {
-            const string getAnnotationsSql = @"
+            const string sql = @"
                 SELECT
-                    annotations.comment,
-                    annotations.id,
-                    annotations.timestamp,
-                    users.display_name
-                FROM plum.annotations
-                INNER JOIN plum.users
-                ON annotations.user_id = users.id
-                WHERE annotations.video_id = @Id
-                ORDER BY annotations.timestamp DESC";
+                    ann.id,
+                    ann.comment,
+                    ann.timestamp,
+                    (CASE
+                        WHEN mem.display_name = ''
+                        THEN usr.display_name
+                        ELSE mem.display_name END)
+                FROM plum.annotations ann
+                INNER JOIN plum.users usr
+                ON ann.user_id = usr.id
+                INNER JOIN plum.memberships mem
+                ON ann.user_id = mem.user_id
+                WHERE ann.video_id = @VideoId
+                ORDER BY ann.timestamp DESC";
 
             using (var conn = _sqlConnectionFactory.GetSqlConnection())
             {
-                return await conn.QueryAsync<AnnotationDto>(getAnnotationsSql, new {request.Id});
+                return await conn.QueryAsync<AnnotationDto>(sql, request);
             }
         }
     }

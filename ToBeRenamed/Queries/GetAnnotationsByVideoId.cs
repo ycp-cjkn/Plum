@@ -6,11 +6,11 @@ namespace ToBeRenamed.Queries
 {
     public class GetAnnotationsByVideoId : IRequest<IEnumerable<AnnotationDto>>
     {
-        public int Id { get; }
+        public int VideoId { get; }
 
-        public GetAnnotationsByVideoId(int id)
+        public GetAnnotationsByVideoId(int videoId)
         {
-            Id = id;
+            VideoId = videoId;
         }
     }
 }
