@@ -20,7 +20,6 @@ namespace ToBeRenamed.Pages.Videos
         }
 
         public VideoDto Video { get; set; }
-
         public IEnumerable<AnnotationDto> Annotations { get; set; }
 
         public async Task OnGetAsync(int id)
@@ -29,12 +28,10 @@ namespace ToBeRenamed.Pages.Videos
             Annotations = await _mediator.Send(new GetAnnotationsByVideoId(id));
         }
 
-        public async Task<PartialViewResult> OnPostCreateAnnotation(int videoId, string comment, string timestamp)
+        public async Task<PartialViewResult> OnPostCreateAnnotation(int videoId, string comment, double timestamp)
         {
             var userDto = await _mediator.Send(new GetSignedInUserDto(User));
-
-            var request = new CreateAnnotation(userDto.Id, comment, videoId, double.Parse(timestamp));
-            var annotation = await _mediator.Send(request);
+            var annotation = await _mediator.Send(new CreateAnnotation(userDto.Id, comment, videoId, timestamp));
 
             return new PartialViewResult
             {
