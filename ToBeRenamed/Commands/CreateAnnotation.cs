@@ -1,8 +1,7 @@
-using System.Collections.Generic;
 using MediatR;
 using ToBeRenamed.Dtos;
 
-namespace ToBeRenamed.Queries
+namespace ToBeRenamed.Commands
 {
     public class CreateAnnotation : IRequest<AnnotationDto>
     {
@@ -10,7 +9,6 @@ namespace ToBeRenamed.Queries
         public string Comment { get; }
         public int VideoId { get; }
         public double Timestamp { get; }
-
 
         public CreateAnnotation(int userId, string comment, int videoId, double timestamp)
         {
