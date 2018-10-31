@@ -20,9 +20,5 @@
   </ItemGroup>
   <ItemGroup>
     <Content Remove="Pages\Videos\Create.cshtml" />
-    <Content Remove="Pages\Videos\Index.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Pages\Videos\" />
   </ItemGroup>
 </Project>
