@@ -41,7 +41,7 @@ namespace ToBeRenamed.Pages.Videos
 
             return new PartialViewResult
             {
-                ViewName = "partials/_Annotation",
+                ViewName = "_Annotation",
                 ViewData = new ViewDataDictionary<AnnotationDto>(ViewData, annotation)
             };
         }

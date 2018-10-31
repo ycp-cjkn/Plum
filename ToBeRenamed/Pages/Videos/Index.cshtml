@@ -47,9 +47,10 @@
                         <p>No annotations to show</p>
                     </div>
                 }
+
                 @foreach (var annotation in Model.Annotations)
                 {
-                    @await Html.PartialAsync("partials/_Annotation", annotation);
+                    <partial name="_Annotation" model="@annotation"/>
                 }
             </div>
         </div>
