@@ -5,6 +5,8 @@
 }
 @Html.AntiForgeryToken()
 <input class="video-id" type="hidden" value="@Model.Video.Id"/>
+<input id="video-url" type="hidden" value="@Model.Video.Url"/>
+
 <div class="container">
     <div class="row">
         <div class="col-md-7">
@@ -63,140 +65,8 @@
     integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
     crossorigin="anonymous"></script>
 
-<script>
-    // 2. This code loads the IFrame Player API code asynchronously.
-    var tag = document.createElement('script');
-
-    tag.src = "https://www.youtube.com/iframe_api";
-    var firstScriptTag = document.getElementsByTagName('script')[0];
-    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
-    // 3. This function creates an <iframe> (and YouTube player)
-    //    after the API code downloads.
-    var player;
-    function onYouTubeIframeAPIReady() {
-        player = new YT.Player('player', {
-            height: '390',
-            width: '640',
-            videoId: '@Model.Video.Url',
-            events: {
-                'onReady': onPlayerReady,
-                'onStateChange': onPlayerStateChange
-            }
-        });
-    }
-
-    // 4. The API will call this function when the video player is ready.
-    function onPlayerReady(event) {
-//        event.target.playVideo();
-    }
-
-    // 5. The API calls this function when the player's state changes.
-    var done = false;
-    function onPlayerStateChange(event) {
-    }
-    function stopVideo() {
-    }
-</script>
-
-
-<script>
-    // Handles clicking timestamp to go to a time in video
-    var annotationsElement = document.querySelector(".annotations");
-    annotationsElement.addEventListener('click', function(e) {
-        var targetElement = e.target;
-        
-        if (targetElement.classList.contains('timestamp')) {
-            var time = parseFloat(targetElement.dataset.timestamp);
-            player.seekTo(time);
-        }
-    });
-</script>
-
-<script>
-    // Handles displaying and hiding the create annotation controls
-    var createAnnotationElement = document.querySelector('.create-annotation-container');
-    var createAnnotationButtonElement = document.querySelector('#create-annotation-btn');
-    var createAnnotationTextarea = document.querySelector('.create-annotation-container textarea');
-    var createAnnotationCancelButton = document.querySelector('.cancel-annotation');
-    var newAnnotationTimestampElement = document.querySelector('.timestamp');
-    var noAnnotationTextElement = document.getElementById('no-annotation-text');
-    
-    createAnnotationButtonElement.addEventListener('click', function(e) {
-        if (createAnnotationElement.classList.contains('hidden')) {
-            // pause video
-            player.pauseVideo();
-            
-            // Set up controls
-            newAnnotationTimestampElement.innerText = getTimestampToDisplay(player.getCurrentTime());
-            
-            // Create annotation controls are hidden, so display them
-            createAnnotationElement.classList.remove('hidden');
-        } else {
-            // Create annotation controls are displayed, so hide them
-            hideCreateAnnotationControls();
-        }
-    });
-    
-    createAnnotationCancelButton.addEventListener('click', function(e) {
-            hideCreateAnnotationControls();
-        }
-    );
-    
-    function hideCreateAnnotationControls() {
-        createAnnotationElement.classList.add('hidden');
-        createAnnotationTextarea.value = '';
-    }
-    
-    function getTimestampToDisplay(timestampNumber) {
-        var totalSeconds = Math.floor(timestampNumber);
-        var minutes = (totalSeconds / 60 < 10) ? "0" + Math.floor(totalSeconds / 60).toString() : Math.floor(totalSeconds / 60).toString()
-        var seconds = (totalSeconds % 60 < 10) ? "0" + (totalSeconds % 60).toString() : (totalSeconds % 60).toString()
-
-        return minutes+ ":" + seconds;
-    }
-</script>
-
-<script>
-    var createAnnotationElement = document.querySelector('.create-annotation-container');
-    createAnnotationElement.addEventListener('click', function(e) {
-        var target = e.target;
-        
-        if (target.classList.contains('submit-annotation')) {
-            // submit annotation
-            var videoId = $('.video-id').val(); 
-            var comment = $('.annotation-text-wrapper textarea').val(); 
-            var url = '/Videos/' + videoId + '?handler=CreateAnnotation';
-            
-            $.ajax({
-                url: url,
-                data: {
-                    comment: comment,
-                    timestamp: player.getCurrentTime(),
-                    videoId: videoId
-                },
-                method: 'POST',
-                dataType: 'html',
-                beforeSend: function(xhr) {
-                    // Set header for security
-                    xhr.setRequestHeader("RequestVerificationToken",
-                        $('input:hidden[name="__RequestVerificationToken"]').val());
-                },
-                success: function(data) {
-                    $('#annotations-body').prepend(data);
-                    hideCreateAnnotationControls();
-                    
-                    if (noAnnotationTextElement !== null) {
-                        // Remove element, since there is now annotations to show
-                        noAnnotationTextElement.parentElement.removeChild(noAnnotationTextElement);
-                    }
-                    
-                    // Continue playing video
-                    player.playVideo();
-                }
-            });
-        }
-    });
-</script>
-
 <link rel="stylesheet" href="~/css/video.css" />
+<script type="text/javascript" src="/js/Videos/View/base.js"></script>
+<script type="text/javascript" src="/js/Videos/View/VideoView.js"></script>
+<script type="text/javascript" src="/js/Videos/Model/VideoModel.js"></script>
+<script type="text/javascript" src="/js/Videos/Controller/VideoController.js"></script>
