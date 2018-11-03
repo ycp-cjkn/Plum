@@ -63,19 +63,7 @@
 
                  @foreach (var annotation in Model.Annotations)
                  {
-                     <div class="annotation-wrapper" data-id="@annotation.Id">
-                         <partial name="_Annotation" model="@annotation"/>
-                         <div class="annotation-replies hidden">
-                             @foreach (var reply in annotation.Replies)
-                             {
-                                 if (reply.AnnotationId == annotation.Id)
-                                 {
-                                     <partial name="_Replies" model="@reply"/>
-                                 }
-                                 annotationsIdsWithReplies.Add(reply.AnnotationId);
-                             }
-                         </div>
-                     </div>
+                     <partial name="_Annotation" model="@annotation"/>
                  }
             </div>
         </div>

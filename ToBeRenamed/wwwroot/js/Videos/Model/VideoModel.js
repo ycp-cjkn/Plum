@@ -33,3 +33,33 @@ Annotation.prototype.submit = function(player) {
         }
     });
 };
+
+function Reply(annotationId, text) {
+    this.annotationId = annotationId;
+    this.text = text;
+}
+
+Reply.prototype.submit = function(annotationElement) {
+    $.ajax({
+        url: apiUrls.submitReply,
+        data: {
+            annotationId: this.annotationId,
+            text: this.text
+        },
+        method: 'POST',
+        dataType: 'html',
+        beforeSend: function(xhr) {
+            // Set header for security
+            xhr.setRequestHeader("RequestVerificationToken",
+                $('input:hidden[name="__RequestVerificationToken"]').val());
+        },
+        success: function(replyHTML) {
+            prependReplyToRepliesBody(annotationElement, replyHTML);
+            removeCreateReplyControls(annotationElement);
+            
+            if(!doesAnnotationElementHaveToggleRepliesButton(annotationElement)) {
+                renderToggleRepliesButton(annotationElement);
+            }
+        }
+    });
+};

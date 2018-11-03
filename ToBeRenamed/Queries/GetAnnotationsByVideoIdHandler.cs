@@ -38,11 +38,22 @@ namespace ToBeRenamed.Queries
                 ORDER BY ann.timestamp DESC";
 
             const string repliesSql = @"
-                SELECT annotation_id, text
-                FROM plum.replies
-                INNER JOIN plum.annotations ON annotations.id = replies.annotation_id
-                WHERE annotations.video_id = @videoId
-                ORDER BY replies.annotation_id ASC, replies.created_at DESC, replies.modified_at DESC";
+                SELECT
+                    rep.annotation_id,
+                    rep.text,
+                    (CASE
+                        WHEN mem.display_name = ''
+                        THEN usr.display_name
+                        ELSE mem.display_name END)
+                FROM plum.replies rep
+                INNER JOIN plum.annotations ann
+                ON ann.id = rep.annotation_id
+                INNER JOIN plum.users usr
+                ON rep.user_id = usr.id
+                INNER JOIN plum.memberships mem
+                ON rep.user_id = mem.user_id
+                WHERE ann.video_id = @videoId
+                ORDER BY rep.annotation_id ASC, rep.created_at DESC, rep.modified_at DESC";
             
             using (var conn = _sqlConnectionFactory.GetSqlConnection())
             {

@@ -5,5 +5,6 @@ namespace ToBeRenamed.Dtos
         public int Id { get; set; }
         public int AnnotationId { get; set; }
         public string Text { get; set; }
+        public string DisplayName { get; set; }
     }
 }

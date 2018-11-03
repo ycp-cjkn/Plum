@@ -26,6 +26,7 @@ function initialize() {
     initializeSubmitAnnotationButtonEventListener();
     initializeShowRepliesButtonEventListener();
     initializeCreateReplyButtonEventListener();
+    initializeSubmitReplyButtonEventListener();
 }
 
 /**
@@ -117,8 +118,24 @@ function initializeCreateReplyButtonEventListener() {
         } else if ((isClickedButtonCreateReplyButton(target) && areCreateReplyControlsDisplayed(target))
                     || isClickedButtonCancelCreateReplyButton(target)) {
             // Remove create reply controls
-            var createReplyControls = annotationElement.querySelector('.' + classNames.createReplyControls);
-            annotationElement.removeChild(createReplyControls);
+            removeCreateReplyControls(annotationElement);
+        }
+    })
+}
+
+function initializeSubmitReplyButtonEventListener() {
+    elements.annotations.addEventListener('click', function(e) {
+        var target = e.target;
+        var annotationElement = target.closest('.' + classNames.annotationWrapper);
+        var annotationId = annotationElement.dataset.id;
+
+        if (isClickedButtonSubmitReplyButton(target)) {
+            var reply = new Reply(
+                annotationId,
+                getCreatedReplyText(annotationElement)
+            );
+
+            reply.submit(annotationElement);
         }
     })
 }

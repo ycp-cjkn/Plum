@@ -41,5 +41,17 @@ namespace ToBeRenamed.Pages.Videos
                 ViewData = new ViewDataDictionary<AnnotationDto>(ViewData, annotation)
             };
         }
+        
+        public async Task<PartialViewResult> OnPostCreateReply(int annotationId, string text)
+        {
+            var userDto = await _mediator.Send(new GetSignedInUserDto(User));
+            var reply = await _mediator.Send(new CreateAnnotationReply(userDto.Id, annotationId, text));
+
+            return new PartialViewResult
+            {
+                ViewName = "_Replies",
+                ViewData = new ViewDataDictionary<ReplyDto>(ViewData, reply)
+            };
+        }
     }
 }

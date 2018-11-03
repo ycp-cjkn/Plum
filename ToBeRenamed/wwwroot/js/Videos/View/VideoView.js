@@ -105,12 +105,21 @@ function hideReplies(annotationElement) {
 }
 
 function changeToggleRepliesTextToShow(annotationElement) {
-    annotationElement.querySelector('.' + classNames.toggleRepliesButton).innerHTML = 'Show Replies<span class="glyphicon glyphicon-menu-down"></span>'
+    annotationElement.querySelector('.' + classNames.toggleRepliesButton).innerHTML = getToggleRepliesShowHTML();
+}
+
+function getToggleRepliesShowHTML() {
+    return 'Show Replies<span class="glyphicon glyphicon-menu-down"></span>';
 }
 
 function changeToggleRepliesTextToHide(annotationElement) {
-    annotationElement.querySelector('.' + classNames.toggleRepliesButton).innerHTML = 'Hide Replies<span class="glyphicon glyphicon-menu-up"></span>'
+    annotationElement.querySelector('.' + classNames.toggleRepliesButton).innerHTML = getToggleRepliesHideHTML();
 }
+
+function getToggleRepliesHideHTML() {
+    return 'Hide Replies<span class="glyphicon glyphicon-menu-up"></span>';
+}
+
 /**
  * Prepends the annotation HTML to the annotations body
  * @param annotationHTML - HTML created by the backend that represents a single annotation
@@ -160,4 +169,38 @@ function areCreateReplyControlsDisplayed(target) {
 
 function doesAnnotationHaveReplies(annotationElement) {
     return annotationElement.getElementsByClassName(classNames.toggleRepliesButton).length > 0;
+}
+
+function isClickedButtonSubmitReplyButton(target) {
+    return target.classList.contains(classNames.submitReply);
+}
+
+function prependReplyToRepliesBody(annotationElement, replyHTML){
+    var repliesBody = annotationElement.querySelector('.' + classNames.annotationReplies);
+    $(repliesBody).prepend(replyHTML);
+}
+
+function removeCreateReplyControls(annotationElement) {
+    var createReplyControls = annotationElement.querySelector('.' + classNames.createReplyControls);
+    annotationElement.removeChild(createReplyControls);
+}
+
+function getCreatedReplyText(annotationElement) {
+    return annotationElement.querySelector('textarea').value;
+}
+
+function doesAnnotationElementHaveToggleRepliesButton(annotationElement) {
+    return annotationElement.getElementsByClassName(classNames.toggleRepliesButton).length > 0;
+}
+
+function renderToggleRepliesButton(annotationElement) {
+    annotationElement.querySelector('.panel-body').insertAdjacentHTML('beforeend', getToggleRepliesDefaultHTML());
+}
+
+function getToggleRepliesDefaultHTML() {
+    return `
+        <div class="toggle-replies-wrapper">
+            <a class="annotation-text toggle-replies" href="#">${getToggleRepliesShowHTML()}</a>
+        </div>
+    `
 }

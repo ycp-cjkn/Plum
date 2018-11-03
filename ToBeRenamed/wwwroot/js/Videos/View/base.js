@@ -16,7 +16,9 @@ var classNames = {
     replyButton: 'reply-button',
     createReplyControls: 'create-reply-container',
     annotationWrapper: 'annotation-wrapper',
-    cancelCreateReplyButton: 'cancel-reply'
+    cancelCreateReplyButton: 'cancel-reply',
+    submitReply: 'submit-reply',
+    annotationReplies: 'annotation-replies'
 };
 
 var selectors = {
@@ -37,5 +39,6 @@ var elements = {
 };
 
 var apiUrls = {
-    submitAnnotation: '/Videos/' + elements.videoId.value + '?handler=CreateAnnotation'
+    submitAnnotation: '/Videos/' + elements.videoId.value + '?handler=CreateAnnotation',
+    submitReply: '/Videos/' + elements.videoId.value + '?handler=CreateReply'
 };
