@@ -24,13 +24,14 @@ function initialize() {
     initializeTimestampClickEventListener();
     initializeCreateAnnotationControlDisplayEventListener();
     initializeSubmitAnnotationButtonEventListener();
+    initializeShowRepliesButtonEventListener();
 }
 
 /**
  * Handles clicking timestamp to go to a time in video
  */
 function initializeTimestampClickEventListener() {
-    var annotationsElement = document.querySelector(".annotations");
+    var annotationsElement = document.querySelector("#annotations");
     annotationsElement.addEventListener('click', function(e) {
         var targetElement = e.target;
 
@@ -86,6 +87,21 @@ function initializeSubmitAnnotationButtonEventListener() {
     });
 }
 
+function initializeShowRepliesButtonEventListener() {
+    elements.annotations.addEventListener('click', function(e) {
+        var target = e.target;
+        
+        if(isClickedButtonShowRepliesButton(target) && areRepliesHidden(target)) {
+            // show replies
+            displayReplies(target);
+            changeToggleRepliesTextToHide(target);
+        } else if (isClickedButtonShowRepliesButton(target) && !areRepliesHidden(target)) {
+            // hide replies
+            hideReplies(target);
+            changeToggleRepliesTextToShow(target);
+        }
+    })
+}
 
 
 

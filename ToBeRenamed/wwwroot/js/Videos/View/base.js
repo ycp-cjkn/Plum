@@ -2,7 +2,8 @@ var idNames = {
     videoUrl: 'video-url',
     createAnnotationButton: 'create-annotation-btn',
     annotationsBody: 'annotations-body',
-    noAnnotationsText: 'no-annotation-text'
+    noAnnotationsText: 'no-annotation-text',
+    annotations: 'annotations'
 };
 
 var classNames = {
@@ -10,7 +11,8 @@ var classNames = {
     cancelAnnotation: 'cancel-annotation',
     newAnnotationTimestamp: 'timestamp',
     submitAnnotation: 'submit-annotation',
-    videoId: 'video-id'
+    videoId: 'video-id',
+    toggleRepliesButton: 'toggle-replies'
 };
 
 var selectors = {
@@ -26,7 +28,8 @@ var elements = {
     createAnnotationTextarea: document.querySelector(selectors.createAnnotationTextarea),
     videoId: document.querySelector('.' + classNames.videoId),
     annotationsBody: document.getElementById(idNames.annotationsBody),
-    noAnnotationsText: document.getElementById(idNames.noAnnotationsText)
+    noAnnotationsText: document.getElementById(idNames.noAnnotationsText),
+    annotations: document.getElementById(idNames.annotations)
 };
 
 var apiUrls = {

@@ -1,4 +1,4 @@
-.annotations {
+#annotations {
     margin-top: 15px;
     max-height: 500px;
     overflow-x: auto;
@@ -6,7 +6,7 @@
     border-left: solid lightgrey thin;
 }
 
-.annotations hr {
+#annotations hr {
     border-top: 1px solid lightgrey;
 }
 
@@ -69,6 +69,6 @@
     margin-left: 20%
 }
 
-.show-replies {
+.toggle-replies-wrapper {
     float: right;
 }

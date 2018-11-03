@@ -81,6 +81,34 @@ function isClickedButtonSubmitAnnotationButton(target) {
     return target.classList.contains(classNames.submitAnnotation);
 }
 
+function isClickedButtonShowRepliesButton(target) {
+    return target.classList.contains(classNames.toggleRepliesButton);
+}
+
+/**
+ * Checks if the replies for the annotation (target) are currently hidden by looking for the hidden class
+ * @param target - The annotation HTML element
+ * @returns {boolean} - True if hidden, false otherwise
+ */
+function areRepliesHidden(target) {
+    return $(target.closest('.annotation-wrapper').lastElementChild).hasClass('hidden');;
+}
+
+function displayReplies(target) {
+    $(target.closest('.annotation-wrapper').lastElementChild).removeClass('hidden');
+}
+
+function hideReplies(target) {
+    $(target.closest('.annotation-wrapper').lastElementChild).addClass('hidden');
+}
+
+function changeToggleRepliesTextToShow(element) {
+    element.innerHTML = 'Show Replies<span class="glyphicon glyphicon-menu-down"></span>'
+}
+
+function changeToggleRepliesTextToHide(element) {
+    element.innerHTML = 'Hide Replies<span class="glyphicon glyphicon-menu-up"></span>'
+}
 /**
  * Prepends the annotation HTML to the annotations body
  * @param annotationHTML - HTML created by the backend that represents a single annotation
