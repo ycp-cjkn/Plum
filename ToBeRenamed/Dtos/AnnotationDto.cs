@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace ToBeRenamed.Dtos
 {
@@ -8,7 +9,7 @@ namespace ToBeRenamed.Dtos
         public string Comment { get; set; }
         public string DisplayName { get; set; }
         public double Timestamp { get; set; }
-
+        
         public string TimestampDisplay
         {
             get

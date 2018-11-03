@@ -10,32 +10,36 @@
     border-top: 1px solid lightgrey;
 }
 
-.annotation-body {
+.annotation-body, .reply-body {
     padding-top: 7px;
 }
 
-.annotation-author-time {
+.annotation-body, .panel {
+    margin-bottom: 5px;
+}
+
+.annotation-author-time, .reply-author {
     font-size: smaller;
     font-style: italic;
     float: right;
     margin-right: 5px;
 }
 
-.annotation-header {
+.annotation-header, .reply-header {
     padding: 2.5px 2.5px;
     margin-bottom: 0px;
 }
 
-.annotation-text {
+.annotation-text, .reply-text {
     font-size: 13px;
 }
 
-.annotation-text-wrapper {
+.annotation-text-wrapper, .reply-text-wrapper {
     margin-left: 0px;
     margin-right: 0px;
 }
 
-.annotation-options {
+.annotation-options, reply-options {
     margin-left: 5px;
 }
 
@@ -57,4 +61,9 @@
     background-color: #337ab7;
     border-color: #2e6da4;
     color: white;
+}
+
+.annotation-replies {
+    width: 80%;
+    margin-left: 20%
 }
