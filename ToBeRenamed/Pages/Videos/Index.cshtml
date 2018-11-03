@@ -2,6 +2,17 @@
 @model IndexModel
 @{
     ViewData["Title"] = Model.Video.Title;
+    var annotationsIdsWithReplies = new List<int>();
+    foreach (var annotation in Model.Annotations) 
+    {
+        foreach (var reply in Model.Replies)
+        {
+            if (reply.AnnotationId == annotation.Id)
+            {
+                annotationsIdsWithReplies.Add(reply.AnnotationId);
+            }
+        }
+    }
 }
 @Html.AntiForgeryToken()
 <input class="video-id" type="hidden" value="@Model.Video.Id"/>
@@ -54,13 +65,14 @@
                  {
                      <div class="annotation-wrapper" data-id="@annotation.Id">
                          <partial name="_Annotation" model="@annotation"/>
-                         <div class="annotation-replies">
-                             @foreach (var reply in Model.Replies)
+                         <div class="annotation-replies hidden">
+                             @foreach (var reply in annotation.Replies)
                              {
                                  if (reply.AnnotationId == annotation.Id)
                                  {
                                      <partial name="_Replies" model="@reply"/>
                                  }
+                                 annotationsIdsWithReplies.Add(reply.AnnotationId);
                              }
                          </div>
                      </div>

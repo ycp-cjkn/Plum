@@ -16,6 +16,7 @@
 
 .annotation-body, .panel {
     margin-bottom: 5px;
+    padding-bottom: 0px;
 }
 
 .annotation-author-time, .reply-author {
@@ -66,4 +67,8 @@
 .annotation-replies {
     width: 80%;
     margin-left: 20%
+}
+
+.show-replies {
+    float: right;
 }

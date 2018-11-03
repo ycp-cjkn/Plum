@@ -9,6 +9,7 @@ namespace ToBeRenamed.Dtos
         public string Comment { get; set; }
         public string DisplayName { get; set; }
         public double Timestamp { get; set; }
+        public List<ReplyDto> Replies { get; set; }
         
         public string TimestampDisplay
         {
