@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 
  */
 function loadIFramePlayerAPI() {
@@ -94,20 +94,22 @@ function areRepliesHidden(target) {
     return $(target.closest('.annotation-wrapper').lastElementChild).hasClass('hidden');;
 }
 
-function displayReplies(target) {
-    $(target.closest('.annotation-wrapper').lastElementChild).removeClass('hidden');
+function displayReplies(annotationElement) {
+    $(annotationElement.lastElementChild).removeClass('hidden');
+    changeToggleRepliesTextToHide(annotationElement);
 }
 
-function hideReplies(target) {
-    $(target.closest('.annotation-wrapper').lastElementChild).addClass('hidden');
+function hideReplies(annotationElement) {
+    $(annotationElement.lastElementChild).addClass('hidden');
+    changeToggleRepliesTextToShow(annotationElement);
 }
 
-function changeToggleRepliesTextToShow(element) {
-    element.innerHTML = 'Show Replies<span class="glyphicon glyphicon-menu-down"></span>'
+function changeToggleRepliesTextToShow(annotationElement) {
+    annotationElement.querySelector('.' + classNames.toggleRepliesButton).innerHTML = 'Show Replies<span class="glyphicon glyphicon-menu-down"></span>'
 }
 
-function changeToggleRepliesTextToHide(element) {
-    element.innerHTML = 'Hide Replies<span class="glyphicon glyphicon-menu-up"></span>'
+function changeToggleRepliesTextToHide(annotationElement) {
+    annotationElement.querySelector('.' + classNames.toggleRepliesButton).innerHTML = 'Hide Replies<span class="glyphicon glyphicon-menu-up"></span>'
 }
 /**
  * Prepends the annotation HTML to the annotations body
@@ -115,4 +117,47 @@ function changeToggleRepliesTextToHide(element) {
  */
 function prependAnnotationToAnnotationsBody(annotationHTML){
     $(elements.annotationsBody).prepend(annotationHTML);
+}
+
+function renderReplyControls(annotationElement) {
+    var html = getCreateReplyControlsHTML();
+    
+    annotationElement.querySelector('.panel').insertAdjacentHTML('afterend', html);
+}
+
+function getCreateReplyControlsHTML() {
+
+    return `<div class="create-reply-container">
+                <div class="panel panel-default">
+                    <div class="panel panel-heading reply-header">
+                        <span class="annotation-options glyphicon glyphicon-option-horizontal" aria-hidden="true"></span>
+                        <!--<span class="annotation-author-time block">-->
+                        <!--</span>-->
+                    </div>
+                    <div class="panel-body reply-body">
+                        <div class="reply-text-wrapper row">
+                            <textarea></textarea>
+                            <button type="button" class="submit-reply btn btn-success btn-sm">Submit</button>
+                            <button type="button" class="cancel-reply btn btn-secondary btn-sm">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+            </div>`;
+}
+
+function isClickedButtonCreateReplyButton(target) {
+    return target.classList.contains('reply-button');
+}
+
+function isClickedButtonCancelCreateReplyButton(target) {
+    return target.classList.contains(classNames.cancelCreateReplyButton);
+}
+
+function areCreateReplyControlsDisplayed(target) {
+    return target.closest('.' + classNames.annotationWrapper).getElementsByClassName(classNames.createReplyControls).length > 0;
+}
+
+function doesAnnotationHaveReplies(annotationElement) {
+    return annotationElement.getElementsByClassName(classNames.toggleRepliesButton).length > 0;
 }

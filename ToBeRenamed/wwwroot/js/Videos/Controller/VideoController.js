@@ -1,4 +1,4 @@
-var state = {
+﻿var state = {
     player: null
 };
 
@@ -25,6 +25,7 @@ function initialize() {
     initializeCreateAnnotationControlDisplayEventListener();
     initializeSubmitAnnotationButtonEventListener();
     initializeShowRepliesButtonEventListener();
+    initializeCreateReplyButtonEventListener();
 }
 
 /**
@@ -90,15 +91,34 @@ function initializeSubmitAnnotationButtonEventListener() {
 function initializeShowRepliesButtonEventListener() {
     elements.annotations.addEventListener('click', function(e) {
         var target = e.target;
+        var annotationElement = target.closest('.' + classNames.annotationWrapper);
         
         if(isClickedButtonShowRepliesButton(target) && areRepliesHidden(target)) {
             // show replies
-            displayReplies(target);
-            changeToggleRepliesTextToHide(target);
+            displayReplies(annotationElement);
         } else if (isClickedButtonShowRepliesButton(target) && !areRepliesHidden(target)) {
             // hide replies
-            hideReplies(target);
-            changeToggleRepliesTextToShow(target);
+            hideReplies(annotationElement);
+        }
+    })
+}
+
+function initializeCreateReplyButtonEventListener() {
+    elements.annotations.addEventListener('click', function(e) {
+        var target = e.target;
+        var annotationElement = target.closest('.' + classNames.annotationWrapper);
+        
+        if(isClickedButtonCreateReplyButton(target) && !areCreateReplyControlsDisplayed(target)) {
+            // Display create reply controls
+            renderReplyControls(annotationElement);
+            if(doesAnnotationHaveReplies(annotationElement)) {
+                displayReplies(annotationElement);
+            }
+        } else if ((isClickedButtonCreateReplyButton(target) && areCreateReplyControlsDisplayed(target))
+                    || isClickedButtonCancelCreateReplyButton(target)) {
+            // Remove create reply controls
+            var createReplyControls = annotationElement.querySelector('.' + classNames.createReplyControls);
+            annotationElement.removeChild(createReplyControls);
         }
     })
 }
