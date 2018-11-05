@@ -3,6 +3,7 @@ using MediatR;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Transactions;
 using ToBeRenamed.Factories;
 
 namespace ToBeRenamed.Commands
@@ -25,9 +26,14 @@ namespace ToBeRenamed.Commands
 
             var rps = request.Privileges.Distinct().Select(p => new { p.Alias, request.RoleId });
 
-            using (var cnn = _sqlConnectionFactory.GetSqlConnection())
+            using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
-                await cnn.ExecuteAsync(sql, rps);
+                using (var cnn = _sqlConnectionFactory.GetSqlConnection())
+                {
+                    await cnn.ExecuteAsync(sql, rps);
+                }
+
+                scope.Complete();
             }
 
             return Unit.Value;
