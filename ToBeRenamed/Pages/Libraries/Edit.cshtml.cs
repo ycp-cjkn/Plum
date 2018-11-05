@@ -7,6 +7,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using ToBeRenamed.Commands;
 using ToBeRenamed.Queries;
 
 namespace ToBeRenamed.Pages.Libraries
@@ -23,11 +24,15 @@ namespace ToBeRenamed.Pages.Libraries
 
         [BindProperty]
         [Required]
-        public string Title { get; set; }
+        public string NewTitle { get; set; }
 
         [BindProperty]
         [Required]
-        public string Description { get; set; }
+        public string NewDesc { get; set; }
+
+        [BindProperty]
+        [Required]
+        public int LibraryId { get; set; }
 
         public async Task<IActionResult> OnPostAsync()
         {
@@ -37,6 +42,9 @@ namespace ToBeRenamed.Pages.Libraries
             }
 
             var userDto = await _mediator.Send(new GetSignedInUserDto(User));
+
+            await _mediator.Send(new UpdateLibraryTitle(LibraryId, NewTitle));
+            await _mediator.Send(new UpdateLibraryDesc(LibraryId, NewDesc));
 
             return RedirectToPage("/Libraries");
         }

@@ -18,16 +18,16 @@ namespace ToBeRenamed.Commands
         public async Task<Unit> Handle(UpdateLibraryDesc request, CancellationToken cancellationToken)
         {
             var newDesc = request.NewDesc;
-            var membershipId = request.MembershipId;
+            var libraryId = request.LibraryId;
 
             const string updateLibraryDescSql = @"
                 UPDATE plum.libraries
                 SET description = @newDesc
-                WHERE id = @membershipId";
+                WHERE id = @libraryId";
 
             using (var cnn = _sqlConnectionFactory.GetSqlConnection())
             {
-                await cnn.QueryAsync(updateLibraryDescSql, new { newDesc, membershipId });
+                await cnn.QueryAsync(updateLibraryDescSql, new { newDesc, libraryId });
             }
 
             return Unit.Value;

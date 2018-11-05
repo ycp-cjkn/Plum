@@ -8,20 +8,22 @@
 
 <form method="POST">
     <div class="form-group">
-        <label asp-for="Title"></label>
-        <input asp-for="Title" class="form-control" />
-        <span asp-validation-for="Title" class="text-danger"></span>
+        <label asp-for="NewTitle"></label>
+        <input asp-for="NewTitle" class="form-control" />
+        <span asp-validation-for="NewTitle" class="text-danger"></span>
+        <button type="submit" class="btn btn-default" asp-page-handler="NewTitle">Update</button>
     </div>
 
     <div class="form-group">
-        <label asp-for="Description"></label>
-        <input asp-for="Description" class="form-control" />
-        <span asp-validation-for="Description" class="text-danger"></span>
+        <label asp-for="NewDesc"></label>
+        <input asp-for="NewDesc" class="form-control" />
+        <span asp-validation-for="NewDesc" class="text-danger"></span>
+        <button type="submit" class="btn btn-default" asp-page-handler="NewDesc">Update</button>
     </div>
 
-    <div class="form-group">
-        <button type="submit" class="btn btn-default">Edit</button>
-    </div>
+    @*<div class="form-group">
+            <button type="submit" class="btn btn-default">Edit</button>
+        </div>*@
 </form>
 
 <div>

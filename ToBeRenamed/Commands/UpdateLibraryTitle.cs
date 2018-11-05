@@ -4,13 +4,13 @@ namespace ToBeRenamed.Commands
 {
     public class UpdateLibraryTitle : IRequest
     {
-        public int MembershipId { get; }
+        public int LibraryId { get; }
         public string NewTitle { get; }
 
 
-        public UpdateLibraryTitle(int membershipId, string newTitle)
+        public UpdateLibraryTitle(int libraryId, string newTitle)
         {
-            MembershipId = membershipId;
+            LibraryId = libraryId;
             NewTitle = newTitle;
         }
     }
