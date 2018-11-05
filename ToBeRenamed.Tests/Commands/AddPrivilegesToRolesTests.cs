@@ -1,7 +1,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using ToBeRenamed.Commands;
-using ToBeRenamed.Dtos;
 using ToBeRenamed.Models;
 using ToBeRenamed.Queries;
 using Xunit;
@@ -11,17 +10,19 @@ namespace ToBeRenamed.Tests.Commands
     public class AddPrivilegesToRolesTests : IClassFixture<DatabaseFixture>
     {
         private readonly DatabaseFixture _fixture;
+        private readonly TestUtility _utility;
 
         public AddPrivilegesToRolesTests(DatabaseFixture fixture)
         {
             _fixture = fixture;
+            _utility = new TestUtility(_fixture);
         }
 
         [Fact]
         [ResetDatabase]
         public async Task Test()
         {
-            var library = await CreateLibraryAsync();
+            var library = await _utility.CreateLibraryAsync();
 
             // Create a new role
             var roleId = await _fixture.SendAsync(new CreateRole("Student", library.Id));
@@ -44,24 +45,6 @@ namespace ToBeRenamed.Tests.Commands
 
             // Check that the set of returned privileges is equal to our privileges
             Assert.True(roles.Single(r => r.Id == roleId).Privileges.SetEquals(privileges.ToHashSet()));
-        }
-
-        private async Task<LibraryDto> CreateLibraryAsync()
-        {
-            const string title = "My Fantastic Library";
-            const string description = "A suitable description.";
-
-            // Create a test user
-            var userRequest = new CreateUserWithoutAuth("Alice");
-            var user = await _fixture.SendAsync(userRequest);
-
-            // Create a library with that user
-            var request = new CreateLibrary(user.Id, title, description);
-            await _fixture.SendAsync(request);
-
-            // Get all libraries created by that user
-            var librariesRequest = new GetLibrariesCreatedByUserId(user.Id);
-            return (await _fixture.SendAsync(librariesRequest)).Single();
         }
     }
 }
