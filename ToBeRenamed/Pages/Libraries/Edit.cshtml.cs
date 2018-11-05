@@ -7,6 +7,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using ToBeRenamed.Queries;
 
 namespace ToBeRenamed.Pages.Libraries
 {
@@ -35,7 +36,7 @@ namespace ToBeRenamed.Pages.Libraries
                 return Page();
             }
 
-
+            var userDto = await _mediator.Send(new GetSignedInUserDto(User));
 
             return RedirectToPage("/Libraries");
         }
