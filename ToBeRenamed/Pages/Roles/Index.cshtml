@@ -1,0 +1,31 @@
+﻿@page "{libraryId:int}"
+@using Models
+@model IndexModel
+@{
+    ViewData["Title"] = "Roles";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="page-header">
+            <h1>Roles <small></small></h1>
+            <p>Edit roles for library</p>
+        </div>        
+    </div>
+</div>
+
+@foreach (var role in Model.Roles)
+{
+    <h3>@role.Title</h3>
+    <form autocomplete="off">
+        @foreach (var privilege in Privilege.All())
+        {
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" value="" @(role.Privileges.Contains(privilege) ? "checked" : "")>
+                    @privilege.Alias
+                </label>
+            </div>
+        }
+    </form>
+}
