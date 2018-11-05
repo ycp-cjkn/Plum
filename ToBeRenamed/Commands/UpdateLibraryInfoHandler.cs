@@ -6,28 +6,29 @@ using ToBeRenamed.Factories;
 
 namespace ToBeRenamed.Commands
 {
-    public class UpdateLibraryTitleHandler : IRequestHandler<UpdateLibraryTitle>
+    public class UpdateLibraryInfoHandler : IRequestHandler<UpdateLibraryInfo>
     {
         private readonly ISqlConnectionFactory _sqlConnectionFactory;
 
-        public UpdateLibraryTitleHandler(ISqlConnectionFactory sqlConnectionFactory)
+        public UpdateLibraryInfoHandler(ISqlConnectionFactory sqlConnectionFactory)
         {
             _sqlConnectionFactory = sqlConnectionFactory;
         }
 
-        public async Task<Unit> Handle(UpdateLibraryTitle request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(UpdateLibraryInfo request, CancellationToken cancellationToken)
         {
             var newTitle = request.NewTitle;
+            var newDescription = request.NewDescription;
             var libraryId = request.LibraryId;
 
-            const string updateLibraryTitleSql = @"
+            const string updateLibraryInfoSql = @"
                 UPDATE plum.libraries
-                SET title = @newTitle
+                SET title = @newTitle, description = @newDescription
                 WHERE id = @libraryId"; 
 
             using (var cnn = _sqlConnectionFactory.GetSqlConnection())
             {
-                await cnn.QueryAsync(updateLibraryTitleSql, new { newTitle, libraryId });
+                await cnn.QueryAsync(updateLibraryInfoSql, new { newTitle, newDescription, libraryId });
             }
 
             return Unit.Value;

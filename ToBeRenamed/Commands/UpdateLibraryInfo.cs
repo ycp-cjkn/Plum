@@ -2,16 +2,18 @@
 
 namespace ToBeRenamed.Commands
 {
-    public class UpdateLibraryTitle : IRequest
+    public class UpdateLibraryInfo : IRequest
     {
         public int LibraryId { get; }
         public string NewTitle { get; }
+        public string NewDescription { get; }
 
-
-        public UpdateLibraryTitle(int libraryId, string newTitle)
+        public UpdateLibraryInfo(int libraryId, string newTitle, string newDescription)
         {
             LibraryId = libraryId;
             NewTitle = newTitle;
+            NewDescription = newDescription;
+
         }
     }
 }

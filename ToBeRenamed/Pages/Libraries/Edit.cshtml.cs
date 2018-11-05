@@ -28,25 +28,17 @@ namespace ToBeRenamed.Pages.Libraries
 
         [BindProperty]
         [Required]
-        public string NewDesc { get; set; }
+        public string NewDescription { get; set; }
 
-        [BindProperty]
-        [Required]
-        public int LibraryId { get; set; }
-
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAsync(int id)
         {
             if (!ModelState.IsValid)
             {
                 return Page();
             }
 
-            var userDto = await _mediator.Send(new GetSignedInUserDto(User));
-
-            await _mediator.Send(new UpdateLibraryTitle(LibraryId, NewTitle));
-            await _mediator.Send(new UpdateLibraryDesc(LibraryId, NewDesc));
-
-            return RedirectToPage("/Libraries");
+            await _mediator.Send(new UpdateLibraryInfo(id, NewTitle, NewDescription));
+            return RedirectToPage("/Libraries/Index");
         }
     }
 }
