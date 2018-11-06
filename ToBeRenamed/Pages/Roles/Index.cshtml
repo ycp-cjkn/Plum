@@ -8,24 +8,69 @@
 <div class="row">
     <div class="col-md-12">
         <div class="page-header">
-            <h1>Roles <small></small></h1>
-            <p>Edit roles for library</p>
-        </div>        
+            <h1>Members and Roles <small></small></h1>
+            <p>Edit members and roles for <b>@Model.Library.Title</b></p>
+        </div>
     </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Members</div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Full Name</th>
+                <th>Display Name</th>
+                <th>Member Since</th>
+                <th>Role</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var member in Model.Members)
+            {
+                <tr>
+                    <th scope="row">@member.Id</th>
+                    <td>@member.DisplayName</td>
+                    <td>@member.DisplayName</td>
+                    <td>-</td>
+                    <td>
+                        <select>
+                            <option value="volvo">Volvo</option>
+                            <option value="saab">Saab</option>
+                            <option value="mercedes">Mercedes</option>
+                            <option value="audi">Audi</option>
+                        </select>
+                    </td>
+                    <td>
+                        <a href="#">Kick</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>
 
 @foreach (var role in Model.Roles)
 {
     <h3>@role.Title</h3>
-    <form autocomplete="off">
+    <form autocomplete="off" method="post">
+        @*<input hidden="" asp-for="@role.Id" />*@
+        <input type="hidden" name="roleId" value="@role.Id" />
         @foreach (var privilege in Privilege.All())
         {
             <div class="checkbox">
                 <label>
-                    <input type="checkbox" value="" @(role.Privileges.Contains(privilege) ? "checked" : "")>
+                    <input type="checkbox"
+                           name="Privileges"
+                           value="@privilege.Alias"
+                           @(role.Privileges.Contains(privilege) ? "checked" : "")>
+
                     @privilege.Alias
                 </label>
             </div>
         }
+        <button class="btn" type="submit">Update</button>
     </form>
 }
