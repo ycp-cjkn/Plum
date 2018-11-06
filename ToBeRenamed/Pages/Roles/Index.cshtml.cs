@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using ToBeRenamed.Commands;
 using ToBeRenamed.Dtos;
@@ -26,18 +27,37 @@ namespace ToBeRenamed.Pages.Roles
         public LibraryDto Library;
         public IEnumerable<Role> Roles;
 
-        public async Task OnGetAsync(int libraryId)
+        [BindProperty(SupportsGet = true)]
+        public int LibraryId { get; set; }
+
+        [Required]
+        [MaxLength(16)]
+        [BindProperty]
+        public string NewRoleTitle { get; set; }
+
+        public async Task OnGetAsync()
         {
-            Members = await _mediator.Send(new GetMembersOfLibrary(libraryId));
-            Library = await _mediator.Send(new GetLibraryDtoById(libraryId));
-            Roles = await _mediator.Send(new GetRolesForLibrary(libraryId));
+            Members = await _mediator.Send(new GetMembersOfLibrary(LibraryId));
+            Library = await _mediator.Send(new GetLibraryDtoById(LibraryId));
+            Roles = await _mediator.Send(new GetRolesForLibrary(LibraryId));
         }
 
-        public async Task<IActionResult> OnPostAsync(int roleId, string[] privileges)
+        public async Task<IActionResult> OnPostUpdatePrivilegesAsync(int roleId, string[] privileges)
         {
             var set = _mapper.Map<ISet<Privilege>>(privileges);
-
             await _mediator.Send(new ReplacePrivilegesOfRole(roleId, set));
+
+            return RedirectToPage();
+        }
+
+        public async Task<IActionResult> OnPostCreateRoleAsync()
+        {
+            if (ModelState.IsValid)
+            {
+                // TODO: Should only be able to create a role if the user has the
+                // privilege and is a member of the Library
+                await _mediator.Send(new CreateRole(NewRoleTitle, LibraryId));
+            }
 
             return RedirectToPage();
         }

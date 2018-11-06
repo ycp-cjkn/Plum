@@ -9,7 +9,7 @@
     <div class="col-md-12">
         <div class="page-header">
             <h1>Members and Roles <small></small></h1>
-            <p>Edit members and roles for <b>@Model.Library.Title</b></p>
+            <p>Manage members and roles for <b>@Model.Library.Title</b></p>
         </div>
     </div>
 </div>
@@ -38,11 +38,11 @@
                             <td>@member.DisplayName</td>
                             <td>@member.CreatedAt</td>
                             <td>
-                                <select>
-                                    <option value="volvo">Volvo</option>
-                                    <option value="saab">Saab</option>
-                                    <option value="mercedes">Mercedes</option>
-                                    <option value="audi">Audi</option>
+                                <select @*class="form-control"*@>
+                                    @foreach (var role in Model.Roles)
+                                    {
+                                        <option value="@role.Id">@role.Title</option>
+                                    }
                                 </select>
                             </td>
                             <td>
@@ -72,7 +72,7 @@
                 </div>
                 <form autocomplete="off" method="post">
                     <div class="panel-body">
-                        <input type="hidden" name="roleId" value="@role.Id"/>
+                        <input type="hidden" name="roleId" value="@role.Id" />
                         @foreach (var privilege in Privilege.All())
                         {
                             <div class="checkbox">
@@ -88,7 +88,7 @@
                         }
                     </div>
                     <div class="panel-footer">
-                        <button class="btn btn-primary" type="submit">Update</button>
+                        <button class="btn btn-primary" type="submit" asp-page-handler="UpdatePrivileges">Update</button>
                     </div>
                 </form>
             </div>
@@ -101,12 +101,17 @@
                     Create a new role
                 </h3>
             </div>
-            <form autocomplete="off" method="post">
+            <form class="form-inline" autocomplete="off" method="post">
                 <div class="panel-body">
-                    <input type="text"/>
+                    <div class="form-group">
+                        <label asp-for="NewRoleTitle">Name</label>
+                        <div>
+                            <input class="form-control" asp-for="NewRoleTitle" />
+                        </div>
+                    </div>
                 </div>
                 <div class="panel-footer">
-                    <button class="btn btn-primary" type="submit">Create</button>
+                    <button class="btn btn-primary" type="submit" asp-page-handler="CreateRole">Create</button>
                 </div>
             </form>
         </div>
