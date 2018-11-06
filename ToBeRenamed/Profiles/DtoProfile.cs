@@ -14,7 +14,7 @@ namespace ToBeRenamed.Profiles
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.First().Id))
                 .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.First().Title))
                 .ForMember(dest => dest.Privileges, opt => opt
-                    .MapFrom(src => src.Select(r => Privilege.All().Single(p => p.Alias == r.PrivilegeAlias))
+                    .MapFrom(src => src.Select(r => Privilege.All().SingleOrDefault(p => p.Alias == r.PrivilegeAlias))
                     .ToHashSet()));
 
             CreateMap<IEnumerable<RoleDto>, IEnumerable<Role>>()

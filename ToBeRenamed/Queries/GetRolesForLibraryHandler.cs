@@ -26,7 +26,7 @@ namespace ToBeRenamed.Queries
             const string sql = @"
                 SELECT rol.id, rol.title, rpv.privilege_alias
                 FROM plum.roles rol
-                INNER JOIN plum.role_privileges rpv
+                LEFT JOIN plum.role_privileges rpv
                 ON rpv.role_id = rol.id
                 WHERE
 	                library_id = @LibraryId
