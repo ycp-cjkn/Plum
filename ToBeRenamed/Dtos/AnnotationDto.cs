@@ -10,6 +10,7 @@ namespace ToBeRenamed.Dtos
         public string DisplayName { get; set; }
         public double Timestamp { get; set; }
         public List<ReplyDto> Replies { get; set; }
+        public int UserId { get; set; }
         
         public string TimestampDisplay
         {

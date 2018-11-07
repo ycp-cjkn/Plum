@@ -25,6 +25,7 @@ namespace ToBeRenamed.Queries
                     ann.id,
                     ann.comment,
                     ann.timestamp,
+                    ann.user_id,
                     (CASE
                         WHEN mem.display_name = ''
                         THEN usr.display_name
