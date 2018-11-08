@@ -204,3 +204,42 @@ function getToggleRepliesDefaultHTML() {
         </div>
     `
 }
+
+/**
+ * Using all of the annotation elements on the page, get the user id's and display names of
+ * the users who posted those annotations and return them
+ * @param annotationElements - An array of the annotation elements on the page
+ * @return {object} - An object of user id's mapped to user display names. Ex: {1: 'Kyle Jones'}
+ */
+function getUserIdsAndNames(annotationElements) {
+    var userIdsAndNames = {};
+    
+    for(var i = 0; i < annotationElements.length; i++) {
+        var annotationElement = annotationElements.item(i);
+
+        addUserIdAndNameFromElement(annotationElement, userIdsAndNames);
+    }
+    
+    return userIdsAndNames;
+}
+
+/**
+ * Add the user id and display name of an individual annotation element to the userIdsAndNames param
+ * @param annotationElement - The annotation where the user id and display name will come from
+ * @param userIdsAndNames - A reference to an object where user ids are mapped to display names
+ */
+function addUserIdAndNameFromElement(annotationElement, userIdsAndNames) {
+    var userId = annotationElement.dataset['authorId'];
+
+    if(userIdsAndNames[userId] === undefined) {
+        userIdsAndNames[userId] = annotationElement.querySelector(selectors.displayName).innerText;
+    }
+}
+
+/**
+ * Gets the element where the annotations are stored
+ * @returns {HTMLElement}
+ */
+function getAnnotationElements() {
+    return document.getElementById(idNames.annotationsBody);
+}

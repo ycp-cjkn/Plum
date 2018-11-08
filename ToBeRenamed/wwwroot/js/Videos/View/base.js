@@ -18,11 +18,13 @@ var classNames = {
     annotationWrapper: 'annotation-wrapper',
     cancelCreateReplyButton: 'cancel-reply',
     submitReply: 'submit-reply',
-    annotationReplies: 'annotation-replies'
+    annotationReplies: 'annotation-replies',
+    displayName: 'display-name'
 };
 
 var selectors = {
-    createAnnotationTextarea: '.create-annotation-container textarea'
+    createAnnotationTextarea: '.create-annotation-container textarea',
+    displayName: `.${classNames.displayName}`
 };
 
 var elements = {

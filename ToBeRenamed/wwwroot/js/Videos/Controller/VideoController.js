@@ -1,5 +1,7 @@
 ﻿var state = {
-    player: null
+    player: null,
+    userIdsAndNames: {},
+    annotationElements: {}
 };
 
 // Initialize Youtube API
@@ -17,16 +19,62 @@ function onYouTubeIframeAPIReady() {
         }
     });
 }
+$(document).ready(function(){
+    initialize();
+});
 
-initialize();
 
 function initialize() {
+    // Initialize state
+    initalizeAnnotationElements();
+    initializeUserIdsAndNames();
+    
+    // Initialize event listeners
     initializeTimestampClickEventListener();
     initializeCreateAnnotationControlDisplayEventListener();
     initializeSubmitAnnotationButtonEventListener();
     initializeShowRepliesButtonEventListener();
     initializeCreateReplyButtonEventListener();
     initializeSubmitReplyButtonEventListener();
+
+    // Initialize mutation observers
+    initializeAnnotationElementsMutationObserver();
+}
+
+/**
+ * Initializes the mutation observer for the annotation elements.
+ * Helpful to catch any changes to the list of annotations
+ */
+function initializeAnnotationElementsMutationObserver() {
+    var config = { childList: true };
+    var callback = function(mutationsList, observer) {
+        for(var mutation of mutationsList) {
+            if(mutation.type === 'childList') {
+                if(mutation.addedNodes.length !== 0) {
+                    // A new annotation was added, make sure name exists in names to filter by
+                    addUserIdAndNameFromElement(mutation.addedNodes[0], state.userIdsAndNames);
+                }
+            }
+        }
+    };
+    
+    var observer = new MutationObserver(callback);
+    observer.observe(state.annotationElements, config);
+}
+
+/**
+ * Initializes the state variable that contains the user's id mapped to the user's display name
+ */
+function initializeUserIdsAndNames() {
+    state.userIdsAndNames = getUserIdsAndNames(state.annotationElements.children);
+}
+
+/**
+ * Initializes the state variable that contains the annotation elements.
+ * This is helpful since the variable gets automatically updated as the DOM changes.
+ */
+function initalizeAnnotationElements() {
+    state.annotationElements = getAnnotationElements();
 }
 
 /**
