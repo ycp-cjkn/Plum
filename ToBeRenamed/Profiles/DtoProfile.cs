@@ -19,6 +19,9 @@ namespace ToBeRenamed.Profiles
 
             CreateMap<IEnumerable<RoleDto>, IEnumerable<Role>>()
                 .ConvertUsing((src, dst, ctx) => src.GroupBy(r => r.Id).Select(ctx.Mapper.Map<Role>));
+
+            CreateMap<MemberDto, Member>()
+                .ForMember(dest => dest.Role, opt => opt.Ignore());
         }
     }
 }
