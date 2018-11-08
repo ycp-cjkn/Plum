@@ -77,3 +77,8 @@
     width: 80%;
     margin-left: 20%
 }
+
+#filter-annotations {
+    float: right;
+    margin-right: 5px;
+}
