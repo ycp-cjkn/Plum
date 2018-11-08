@@ -23,9 +23,10 @@ Annotation.prototype.submit = function(player) {
             prependAnnotationToAnnotationsBody(annotationHTML);
             hideCreateAnnotationControls();
 
-            if (elements.noAnnotationsText !== null) {
+            if (state.hasAnnotations === false) {
                 // Remove element, since there is now annotations to show
-                elements.noAnnotationsText.parentElement.removeChild(noAnnotationTextElement);
+                elements.noAnnotationsText.parentElement.removeChild(elements.noAnnotationsText);
+                state.hasAnnotations = true;
             }
 
             // Continue playing video

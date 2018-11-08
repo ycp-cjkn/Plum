@@ -1,7 +1,8 @@
 ﻿var state = {
     player: null,
     userIdsAndNames: {},
-    annotationElements: {}
+    annotationElements: {},
+    hasAnnotations: null
 };
 
 // Initialize Youtube API
@@ -28,6 +29,7 @@ function initialize() {
     // Initialize state
     initalizeAnnotationElements();
     initializeUserIdsAndNames();
+    initializeHasAnnotations();
     
     // Initialize event listeners
     initializeTimestampClickEventListener();
@@ -39,6 +41,10 @@ function initialize() {
 
     // Initialize mutation observers
     initializeAnnotationElementsMutationObserver();
+}
+
+function initializeHasAnnotations() {
+    state.hasAnnotations = doesVideoHaveAnnotations();
 }
 
 /**
@@ -66,7 +72,10 @@ function initializeAnnotationElementsMutationObserver() {
  * Initializes the state variable that contains the user's id mapped to the user's display name
  */
 function initializeUserIdsAndNames() {
-    state.userIdsAndNames = getUserIdsAndNames(state.annotationElements.children);
+    if(state.annotationElements.children.length !== 0) {
+        // Only need to initialize if there are annotations
+        state.userIdsAndNames = getUserIdsAndNames(state.annotationElements.children);
+    }
 }
 
 /**

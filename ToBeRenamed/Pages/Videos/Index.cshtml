@@ -33,10 +33,15 @@
             <div class="annotations-header">
                 <span id="annotations-header-text">Annotations</span>
                 <button type="button" class="btn btn-primary" id="create-annotation-btn" style="float: right">Create</button>
-                <a id="filter-annotations" class="btn btn-default" aria-hidden="true">
-                    <span class="glyphicon glyphicon-filter"></span>
-                    <span class="glyphicon glyphicon-menu-down"></span>
-                </a>
+                <div class="dropdown" style="float: right;">
+                    <button id="filter-annotations" type="button" class="btn btn-default" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Filter
+                        <span class="caret"></span>
+                    </button>
+                    <ul id="filter-annotations-list" class="dropdown-menu" aria-labelledby="filter-annotations">
+                        
+                    </ul>
+                </div>
             </div>
             <div class="create-annotation-container hidden">
                 <div class="panel panel-default annotation-wrapper">
@@ -57,18 +62,17 @@
                 </div>
                 <hr>
             </div>
+             @if (!Model.Annotations.Any())
+             {
+                 <div id="no-annotation-text" class="text-center">
+                     <p>No annotations to show</p>
+                 </div>
+             }
             <div id="annotations-body">
-                @if (!Model.Annotations.Any())
+                @foreach (var annotation in Model.Annotations)
                 {
-                    <div id="no-annotation-text" class="text-center">
-                        <p>No annotations to show</p>
-                    </div>
+                    <partial name="_Annotation" model="@annotation"/>
                 }
-
-                 @foreach (var annotation in Model.Annotations)
-                 {
-                     <partial name="_Annotation" model="@annotation"/>
-                 }
             </div>
         </div>
     </div>

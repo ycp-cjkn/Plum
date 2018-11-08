@@ -3,7 +3,8 @@
     createAnnotationButton: 'create-annotation-btn',
     annotationsBody: 'annotations-body',
     noAnnotationsText: 'no-annotation-text',
-    annotations: 'annotations'
+    annotations: 'annotations',
+    filterAnnotationsList: 'filter-annotations-list'
 };
 
 var classNames = {
@@ -24,7 +25,9 @@ var classNames = {
 
 var selectors = {
     createAnnotationTextarea: '.create-annotation-container textarea',
-    displayName: `.${classNames.displayName}`
+    displayName: `.${classNames.displayName}`,
+    filterAnnotationsList: `#${idNames.filterAnnotationsList}`,
+    noAnnotationsText: `#${idNames.noAnnotationsText}`
 };
 
 var elements = {

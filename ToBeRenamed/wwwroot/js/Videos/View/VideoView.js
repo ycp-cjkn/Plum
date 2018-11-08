@@ -233,6 +233,7 @@ function addUserIdAndNameFromElement(annotationElement, userIdsAndNames) {
 
     if(userIdsAndNames[userId] === undefined) {
         userIdsAndNames[userId] = annotationElement.querySelector(selectors.displayName).innerText;
+        insertIntoFilterByUserDropdown(userId, userIdsAndNames[userId]);
     }
 }
 
@@ -242,4 +243,23 @@ function addUserIdAndNameFromElement(annotationElement, userIdsAndNames) {
  */
 function getAnnotationElements() {
     return document.getElementById(idNames.annotationsBody);
+}
+
+function insertIntoFilterByUserDropdown(userId, displayName) {
+    var dropdown = elements.annotations.querySelector(selectors.filterAnnotationsList);
+    
+    var listElement = document.createElement('li');
+    var listButton = document.createElement('a');
+    var text = document.createTextNode(displayName);
+    listButton.appendChild(text);
+    listElement.appendChild(listButton);
+    
+    listButton.dataset['authorId'] = userId;
+    listButton.href = '#';
+    
+    dropdown.appendChild(listElement);
+}
+
+function doesVideoHaveAnnotations() {
+    return elements.annotations.querySelector(selectors.noAnnotationsText) === null;
 }
