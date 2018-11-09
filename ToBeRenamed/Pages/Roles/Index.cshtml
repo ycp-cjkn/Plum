@@ -38,10 +38,17 @@
                             <td>@member.DisplayName</td>
                             <td>@member.CreatedAt</td>
                             <td>
-                                <select @*class="form-control"*@>
+                                <select @*class="form-control" *@>
                                     @foreach (var role in Model.Roles)
                                     {
-                                        <option value="@role.Id">@role.Title</option>
+                                        if (member.Role.Id == role.Id)
+                                        {
+                                            <option value="@role.Id" selected>@role.Title</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@role.Id">@role.Title</option>
+                                        }
                                     }
                                 </select>
                             </td>
@@ -62,13 +69,7 @@
         <div class="col-md-4">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h3 class="panel-title">
-                        @role.Title
-                        @*<input name="roleId" type="text" value="@role.Title" />*@
-                        <a href="#">
-                            <span class="glyphicon glyphicon-remove pull-right" aria-hidden="true"></span>
-                        </a>
-                    </h3>
+                    <h3 class="panel-title">@role.Title</h3>
                 </div>
                 <form autocomplete="off" method="post">
                     <div class="panel-body">
@@ -89,6 +90,10 @@
                     </div>
                     <div class="panel-footer">
                         <button class="btn btn-primary" type="submit" asp-page-handler="UpdatePrivileges">Update</button>
+                        <form method="post">
+                            <input hidden="" name="roleId" value="@role.Id" />
+                            <button class="btn btn-default" type="submit" asp-page-handler="DeleteRole">Delete</button>
+                        </form>
                     </div>
                 </form>
             </div>

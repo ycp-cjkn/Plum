@@ -42,6 +42,12 @@ namespace ToBeRenamed.Pages.Roles
             Roles = await _mediator.Send(new GetRolesForLibrary(LibraryId));
         }
 
+        public async Task<IActionResult> OnPostDeleteRoleAsync(int roleId)
+        {
+            await _mediator.Send(new DeleteRoleById(roleId));
+            return RedirectToPage();
+        }
+
         public async Task<IActionResult> OnPostUpdatePrivilegesAsync(int roleId, string[] privileges)
         {
             var set = _mapper.Map<ISet<Privilege>>(privileges);
