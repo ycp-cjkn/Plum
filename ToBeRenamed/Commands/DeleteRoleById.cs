@@ -4,11 +4,11 @@ namespace ToBeRenamed.Commands
 {
     public class DeleteRoleById : IRequest
     {
-        public int Id { get; }
+        public int RoleId { get; }
 
-        public DeleteRoleById(int id)
+        public DeleteRoleById(int roleId)
         {
-            Id = id;
+            RoleId = roleId;
         }
     }
 }

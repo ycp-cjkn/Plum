@@ -28,13 +28,9 @@ namespace ToBeRenamed.Pages.Roles
         public LibraryDto Library;
         public IEnumerable<Role> Roles;
 
+        [Required]
         [BindProperty(SupportsGet = true)]
         public int LibraryId { get; set; }
-
-        [Required]
-        [MaxLength(16)]
-        [BindProperty]
-        public string NewRoleTitle { get; set; }
 
         public async Task OnGetAsync()
         {
@@ -43,14 +39,35 @@ namespace ToBeRenamed.Pages.Roles
             Roles = await _mediator.Send(new GetRolesForLibrary(LibraryId));
         }
 
-        public async Task<IActionResult> OnPostDeleteRoleAsync(int roleId)
+        public async Task<IActionResult> OnPostCreateRoleAsync(CreateRoleRequest request)
         {
-            await _mediator.Send(new DeleteRoleById(roleId));
+            if (ModelState.IsValid)
+            {
+                // TODO: Should only be able to create a role if the user has the
+                // privilege and is a member of the Library
+                await _mediator.Send(new CreateRole(request.Title, LibraryId));
+            }
+
+            return RedirectToPage();
+        }
+
+        public async Task<IActionResult> OnPostDeleteRoleAsync(DeleteRoleRequest request)
+        {
+            if (ModelState.IsValid)
+            {
+                await _mediator.Send(_mapper.Map<DeleteRoleById>(request));
+            }
+
             return RedirectToPage();
         }
 
         public async Task<IActionResult> OnPostUpdateMembersAsync(UpdateMemberRequest[] requests)
         {
+            if (!ModelState.IsValid)
+            {
+                return RedirectToPage();
+            }
+
             var updates = _mapper.Map<IEnumerable<UpdateRoleOfMember>>(requests);
 
             var tasks = updates.Select(u => _mediator.Send(u));
@@ -60,30 +77,47 @@ namespace ToBeRenamed.Pages.Roles
             return RedirectToPage();
         }
 
-        public async Task<IActionResult> OnPostUpdatePrivilegesAsync(int roleId, string[] privileges)
+        public async Task<IActionResult> OnPostUpdateRoleAsync(UpdateRoleRequest request)
         {
-            var set = _mapper.Map<ISet<Privilege>>(privileges);
-            await _mediator.Send(new ReplacePrivilegesOfRole(roleId, set));
+            if (!ModelState.IsValid)
+            {
+                return RedirectToPage();
+            }
+
+            var set = _mapper.Map<ISet<Privilege>>(request.Privileges);
+            await _mediator.Send(new ReplacePrivilegesOfRole(request.RoleId, set));
 
             return RedirectToPage();
         }
 
-        public async Task<IActionResult> OnPostCreateRoleAsync()
+        public class CreateRoleRequest
         {
-            if (ModelState.IsValid)
-            {
-                // TODO: Should only be able to create a role if the user has the
-                // privilege and is a member of the Library
-                await _mediator.Send(new CreateRole(NewRoleTitle, LibraryId));
-            }
+            [Required]
+            [MaxLength(16)]
+            public string Title { get; set; }
+        }
 
-            return RedirectToPage();
+        public class DeleteRoleRequest
+        {
+            [Required]
+            public int RoleId { get; set; }
         }
 
         public class UpdateMemberRequest
         {
+            [Required]
             public int MemberId { get; set; }
+
+            [Required]
             public int RoleId { get; set; }
+        }
+
+        public class UpdateRoleRequest
+        {
+            [Required]
+            public int RoleId { get; set; }
+
+            public IEnumerable<string> Privileges { get; set; }
         }
     }
 }

@@ -96,7 +96,7 @@
                         }
                     </div>
                     <div class="panel-footer">
-                        <button class="btn btn-primary" type="submit" asp-page-handler="UpdatePrivileges">Update</button>
+                        <button class="btn btn-primary" type="submit" asp-page-handler="UpdateRole">Update</button>
                         <form method="post">
                             <input hidden="" name="roleId" value="@role.Id" />
                             <button class="btn btn-default" type="submit" asp-page-handler="DeleteRole">Delete</button>
@@ -116,9 +116,9 @@
             <form class="form-inline" autocomplete="off" method="post">
                 <div class="panel-body">
                     <div class="form-group">
-                        <label asp-for="NewRoleTitle">Name</label>
+                        <label>Name</label>
                         <div>
-                            <input class="form-control" asp-for="NewRoleTitle" />
+                            <input class="form-control" name="Title"/>
                         </div>
                     </div>
                 </div>

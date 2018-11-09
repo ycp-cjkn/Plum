@@ -17,7 +17,7 @@ namespace ToBeRenamed.Commands
 
         public async Task<Unit> Handle(DeleteRoleById request, CancellationToken cancellationToken)
         {
-            const string sql = @"UPDATE plum.roles SET deleted_at = NOW() WHERE id = @Id";
+            const string sql = @"UPDATE plum.roles SET deleted_at = NOW() WHERE id = @RoleId";
 
             using (var cnn = _sqlConnectionFactory.GetSqlConnection())
             {
