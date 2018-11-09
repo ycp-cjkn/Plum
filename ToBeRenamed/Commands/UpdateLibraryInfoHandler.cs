@@ -17,9 +17,9 @@ namespace ToBeRenamed.Commands
 
         public async Task<Unit> Handle(UpdateLibraryInfo request, CancellationToken cancellationToken)
         {
+            var libraryId = request.LibraryId;
             var newTitle = request.NewTitle;
             var newDescription = request.NewDescription;
-            var libraryId = request.LibraryId;
 
             const string updateLibraryInfoSql = @"
                 UPDATE plum.libraries
@@ -28,7 +28,7 @@ namespace ToBeRenamed.Commands
 
             using (var cnn = _sqlConnectionFactory.GetSqlConnection())
             {
-                await cnn.QueryAsync(updateLibraryInfoSql, new { newTitle, newDescription, libraryId });
+                await cnn.QueryAsync(updateLibraryInfoSql, new {libraryId, newTitle, newDescription});
             }
 
             return Unit.Value;

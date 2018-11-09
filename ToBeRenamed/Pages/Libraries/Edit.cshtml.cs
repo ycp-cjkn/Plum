@@ -38,6 +38,7 @@ namespace ToBeRenamed.Pages.Libraries
             }
 
             await _mediator.Send(new UpdateLibraryInfo(id, NewTitle, NewDescription));
+
             return RedirectToPage("/Libraries/Index");
         }
     }
