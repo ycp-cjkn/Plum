@@ -15,7 +15,7 @@
 <div class="row">
     <div class="col-md-12">
         <div class="page-header">
-            <h1>@Model.Library.Title <small>subtitle</small></h1>
+            <h1>@Model.Library.Title</h1>
         </div>
     </div>
 </div>
@@ -26,7 +26,9 @@
             <div class="panel-heading">
                 <h3 class="panel-title">
                     Members
-                    <a href="#"><span class="glyphicon glyphicon-plus-sign pull-right" aria-hidden="true"></span></a>
+                    <a asp-page="/Roles/Index" asp-route-libraryId="@Model.Library.Id">
+                        <span class="glyphicon glyphicon-edit pull-right" aria-hidden="true"></span>
+                    </a>
                 </h3>
             </div>
             <div class="panel-body">
@@ -39,7 +41,8 @@
                             {
                                 <span class="badge">creator</span>
                             }
-                            @member.DisplayName
+
+                            @(string.IsNullOrWhiteSpace(member.DisplayName) ? member.FullName : member.DisplayName)
                         </a>
                     }
                 </div>
@@ -87,7 +90,7 @@
                     <a asp-page="/Videos/CreateVideo" asp-route-id="@Model.Library.Id">
                         <span class="glyphicon glyphicon-plus-sign pull-right" aria-hidden="true"></span>
                     </a>
-                </h3>    
+                </h3>
             </div>
             <div class="panel-body">
                 <div class="row">
