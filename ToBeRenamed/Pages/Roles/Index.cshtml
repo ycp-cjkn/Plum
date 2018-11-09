@@ -18,47 +18,54 @@
     <div class="col-md-12">
         <div class="panel panel-default">
             <div class="panel-heading">Members</div>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Full Name</th>
-                        <th>Display Name</th>
-                        <th>Member Since</th>
-                        <th>Role</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var member in Model.Members)
-                    {
+            <form method="post">
+                <table class="table">
+                    <thead>
                         <tr>
-                            <th scope="row">@member.Id</th>
-                            <td>@member.FullName</td>
-                            <td>@member.DisplayName</td>
-                            <td>@member.CreatedAt</td>
-                            <td>
-                                <select @*class="form-control" *@>
-                                    @foreach (var role in Model.Roles)
-                                    {
-                                        if (member.Role.Id == role.Id)
-                                        {
-                                            <option value="@role.Id" selected>@role.Title</option>
-                                        }
-                                        else
-                                        {
-                                            <option value="@role.Id">@role.Title</option>
-                                        }
-                                    }
-                                </select>
-                            </td>
-                            <td>
-                                <a href="#">Remove</a>
-                            </td>
+                            <th>#</th>
+                            <th>Full Name</th>
+                            <th>Display Name</th>
+                            <th>Member Since</th>
+                            <th>Role</th>
+                            <th></th>
                         </tr>
-                    }
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach (var member in Model.Members)
+                        {
+                            <input type="hidden" name="Requests.Index" value="@member.Id" />
+                            <input type="hidden" name="Requests[@member.Id].MemberId" value="@member.Id" />
+                            <tr>
+                                <th scope="row">@member.Id</th>
+                                <td>@member.FullName</td>
+                                <td>@member.DisplayName</td>
+                                <td>@member.CreatedAt</td>
+                                <td>
+                                    <select name="Requests[@member.Id].RoleId">
+                                        @foreach (var role in Model.Roles)
+                                        {
+                                            if (member.Role.Id == role.Id)
+                                            {
+                                                <option value="@role.Id" selected>@role.Title</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@role.Id">@role.Title</option>
+                                            }
+                                        }
+                                    </select>
+                                </td>
+                                <td>
+                                    <a href="#">Remove</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <div class="panel-footer">
+                    <button class="btn btn-primary" type="submit" asp-page-handler="UpdateMembers">Update</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

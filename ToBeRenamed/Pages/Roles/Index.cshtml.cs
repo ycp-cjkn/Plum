@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Threading.Tasks;
 using ToBeRenamed.Commands;
 using ToBeRenamed.Dtos;
@@ -48,6 +49,17 @@ namespace ToBeRenamed.Pages.Roles
             return RedirectToPage();
         }
 
+        public async Task<IActionResult> OnPostUpdateMembersAsync(UpdateMemberRequest[] requests)
+        {
+            var updates = _mapper.Map<IEnumerable<UpdateRoleOfMember>>(requests);
+
+            var tasks = updates.Select(u => _mediator.Send(u));
+
+            await Task.WhenAll(tasks);
+
+            return RedirectToPage();
+        }
+
         public async Task<IActionResult> OnPostUpdatePrivilegesAsync(int roleId, string[] privileges)
         {
             var set = _mapper.Map<ISet<Privilege>>(privileges);
@@ -66,6 +78,12 @@ namespace ToBeRenamed.Pages.Roles
             }
 
             return RedirectToPage();
+        }
+
+        public class UpdateMemberRequest
+        {
+            public int MemberId { get; set; }
+            public int RoleId { get; set; }
         }
     }
 }
