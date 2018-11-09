@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ToBeRenamed.Commands;
+using ToBeRenamed.Dtos;
 using ToBeRenamed.Queries;
 
 namespace ToBeRenamed.Pages.Libraries
@@ -22,6 +23,8 @@ namespace ToBeRenamed.Pages.Libraries
             _mediator = mediator;
         }
 
+        public LibraryDto Library { get; set; }
+
         [BindProperty]
         [Required]
         public string NewTitle { get; set; }
@@ -29,6 +32,12 @@ namespace ToBeRenamed.Pages.Libraries
         [BindProperty]
         [Required]
         public string NewDescription { get; set; }
+
+        public async Task<IActionResult> OnGetAsync(int id)
+        {
+            Library = await _mediator.Send(new GetLibraryDtoById(id));
+            return Page();
+        }
 
         public async Task<IActionResult> OnPostAsync(int id)
         {

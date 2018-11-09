@@ -9,13 +9,13 @@
 <form method="POST">
     <div class="form-group">
         <h3 class="panel-title"><b>New Title</b></h3>
-        <input asp-for="NewTitle" class="form-control" />
+        <input asp-for="NewTitle" class="form-control" value="@Model.Library.Title"/>
         <span asp-validation-for="NewTitle" class="text-danger"></span>
     </div>
 
     <div class="form-group">
         <h3 class="panel-title"><b>New Description</b></h3>
-        <input asp-for="NewDescription" class="form-control" />
+        <input asp-for="NewDescription" class="form-control" value="@Model.Library.Description" />
         <span asp-validation-for="NewDescription" class="text-danger"></span>
     </div>
 
