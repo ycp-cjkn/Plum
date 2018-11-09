@@ -1,0 +1,2 @@
+ALTER TABLE plum.memberships
+  ADD COLUMN is_deleted BOOLEAN DEFAULT FALSE

@@ -12,6 +12,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Migrations\0006 - Add is_deleted column to memberships.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="dbup-postgresql" Version="4.1.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.1.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="2.1.1" />
