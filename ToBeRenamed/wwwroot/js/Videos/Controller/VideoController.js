@@ -59,8 +59,12 @@ function initializeAnnotationElementsMutationObserver() {
         for(var mutation of mutationsList) {
             if(mutation.type === 'childList') {
                 if(mutation.addedNodes.length !== 0) {
+                    var annotationElement = mutation.addedNodes[0];
                     // A new annotation was added, make sure name exists in names to filter by
-                    addUserIdAndNameFromElement(mutation.addedNodes[0], state.userIdsAndNames);
+                    addUserIdAndNameFromElement(annotationElement, state.userIdsAndNames);
+                    
+                    // Hide/display the annotation according to the current user filter
+                    filterAnnotationByUserId(annotationElement);
                 }
             }
         }

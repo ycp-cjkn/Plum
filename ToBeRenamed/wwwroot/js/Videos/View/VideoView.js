@@ -304,17 +304,25 @@ function filterAnnotationsByUserId() {
     
     for(var i = 0; i< annotationElements.length; i++) {
         var annotation = annotationElements.item(i);
-        var annotationUserId = annotation.dataset['authorId'];
-        
-        if(state.filterUserId.size === 0) {
-            // No annotations are being filtered, display all
-            annotation.classList.remove('hidden');
-        } else if(state.filterUserId.has(annotationUserId)) {
-            // Filter by user id, so make sure it's being displayed
-            annotation.classList.remove('hidden');
-        } else {
-            // User id is not in filter, so hide it
-            annotation.classList.add('hidden');
-        }
+        filterAnnotationByUserId(annotation);
+    }
+}
+
+/**
+ * Hides or displays an annotation according to state's filter user data
+ * @param annotation - The annotation element that will be displayed or hidden
+ */
+function filterAnnotationByUserId(annotation) {
+    var annotationUserId = annotation.dataset['authorId'];
+
+    if(state.filterUserId.size === 0) {
+        // No annotations are being filtered, display all
+        annotation.classList.remove('hidden');
+    } else if(state.filterUserId.has(annotationUserId)) {
+        // Filter by user id, so make sure it's being displayed
+        annotation.classList.remove('hidden');
+    } else {
+        // User id is not in filter, so hide it
+        annotation.classList.add('hidden');
     }
 }
