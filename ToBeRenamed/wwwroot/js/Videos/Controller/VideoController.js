@@ -215,10 +215,11 @@ function initializeCreateReplyButtonEventListener() {
 function initializeSubmitReplyButtonEventListener() {
     elements.annotations.addEventListener('click', function(e) {
         var target = e.target;
-        var annotationElement = target.closest('.' + classNames.annotationWrapper);
-        var annotationId = annotationElement.dataset.id;
 
         if (isClickedButtonSubmitReplyButton(target)) {
+            var annotationElement = target.closest('.' + classNames.annotationWrapper);
+            var annotationId = annotationElement.dataset.id;
+            
             var reply = new Reply(
                 annotationId,
                 getCreatedReplyText(annotationElement)
