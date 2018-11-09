@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using ToBeRenamed.Commands;
 using ToBeRenamed.Dtos;
+using ToBeRenamed.Models;
 using ToBeRenamed.Queries;
 
 namespace ToBeRenamed.Pages
@@ -22,7 +23,7 @@ namespace ToBeRenamed.Pages
         public LibraryDto Library { get; set; }
         public IEnumerable<MemberDto> Members { get; set; }
         public IEnumerable<VideoDto> Videos { get; set; }
-        public MembershipDto Membership;
+        public Member Member { get; set; }
 
         [BindProperty]
         [StringLength(64, MinimumLength = 1)]
@@ -60,15 +61,13 @@ namespace ToBeRenamed.Pages
         {
             var libraryTask = _mediator.Send(new GetLibraryDtoById(Id));
             var membersTask = _mediator.Send(new GetMembersOfLibrary(Id));
-            var userTask = _mediator.Send(new GetSignedInUserDto(User));
             var videosTask = _mediator.Send(new GetVideosOfLibrary(Id));
+            var memberTask = _mediator.Send(new GetSignedInMember(User, Id));
 
             Library = await libraryTask.ConfigureAwait(false);
             Members = await membersTask.ConfigureAwait(false);
             Videos = await videosTask.ConfigureAwait(false);
-
-            var user = await userTask.ConfigureAwait(false);
-            Membership = await _mediator.Send(new GetMembershipDto(user.Id, Library.Id));
+            Member = await memberTask.ConfigureAwait(false);
         }
     }
 }

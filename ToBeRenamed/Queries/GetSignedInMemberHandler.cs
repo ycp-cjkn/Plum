@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Dapper;
 using MediatR;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -28,7 +27,11 @@ namespace ToBeRenamed.Queries
         public async Task<Member> Handle(GetSignedInMember request, CancellationToken cancellationToken)
         {
             var member = await GetSignedInMember(request);
-            member.Role = await GetRoleByMembershipId(member.Id);
+
+            var roles = await _mediator.Send(new GetRolesForMembers(new[] { member.Id }), cancellationToken);
+
+            member.Role = roles[member.Id];
+
             return member;
         }
 
@@ -56,26 +59,6 @@ namespace ToBeRenamed.Queries
             {
                 var dtos = await cnn.QueryAsync<MemberDto>(sql, new { nameIdentifier });
                 return _mapper.Map<Member>(dtos.Single());
-            }
-        }
-
-        private async Task<Role> GetRoleByMembershipId(int membershipId)
-        {
-            const string sql = @"
-                SELECT rol.id, rol.title, rpv.privilege_alias
-                FROM plum.roles rol
-                INNER JOIN plum.memberships mem
-                ON mem.role_id = rol.id
-                LEFT JOIN plum.role_privileges rpv
-                ON rpv.role_id = rol.id
-                WHERE
-	                mem.id = @membershipId
-                ORDER BY rol.created_at";
-
-            using (var cnn = _sqlConnectionFactory.GetSqlConnection())
-            {
-                var dtos = await cnn.QueryAsync<RoleDto>(sql, new { membershipId });
-                return _mapper.Map<IEnumerable<Role>>(dtos).Single();
             }
         }
     }
