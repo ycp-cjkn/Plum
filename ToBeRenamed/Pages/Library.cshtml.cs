@@ -21,7 +21,7 @@ namespace ToBeRenamed.Pages
         }
 
         public LibraryDto Library { get; set; }
-        public IEnumerable<MemberDto> Members { get; set; }
+        public IEnumerable<Member> Members { get; set; }
         public IEnumerable<VideoDto> Videos { get; set; }
         public Member Member { get; set; }
 

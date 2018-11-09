@@ -6,9 +6,9 @@ namespace ToBeRenamed.Queries
 {
     public class GetRolesForMembers : IRequest<IDictionary<int, Role>>
     {
-        public IEnumerable<int> MembershipIds { get; }
+        public IList<int> MembershipIds { get; }
 
-        public GetRolesForMembers(IEnumerable<int> membershipIds)
+        public GetRolesForMembers(IList<int> membershipIds)
         {
             MembershipIds = membershipIds;
         }

@@ -22,6 +22,9 @@ namespace ToBeRenamed.Profiles
 
             CreateMap<MemberDto, Member>()
                 .ForMember(dest => dest.Role, opt => opt.Ignore());
+
+            CreateMap<IEnumerable<MemberDto>, IEnumerable<Member>>()
+                .ConvertUsing((src, dst, ctx) => src.Select(m => ctx.Mapper.Map<Member>(m)));
         }
     }
 }

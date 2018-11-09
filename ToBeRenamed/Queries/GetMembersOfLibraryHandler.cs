@@ -1,23 +1,45 @@
-﻿using Dapper;
+﻿using AutoMapper;
+using Dapper;
 using MediatR;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using ToBeRenamed.Dtos;
 using ToBeRenamed.Factories;
+using ToBeRenamed.Models;
 
 namespace ToBeRenamed.Queries
 {
-    public class GetMembersOfLibraryHandler : IRequestHandler<GetMembersOfLibrary, IEnumerable<MemberDto>>
+    public class GetMembersOfLibraryHandler : IRequestHandler<GetMembersOfLibrary, IEnumerable<Member>>
     {
+        private readonly IMapper _mapper;
+        private readonly IMediator _mediator;
         private readonly ISqlConnectionFactory _sqlConnectionFactory;
 
-        public GetMembersOfLibraryHandler(ISqlConnectionFactory sqlConnectionFactory)
+        public GetMembersOfLibraryHandler(IMapper mapper, IMediator mediator, ISqlConnectionFactory sqlConnectionFactory)
         {
+            _mapper = mapper;
+            _mediator = mediator;
             _sqlConnectionFactory = sqlConnectionFactory;
         }
 
-        public async Task<IEnumerable<MemberDto>> Handle(GetMembersOfLibrary request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<Member>> Handle(GetMembersOfLibrary request, CancellationToken cancellationToken)
+        {
+            var dtos = await GetMembersOfLibrary(request);
+            var members = _mapper.Map<IEnumerable<Member>>(dtos).ToArray();
+            var memberIds = members.Select(m => m.Id).ToList();
+            var roles = await _mediator.Send(new GetRolesForMembers(memberIds), cancellationToken);
+
+            foreach (var member in members)
+            {
+                member.Role = roles[member.Id];
+            }
+
+            return members;
+        }
+
+        public async Task<IEnumerable<MemberDto>> GetMembersOfLibrary(GetMembersOfLibrary request)
         {
             const string sql = @"
                 SELECT

@@ -23,7 +23,7 @@ namespace ToBeRenamed.Pages.Roles
             _mediator = mediator;
         }
 
-        public IEnumerable<MemberDto> Members;
+        public IEnumerable<Member> Members;
         public LibraryDto Library;
         public IEnumerable<Role> Roles;
 
