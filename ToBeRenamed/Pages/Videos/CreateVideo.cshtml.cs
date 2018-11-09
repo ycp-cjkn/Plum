@@ -1,12 +1,13 @@
-﻿using System.Threading.Tasks;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.DependencyModel;
+using System.Threading.Tasks;
 using ToBeRenamed.Commands;
-using ToBeRenamed.Dtos;
+using ToBeRenamed.Models;
 using ToBeRenamed.Queries;
+using ToBeRenamed.Extensions;
+using ToBeRenamed.Filters;
 
 namespace ToBeRenamed.Pages.Videos
 {
@@ -19,7 +20,7 @@ namespace ToBeRenamed.Pages.Videos
         {
             _mediator = mediator;
         }
-    
+
         [BindProperty]
         public string Title { get; set; }
 
@@ -29,16 +30,33 @@ namespace ToBeRenamed.Pages.Videos
         [BindProperty]
         public string Description { get; set; }
 
+        [BindProperty(SupportsGet = true)]
+        public int LibraryId { get; set; }
 
-        public async Task<IActionResult> OnPostAsync(int id)
+        public async Task<IActionResult> OnGetAsync()
         {
-            var userDto = await _mediator.Send(new GetSignedInUserDto(User));
+            var member = await _mediator.Send(new GetSignedInMember(User, LibraryId));
 
-            var libraryDto = await _mediator.Send(new GetLibraryDtoById(id));
+            if (!member.Role.Privileges.Contains(Privilege.CanSubmitVideo))
+            {
+                return this.InsufficientPrivileges();
+            }
 
-            await _mediator.Send(new CreateVideo(userDto.Id, libraryDto.Id ,Title, Link, Description));
+            return Page();
+        }
 
-            return Redirect($"/Library/{libraryDto.Id}");
+        public async Task<IActionResult> OnPostAsync()
+        {
+            var member = await _mediator.Send(new GetSignedInMember(User, LibraryId));
+
+            if (!member.Role.Privileges.Contains(Privilege.CanSubmitVideo))
+            {
+                return this.InsufficientPrivileges();
+            }
+
+            await _mediator.Send(new CreateVideo(member.UserId, LibraryId, Title, Link, Description));
+
+            return Redirect($"/Library/{LibraryId}");
         }
     }
 }
