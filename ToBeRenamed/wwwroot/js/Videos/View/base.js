@@ -27,7 +27,8 @@ var selectors = {
     createAnnotationTextarea: '.create-annotation-container textarea',
     displayName: `.${classNames.displayName}`,
     filterAnnotationsList: `#${idNames.filterAnnotationsList}`,
-    noAnnotationsText: `#${idNames.noAnnotationsText}`
+    noAnnotationsText: `#${idNames.noAnnotationsText}`,
+    filterAnnotationsListEntry: `#${idNames.filterAnnotationsList} li`
 };
 
 var elements = {

@@ -82,3 +82,7 @@
     float: right;
     margin-right: 5px;
 }
+
+#filter-annotations-list .active {
+    background-color: #5bc0de;
+}

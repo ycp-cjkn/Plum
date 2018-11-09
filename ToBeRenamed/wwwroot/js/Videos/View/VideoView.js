@@ -263,3 +263,58 @@ function insertIntoFilterByUserDropdown(userId, displayName) {
 function doesVideoHaveAnnotations() {
     return elements.annotations.querySelector(selectors.noAnnotationsText) === null;
 }
+
+/**
+ * Highlight or unhighlight (if already highlighted) the clickedEntryElement
+ * @param clickedEntryElement - the filter dropdown entry that was clicked
+ */
+function updateHighlightedUser(clickedEntryElement) {
+    // add 'active' class to classlist if it already isn't in it
+    if(clickedEntryElement.classList.contains('active')) {
+        clickedEntryElement.classList.remove('active');
+    } else {
+        clickedEntryElement.classList.add('active');
+    }
+}
+
+/**
+ * Update the state object that holds the data about which user id's are currently
+ * being filtered
+ * @param clickedEntryElement - The entry in the filter dropdown that was clicked
+ */
+function updateFilterUserIdState(clickedEntryElement) {
+    var userId = clickedEntryElement.dataset['authorId'];
+    
+    if(state.filterUserId.has(userId)) {
+        // user is already being filtered, turn filtering off for the user
+        state.filterUserId.delete(userId);
+    } else {
+        // user is not being filtered, so turn it on for the user
+        state.filterUserId.add(userId);
+    }
+}
+
+/**
+ * Filter the annotations so that the annotations that belong to any user
+ * id's in the state object that holds the filter data are displayed, and any
+ * user id's that aren't in it are hidden.
+ */
+function filterAnnotationsByUserId() {
+    var annotationElements = state.annotationElements.children;
+    
+    for(var i = 0; i< annotationElements.length; i++) {
+        var annotation = annotationElements.item(i);
+        var annotationUserId = annotation.dataset['authorId'];
+        
+        if(state.filterUserId.size === 0) {
+            // No annotations are being filtered, display all
+            annotation.classList.remove('hidden');
+        } else if(state.filterUserId.has(annotationUserId)) {
+            // Filter by user id, so make sure it's being displayed
+            annotation.classList.remove('hidden');
+        } else {
+            // User id is not in filter, so hide it
+            annotation.classList.add('hidden');
+        }
+    }
+}

@@ -2,7 +2,8 @@
     player: null,
     userIdsAndNames: {},
     annotationElements: {},
-    hasAnnotations: null
+    hasAnnotations: null,
+    filterUserId : new Set()
 };
 
 // Initialize Youtube API
@@ -27,7 +28,7 @@ $(document).ready(function(){
 
 function initialize() {
     // Initialize state
-    initalizeAnnotationElements();
+    initializeAnnotationElements();
     initializeUserIdsAndNames();
     initializeHasAnnotations();
     
@@ -38,6 +39,7 @@ function initialize() {
     initializeShowRepliesButtonEventListener();
     initializeCreateReplyButtonEventListener();
     initializeSubmitReplyButtonEventListener();
+    initializeFilterByUserDropdownEventListener();
 
     // Initialize mutation observers
     initializeAnnotationElementsMutationObserver();
@@ -82,8 +84,34 @@ function initializeUserIdsAndNames() {
  * Initializes the state variable that contains the annotation elements.
  * This is helpful since the variable gets automatically updated as the DOM changes.
  */
-function initalizeAnnotationElements() {
+function initializeAnnotationElements() {
     state.annotationElements = getAnnotationElements();
+}
+
+/**
+ * Initializes the event listener for the filter dropdown
+ */
+function initializeFilterByUserDropdownEventListener() {
+    var filterByUserListElement = elements.annotations.querySelector(selectors.filterAnnotationsList);
+    filterByUserListElement.addEventListener('click', function(e) {
+        // Stop dropdown from closing
+        e.stopPropagation();
+        
+        var clickedEntryElement = e.target;
+        
+        // User clicked in filter dropdown
+        updateUserFilter(clickedEntryElement);
+    });
+}
+
+/**
+ * Executes after a user clicks on an entry in the filter dropdown
+ * @param clickedEntryElement - The entry in the filter dropdown that got clicked
+ */
+function updateUserFilter(clickedEntryElement) {
+    updateHighlightedUser(clickedEntryElement);
+    updateFilterUserIdState(clickedEntryElement);
+    filterAnnotationsByUserId(clickedEntryElement);
 }
 
 /**
