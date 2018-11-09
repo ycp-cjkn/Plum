@@ -329,6 +329,15 @@ function unhideAnnotationText(annotationElementBody) {
 }
 
 /**
+ * Updates the annotation text.
+ * Useful after the annotation gets updated.
+ * @param annotationElementBody - The annotation element's body element
+ */
+function updateAnnotationText(annotationElementBody) {
+    annotationElementBody.querySelector(selectors.annotationText).innerText = document.querySelector(selectors.editAnnotationText).value;
+}
+
+/**
  * Renders the edit annotation controls
  * @param annotationElementBody - The annotation element's body element, where the controls will be displayed
  */

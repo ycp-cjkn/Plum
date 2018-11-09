@@ -39,7 +39,8 @@ var selectors = {
     annotationWrapper: `.${classNames.annotationWrapper}`,
     annotationBody: `.${classNames.annotationBody}`,
     annotationText: `.${classNames.annotationText}`,
-    editAnnotationTextWrapper: `.${classNames.editAnnotationTextWrapper}`
+    editAnnotationTextWrapper: `.${classNames.editAnnotationTextWrapper}`,
+    editAnnotationText: `.${classNames.editAnnotationTextWrapper} textarea`
 };
 
 var elements = {
@@ -57,5 +58,6 @@ var elements = {
 
 var apiUrls = {
     submitAnnotation: '/Videos/' + elements.videoId.value + '?handler=CreateAnnotation',
-    submitReply: '/Videos/' + elements.videoId.value + '?handler=CreateReply'
+    submitReply: '/Videos/' + elements.videoId.value + '?handler=CreateReply',
+    editAnnotation: '/Videos/' + elements.videoId.value + '?handler=EditAnnotation'
 };
