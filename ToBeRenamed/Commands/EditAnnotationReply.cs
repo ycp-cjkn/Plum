@@ -3,17 +3,19 @@ using ToBeRenamed.Dtos;
 
 namespace ToBeRenamed.Commands
 {
-    public class DeleteAnnotationReply : IRequest<ReplyDto>
+    public class EditAnnotationReply : IRequest<ReplyDto>
     {
         public int UserId { get; }
         public int AnnotationId { get; }
         public string Text { get; }
+        public string NewText { get; }
 
-        public DeleteAnnotationReply(int userId, int annotationId, string text)
+        public EditAnnotationReply(int userId, int annotationId, string text, string new_Text)
         {
             UserId = userId;
             AnnotationId = annotationId;
             Text = text;
+            NewText = new_Text;
         }
     }
 }
