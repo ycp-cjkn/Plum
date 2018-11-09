@@ -3,7 +3,8 @@
     userIdsAndNames: {},
     annotationElements: {},
     hasAnnotations: null,
-    filterUserId : new Set()
+    filterUserId : new Set(),
+    currentUserId: null
 };
 
 // Initialize Youtube API
@@ -31,6 +32,7 @@ function initialize() {
     initializeAnnotationElements();
     initializeUserIdsAndNames();
     initializeHasAnnotations();
+    initializeCurrentUserId();
     
     // Initialize event listeners
     initializeTimestampClickEventListener();
@@ -43,6 +45,17 @@ function initialize() {
 
     // Initialize mutation observers
     initializeAnnotationElementsMutationObserver();
+    
+    // Intialize content
+    initializeAnnotationOptionDropdowns();
+}
+
+function initializeAnnotationOptionDropdowns() {
+    renderAnnotationOptionsDropdowns();
+}
+
+function initializeCurrentUserId() {
+    setCurrentUserId();
 }
 
 function initializeHasAnnotations() {

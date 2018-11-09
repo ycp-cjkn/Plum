@@ -260,6 +260,44 @@ function insertIntoFilterByUserDropdown(userId, displayName) {
     dropdown.appendChild(listElement);
 }
 
+function renderAnnotationOptionsDropdowns() {
+    for(var i = 0; i< state.annotationElements.children.length; i++) {
+        var annotation = state.annotationElements.children.item(i);
+        var annotationOptionsUl = annotation.querySelector('.annotation-options-ul');
+
+        if(annotation.dataset['authorId'] === state.currentUserId) {
+            var editListElement = document.createElement('li');
+            var editListButton = document.createElement('a');
+            var editText = document.createTextNode('Edit');
+            editListButton.appendChild(editText);
+            editListElement.appendChild(editListButton);
+            editListButton.href = '#';
+
+            annotationOptionsUl.appendChild(editListElement);
+
+            var deleteListElement = document.createElement('li');
+            var deleteListButton = document.createElement('a');
+            var deleteText = document.createTextNode('Delete');
+            deleteListButton.appendChild(deleteText);
+            deleteListElement.appendChild(deleteListButton);
+            deleteListButton.href = '#';
+
+            annotationOptionsUl.appendChild(deleteListElement);
+        } else {
+            // annotation is not owned by current user
+            var listElement = document.createElement('li');
+            var text = document.createTextNode('No Options');
+            listElement.appendChild(text);
+
+            annotationOptionsUl.appendChild(listElement);
+        }
+    }
+}
+
+function setCurrentUserId() {
+    state.currentUserId = document.querySelector('#user-id').value;
+}
+
 function doesVideoHaveAnnotations() {
     return elements.annotations.querySelector(selectors.noAnnotationsText) === null;
 }

@@ -17,6 +17,7 @@
 @Html.AntiForgeryToken()
 <input class="video-id" type="hidden" value="@Model.Video.Id"/>
 <input id="video-url" type="hidden" value="@Model.Video.Url"/>
+<input id="user-id" type="hidden" value="@Model.CurrentUser.Id"/>
 
 <div class="container">
     <div class="row">
