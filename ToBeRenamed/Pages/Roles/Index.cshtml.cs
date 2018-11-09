@@ -93,7 +93,7 @@ namespace ToBeRenamed.Pages.Roles
         public class CreateRoleRequest
         {
             [Required]
-            [MaxLength(16)]
+            [MaxLength(25)]
             public string Title { get; set; }
         }
 
@@ -110,6 +110,8 @@ namespace ToBeRenamed.Pages.Roles
 
             [Required]
             public int RoleId { get; set; }
+
+            public string DisplayName { get; set; }
         }
 
         public class UpdateRoleRequest
