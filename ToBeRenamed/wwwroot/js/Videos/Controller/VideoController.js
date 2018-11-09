@@ -33,6 +33,9 @@ function initialize() {
     initializeUserIdsAndNames();
     initializeHasAnnotations();
     initializeCurrentUserId();
+
+    // Intialize content
+    initializeAnnotationOptionDropdowns();
     
     // Initialize event listeners
     initializeTimestampClickEventListener();
@@ -42,12 +45,67 @@ function initialize() {
     initializeCreateReplyButtonEventListener();
     initializeSubmitReplyButtonEventListener();
     initializeFilterByUserDropdownEventListener();
+    initalizeFilterByUserDropdownContentEventListener();
+    initializeCancelEditAnnotationButtonEventListener();
 
     // Initialize mutation observers
     initializeAnnotationElementsMutationObserver();
-    
-    // Intialize content
-    initializeAnnotationOptionDropdowns();
+}
+
+/**
+ * Initializes the event listener that listens for any clicks to the annotation options dropdown 
+ * entries
+ */
+function initalizeFilterByUserDropdownContentEventListener() {
+    document.querySelector(selectors.editAnnotation).addEventListener('click', function(e){
+        var target = e.target;
+        
+        if(target.classList.contains(classNames.editAnnotation)) {
+            // edit annotation clicked
+            
+            // Get annotation element
+            var annotationElement = target.closest(selectors.annotationWrapper);
+            
+            // Insert edit controls
+            var annotationElementBody = annotationElement.querySelector(selectors.annotationBody);
+            addEditAnnotationControls(annotationElementBody);
+            
+        } else if(target.classList.contains(classNames.deleteAnnotation)) {
+            // delete annotation clicked
+        }
+    });
+}
+
+/**
+ * Initializes an event listener that listeners for any clicks to the cancel annotation edit button
+ */
+function initializeCancelEditAnnotationButtonEventListener() {
+    elements.annotations.addEventListener('click', function(e) {
+        var target = e.target;
+        
+        if(target.classList.contains(classNames.cancelEditAnnotation)) {
+            var annotationElementBody = target.closest(selectors.annotationWrapper).querySelector(selectors.annotationBody);
+            removeEditControls(annotationElementBody);
+            unhideAnnotationText(annotationElementBody);
+        }
+    })
+}
+
+/**
+ * Removes the edit annotation controls from the view
+ * @param annotationElementBody - the body of the annotation element
+ */
+function removeEditControls(annotationElementBody) {
+    removeEditAnnotationControls(annotationElementBody);
+}
+
+/**
+ * Add the edit annotation controls to the view
+ * @param annotationElementBody - the body of the annotation element
+ */
+function addEditAnnotationControls(annotationElementBody) {
+    hideAnnotationText(annotationElementBody);
+    renderEditAnnotationControls(annotationElementBody);
 }
 
 function initializeAnnotationOptionDropdowns() {

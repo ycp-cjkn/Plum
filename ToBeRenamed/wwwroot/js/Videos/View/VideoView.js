@@ -272,6 +272,7 @@ function renderAnnotationOptionsDropdowns() {
             editListButton.appendChild(editText);
             editListElement.appendChild(editListButton);
             editListButton.href = '#';
+            editListButton.classList.add(classNames.editAnnotation);
 
             annotationOptionsUl.appendChild(editListElement);
 
@@ -281,6 +282,7 @@ function renderAnnotationOptionsDropdowns() {
             deleteListButton.appendChild(deleteText);
             deleteListElement.appendChild(deleteListButton);
             deleteListButton.href = '#';
+            deleteListButton.classList.add(classNames.deleteAnnotation);
 
             annotationOptionsUl.appendChild(deleteListElement);
         } else {
@@ -292,6 +294,61 @@ function renderAnnotationOptionsDropdowns() {
             annotationOptionsUl.appendChild(listElement);
         }
     }
+}
+
+/**
+ * Gets the HTML for the edit annotation controls
+ * @returns {string}
+ */
+function getEditAnnotationControlsHTML() {
+    return `
+        <div class="edit-annotation-text-wrapper row">
+            <textarea></textarea>
+            <button type="button" class="submit-edit-annotation btn btn-success btn-sm">Submit</button>
+            <button type="button" class="cancel-edit-annotation btn btn-secondary btn-sm">Cancel</button>
+        </div>
+    `;
+}
+
+/**
+ * Hides the annotation text.
+ * This is useful when you need to edit the text, and hide it before displaying the edit controls
+ * @param annotationElementBody - The annotation element's body element
+ */
+function hideAnnotationText(annotationElementBody) {
+    annotationElementBody.querySelector(selectors.annotationText).classList.add('hidden');
+}
+
+/**
+ * Unhides the annotation text.
+ * Useful when closing the edit annotation controls and showing the existing annotation text again
+ * @param annotationElementBody
+ */
+function unhideAnnotationText(annotationElementBody) {
+    annotationElementBody.querySelector(selectors.annotationText).classList.remove('hidden');
+}
+
+/**
+ * Renders the edit annotation controls
+ * @param annotationElementBody - The annotation element's body element, where the controls will be displayed
+ */
+function renderEditAnnotationControls(annotationElementBody) {
+    var html = getEditAnnotationControlsHTML();
+    
+    $(annotationElementBody).prepend(html);
+    
+    // Add existing annotation text to textarea
+    var annotationText = annotationElementBody.querySelector(selectors.annotationText).innerText.trim();
+    annotationElementBody.querySelector('textarea').value = annotationText;
+}
+
+/**
+ * Removes the edit annotation controls from the view
+ * @param annotationElementBody - The annotation element's body element
+ */
+function removeEditAnnotationControls(annotationElementBody) {
+    var editAnnotationTextWrapper = annotationElementBody.querySelector(selectors.editAnnotationTextWrapper);
+    annotationElementBody.removeChild(editAnnotationTextWrapper);
 }
 
 function setCurrentUserId() {

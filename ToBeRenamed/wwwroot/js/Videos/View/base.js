@@ -20,7 +20,13 @@ var classNames = {
     cancelCreateReplyButton: 'cancel-reply',
     submitReply: 'submit-reply',
     annotationReplies: 'annotation-replies',
-    displayName: 'display-name'
+    displayName: 'display-name',
+    editAnnotation: 'edit-annotation',
+    annotationBody: 'annotation-body',
+    deleteAnnotation: 'delete-annotation',
+    cancelEditAnnotation: 'cancel-edit-annotation',
+    annotationText: 'annotation-text',
+    editAnnotationTextWrapper: 'edit-annotation-text-wrapper'
 };
 
 var selectors = {
@@ -28,7 +34,12 @@ var selectors = {
     displayName: `.${classNames.displayName}`,
     filterAnnotationsList: `#${idNames.filterAnnotationsList}`,
     noAnnotationsText: `#${idNames.noAnnotationsText}`,
-    filterAnnotationsListEntry: `#${idNames.filterAnnotationsList} li`
+    filterAnnotationsListEntry: `#${idNames.filterAnnotationsList} li`,
+    editAnnotation: `#${idNames.annotations} a.${classNames.editAnnotation}`,
+    annotationWrapper: `.${classNames.annotationWrapper}`,
+    annotationBody: `.${classNames.annotationBody}`,
+    annotationText: `.${classNames.annotationText}`,
+    editAnnotationTextWrapper: `.${classNames.editAnnotationTextWrapper}`
 };
 
 var elements = {
