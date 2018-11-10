@@ -21,11 +21,13 @@ namespace ToBeRenamed.Pages.Videos
 
         public VideoDto Video { get; set; }
         public IEnumerable<AnnotationDto> Annotations { get; set; }
+        public IEnumerable<ReplyDto> Replies { get; set; }
 
         public async Task OnGetAsync(int id)
         {
             Video = await _mediator.Send(new GetVideoById(id));
             Annotations = await _mediator.Send(new GetAnnotationsByVideoId(id));
+            Replies = await _mediator.Send(new GetAnnotationRepliesByVideoId(id));
         }
 
         public async Task<PartialViewResult> OnPostCreateAnnotation(int videoId, string comment, double timestamp)
@@ -37,6 +39,18 @@ namespace ToBeRenamed.Pages.Videos
             {
                 ViewName = "_Annotation",
                 ViewData = new ViewDataDictionary<AnnotationDto>(ViewData, annotation)
+            };
+        }
+        
+        public async Task<PartialViewResult> OnPostCreateReply(int annotationId, string text)
+        {
+            var userDto = await _mediator.Send(new GetSignedInUserDto(User));
+            var reply = await _mediator.Send(new CreateAnnotationReply(userDto.Id, annotationId, text));
+
+            return new PartialViewResult
+            {
+                ViewName = "_Replies",
+                ViewData = new ViewDataDictionary<ReplyDto>(ViewData, reply)
             };
         }
     }

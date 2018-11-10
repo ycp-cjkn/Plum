@@ -1,4 +1,4 @@
-.annotations {
+﻿#annotations {
     margin-top: 15px;
     max-height: 500px;
     overflow-x: auto;
@@ -6,36 +6,41 @@
     border-left: solid lightgrey thin;
 }
 
-.annotations hr {
+#annotations hr {
     border-top: 1px solid lightgrey;
 }
 
-.annotation-body {
+.annotation-body, .reply-body {
     padding-top: 7px;
 }
 
-.annotation-author-time {
+.annotation-body, .panel {
+    margin-bottom: 5px;
+    padding-bottom: 0px;
+}
+
+.annotation-author-time, .reply-author {
     font-size: smaller;
     font-style: italic;
     float: right;
     margin-right: 5px;
 }
 
-.annotation-header {
+.annotation-header, .reply-header {
     padding: 2.5px 2.5px;
     margin-bottom: 0px;
 }
 
-.annotation-text {
+.annotation-text, .reply-text {
     font-size: 13px;
 }
 
-.annotation-text-wrapper {
+.annotation-text-wrapper, .reply-text-wrapper {
     margin-left: 0px;
     margin-right: 0px;
 }
 
-.annotation-options {
+.annotation-options, reply-options {
     margin-left: 5px;
 }
 
@@ -48,13 +53,27 @@
     margin: 10px 10px;
 }
 
-.create-annotation-container textarea {
+.create-annotation-container textarea,.create-reply-container textarea {
     width: 100%;
     max-width: 100%;
 }
 
-.create-annotation-container .panel-heading {
+.create-annotation-container .panel-heading,.create-reply-container .panel-heading {
     background-color: #337ab7;
     border-color: #2e6da4;
     color: white;
+}
+
+.annotation-replies {
+    width: 80%;
+    margin-left: 20%
+}
+
+.toggle-replies-wrapper {
+    float: right;
+}
+
+.create-reply-container {
+    width: 80%;
+    margin-left: 20%
 }

@@ -1,18 +1,34 @@
 @model Dtos.AnnotationDto
 
-<div class="panel panel-default annotation-wrapper" data-id="@Model.Id">
-    <div class="panel panel-heading annotation-header">
-        <span class="annotation-options glyphicon glyphicon-option-horizontal" aria-hidden="true"></span>
-        <span class="annotation-options glyphicon glyphicon glyphicon-comment" aria-hidden="true"></span>
-        <span class="annotation-author-time block">
-            @Model.DisplayName @@ <a class="timestamp" href="#" data-timestamp="@Model.Timestamp">@Model.TimestampDisplay</a>
-        </span>
-    </div>
-    <div class="panel-body annotation-body">
-        <div class="annotation-text-wrapper row">
-            <span class="annotation-text">
-                @Model.Comment
+<div class="annotation-wrapper" data-id="@Model.Id">
+    <div class="panel panel-default">
+        <div class="panel panel-heading annotation-header">
+            <span class="annotation-options glyphicon glyphicon-option-horizontal" aria-hidden="true"></span>
+            <span class="annotation-options reply-button glyphicon glyphicon glyphicon-comment" aria-hidden="true"></span>
+            <span class="annotation-author-time block">
+                @Model.DisplayName @@ <a class="timestamp" href="#" data-timestamp="@Model.Timestamp">@Model.TimestampDisplay</a>
             </span>
         </div>
+        <div class="panel-body annotation-body">
+            <div class="annotation-text-wrapper row">
+                <span class="annotation-text">
+                    @Model.Comment
+                </span>
+            </div>
+            @if (Model.Replies != null && Model.Replies.Count != 0)
+            {
+                <div class="toggle-replies-wrapper">
+                    <a class="annotation-text toggle-replies" href="#">Show Replies<span class="glyphicon glyphicon-menu-down"></span></a>
+                </div>
+            }
+        </div>
+    </div>
+    <div class="annotation-replies hidden">
+        @if(Model.Replies != null) {
+            foreach (var reply in Model.Replies)
+            {
+                <partial name="_Replies" model="@reply"/>
+            }
+        }
     </div>
 </div>
