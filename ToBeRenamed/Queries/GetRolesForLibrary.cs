@@ -4,11 +4,11 @@ using ToBeRenamed.Models;
 
 namespace ToBeRenamed.Queries
 {
-    public class GetMembersOfLibrary : IRequest<IEnumerable<Member>>
+    public class GetRolesForLibrary : IRequest<IEnumerable<Role>>
     {
         public int LibraryId { get; }
 
-        public GetMembersOfLibrary(int libraryId)
+        public GetRolesForLibrary(int libraryId)
         {
             LibraryId = libraryId;
         }

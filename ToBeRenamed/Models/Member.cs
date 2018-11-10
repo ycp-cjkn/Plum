@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace ToBeRenamed.Dtos
+namespace ToBeRenamed.Models
 {
-    public class MemberDto
+    public class Member
     {
         public int Id { get; set; }
         public int UserId { get; set; }
@@ -11,5 +11,6 @@ namespace ToBeRenamed.Dtos
         public string DisplayName { get; set; }
         public DateTime CreatedAt { get; set; }
         public bool IsCreator { get; set; }
+        public Role Role { get; set; }
     }
 }
