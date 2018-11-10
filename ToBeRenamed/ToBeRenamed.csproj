@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="7.0.1" />
     <PackageReference Include="Dapper" Version="1.50.5" />
     <PackageReference Include="MediatR" Version="5.1.0" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="5.1.0" />
@@ -17,13 +18,8 @@
 
   <ItemGroup>
     <Compile Remove="Pages\Videos\EmptyClass.cs" />
-    <Compile Remove="Pages\Videos\Index.cshtml.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Remove="Pages\Videos\Create.cshtml" />
-    <Content Remove="Pages\Videos\Index.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Pages\Videos\" />
   </ItemGroup>
 </Project>

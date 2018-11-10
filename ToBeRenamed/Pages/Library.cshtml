@@ -16,7 +16,7 @@
     <div class="col-md-12">
         <div class="page-header">
             <a asp-page="Libraries/Edit"><span class="glyphicon glyphicon-edit pull-right" aria-hidden="true"></span></a>
-            <h1>@Model.Library.Title <small>subtitle</small></h1>
+            <h1>@Model.Library.Title</h1>
         </div>
     </div>
 </div>
@@ -27,7 +27,9 @@
             <div class="panel-heading">
                 <h3 class="panel-title">
                     Members
-                    <a href="#"><span class="glyphicon glyphicon-plus-sign pull-right" aria-hidden="true"></span></a>
+                    <a asp-page="/Roles/Index" asp-route-libraryId="@Model.Library.Id">
+                        <span class="glyphicon glyphicon-edit pull-right" aria-hidden="true"></span>
+                    </a>
                 </h3>
             </div>
             <div class="panel-body">
@@ -40,7 +42,8 @@
                             {
                                 <span class="badge">creator</span>
                             }
-                            @member.DisplayName
+
+                            @(string.IsNullOrWhiteSpace(member.DisplayName) ? member.FullName : member.DisplayName)
                         </a>
                     }
                 </div>
@@ -56,7 +59,7 @@
                         <span asp-validation-for="NewDisplayName" class="text-danger"></span>
                         <label class="sr-only" asp-for="NewDisplayName"></label>
                         <input class="form-control" type="text" asp-for="NewDisplayName" placeholder="" />
-                        <input type="hidden" asp-for="MembershipId" value="@Model.Membership.Id" />
+                        <input type="hidden" asp-for="MembershipId" value="@Model.Member.Id" />
                         <button type="submit" class="btn btn-default" asp-page-handler="DisplayName">Update</button>
                     </div>
                 </form>
@@ -85,10 +88,10 @@
             <div class="panel-heading">
                 <h3 class="panel-title">
                     Videos
-                    <a asp-page="/Videos/CreateVideo" asp-route-id="@Model.Library.Id">
+                    <a asp-page="/Videos/CreateVideo" asp-route-libraryId="@Model.Library.Id">
                         <span class="glyphicon glyphicon-plus-sign pull-right" aria-hidden="true"></span>
                     </a>
-                </h3>    
+                </h3>
             </div>
             <div class="panel-body">
                 <div class="row">
@@ -101,7 +104,7 @@
                     @foreach (var video in Model.Videos)
                     {
                         <div class="col-md-4">
-                            <a class="thumbnail" href="#">
+                            <a class="thumbnail" asp-page="/Videos/Index" asp-route-id="@video.Id">
                                 <img class="media-object"
                                      src="http://identicon.rmhdev.net/@(Uri.EscapeDataString(video.Title)).png" alt="">
                                 <div class="caption">

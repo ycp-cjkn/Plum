@@ -1,0 +1,131 @@
+﻿@page "{libraryId:int}"
+@using Models
+@model IndexModel
+@{
+    ViewData["Title"] = "Roles";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="page-header">
+            <h1>Members and Roles <small></small></h1>
+            <p>Manage members and roles for <b>@Model.Library.Title</b></p>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">Members</div>
+            <form method="post">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Full Name</th>
+                            <th>Display Name</th>
+                            <th>Member Since</th>
+                            <th>Role</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var member in Model.Members)
+                        {
+                            <input type="hidden" name="Requests.Index" value="@member.Id" />
+                            <input type="hidden" name="Requests[@member.Id].MemberId" value="@member.Id" />
+                            <tr>
+                                <th scope="row">@member.Id</th>
+                                <td>@member.FullName</td>
+                                <td>@member.DisplayName</td>
+                                <td>@member.CreatedAt</td>
+                                <td>
+                                    <select name="Requests[@member.Id].RoleId">
+                                        @foreach (var role in Model.Roles)
+                                        {
+                                            if (member.Role.Id == role.Id)
+                                            {
+                                                <option value="@role.Id" selected>@role.Title</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@role.Id">@role.Title</option>
+                                            }
+                                        }
+                                    </select>
+                                </td>
+                                <td>
+                                    <a href="#">Remove</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <div class="panel-footer">
+                    <button class="btn btn-primary" type="submit" asp-page-handler="UpdateMembers">Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    @foreach (var role in Model.Roles)
+    {
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">@role.Title</h3>
+                </div>
+                <form autocomplete="off" method="post">
+                    <div class="panel-body">
+                        <input type="hidden" name="roleId" value="@role.Id" />
+                        @foreach (var privilege in Privilege.All())
+                        {
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox"
+                                           name="Privileges"
+                                           value="@privilege.Alias"
+                                           @(role.Privileges.Contains(privilege) ? "checked" : "")>
+
+                                    @privilege.Alias
+                                </label>
+                            </div>
+                        }
+                    </div>
+                    <div class="panel-footer">
+                        <button class="btn btn-primary" type="submit" asp-page-handler="UpdateRole">Update</button>
+                        <form method="post">
+                            <input hidden="" name="roleId" value="@role.Id" />
+                            <button class="btn btn-default" type="submit" asp-page-handler="DeleteRole">Delete</button>
+                        </form>
+                    </div>
+                </form>
+            </div>
+        </div>
+    }
+    <div class="col-md-4">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    Create a new role
+                </h3>
+            </div>
+            <form class="form-inline" autocomplete="off" method="post">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label>Name</label>
+                        <div>
+                            <input class="form-control" name="Title"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <button class="btn btn-primary" type="submit" asp-page-handler="CreateRole">Create</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
