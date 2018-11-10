@@ -1,4 +1,5 @@
 ﻿@page "{id:int}"
+@using Models
 @model LibraryModel
 @{
     ViewData["Title"] = @Model.Library.Title;
@@ -88,9 +89,12 @@
             <div class="panel-heading">
                 <h3 class="panel-title">
                     Videos
-                    <a asp-page="/Videos/CreateVideo" asp-route-libraryId="@Model.Library.Id">
-                        <span class="glyphicon glyphicon-plus-sign pull-right" aria-hidden="true"></span>
-                    </a>
+                    @if (Model.Member.Role.Privileges.Contains(Privilege.CanSubmitVideo))
+                    {
+                        <a asp-page="/Videos/CreateVideo" asp-route-libraryId="@Model.Library.Id">
+                            <span class="glyphicon glyphicon-plus-sign pull-right" aria-hidden="true"></span>
+                        </a>
+                    }
                 </h3>
             </div>
             <div class="panel-body">
