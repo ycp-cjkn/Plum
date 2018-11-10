@@ -121,11 +121,19 @@ namespace ToBeRenamed.Pages.Roles
 
         public class UpdateMemberRequest
         {
+            private string _displayName;
+
             [Required]
             public int MemberId { get; set; }
 
             [Required]
             public int RoleId { get; set; }
+
+            public string DisplayName
+            {
+                get => _displayName;
+                set => _displayName = value ?? string.Empty;
+            }
         }
 
         public class UpdateRoleRequest
