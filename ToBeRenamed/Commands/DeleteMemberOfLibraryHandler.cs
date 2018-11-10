@@ -17,13 +17,15 @@ namespace ToBeRenamed.Commands
 
         public async Task<Unit> Handle(DeleteMemberOfLibrary request, CancellationToken cancellationToken)
         {
+            var membershipId = request.MembershipId;
+
             const string sql = @"
                 DELETE FROM plum.memberships
-                WHERE id = @MembershipId";
+                WHERE id = @membershipId";
 
             using (var cnn = _sqlConnectionFactory.GetSqlConnection())
             {
-                await cnn.QueryAsync(sql, request);
+                await cnn.QueryAsync(sql, new { membershipId });
             }
 
             return Unit.Value;
