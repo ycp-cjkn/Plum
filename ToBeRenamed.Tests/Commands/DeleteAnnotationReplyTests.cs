@@ -6,11 +6,11 @@ using Xunit;
 
 namespace ToBeRenamed.Tests.Commands
 {
-    public class CreateAnnotationReplyTests : IClassFixture<DatabaseFixture>
+    public class DeleteAnnotationReplyTests : IClassFixture<DatabaseFixture>
     {
         private readonly DatabaseFixture _fixture;
 
-        public CreateAnnotationReplyTests(DatabaseFixture fixture)
+        public DeleteAnnotationReplyTests(DatabaseFixture fixture)
         {
             _fixture = fixture;
         }
@@ -20,11 +20,11 @@ namespace ToBeRenamed.Tests.Commands
         public async Task Should_ReturnZero_When_UserDeletesReply()
         {
             // Create a test user
-            var userRequest = new CreateUserWithoutAuth("Alice");
+            var userRequest = new CreateUserWithoutAuth("Bebe");
             var user = await _fixture.SendAsync(userRequest);
 
-            const string title = "My Fantastic Library";
-            const string description = "A suitable description.";
+            const string title = "My Cat Thumper";
+            const string description = "Thumper is 12 years old";
             
             // User creates library
             var createLibraryRequest = new CreateLibrary(user.Id, title, description);
@@ -51,9 +51,9 @@ namespace ToBeRenamed.Tests.Commands
             var videos = await _fixture.SendAsync(getVideosRequest);
             var video = videos.ToList().ElementAt(0);
             
-            // Create two annotations
+            // Create 1 annotation
             var comment1 = "This is a comment!";
-            var timestamp1 = 1.25;
+            var timestamp1 = 2.05;
             
             var annotationRequest1 = new CreateAnnotation(user.Id, comment1, video.Id, timestamp1);
 
@@ -65,18 +65,22 @@ namespace ToBeRenamed.Tests.Commands
             var annotation = results.ToList().ElementAt(0);
 
             // create reply
-            var replyText1 = "This is a reply";
-            
+            var replyText1 = "Such a great annotation";
             var createReplyRequest1 = new CreateAnnotationReply(user.Id, annotation.Id, replyText1);
             
             await _fixture.SendAsync(createReplyRequest1);
-            
+
+            //delete reply
+            var deleteReplyRequest = new DeleteAnnotationReply(user.Id, annotation.Id, replyText1);
+
+            await _fixture.SendAsync(deleteReplyRequest);
+
             // get replies
             var getRepliesRequest = new GetAnnotationRepliesByAnnotationId(annotation.Id);
             var replyResults = await _fixture.SendAsync(getRepliesRequest);
             var replies = replyResults.ToList();
             
-            // Check that both replies got created
+            // Check that no replies are in database
             Assert.Equal(0, replies.Count);
         }
     }
