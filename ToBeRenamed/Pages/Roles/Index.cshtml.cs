@@ -51,6 +51,16 @@ namespace ToBeRenamed.Pages.Roles
             return RedirectToPage();
         }
 
+        public async Task<IActionResult> OnPostDeleteMemberAsync(DeleteMemberRequest request)
+        {
+            if (ModelState.IsValid)
+            {
+                await _mediator.Send(_mapper.Map<DeleteMemberOfLibrary>(request));
+            }
+
+            return RedirectToPage();
+        }
+
         public async Task<IActionResult> OnPostDeleteRoleAsync(DeleteRoleRequest request)
         {
             if (ModelState.IsValid)
@@ -101,6 +111,12 @@ namespace ToBeRenamed.Pages.Roles
         {
             [Required]
             public int RoleId { get; set; }
+        }
+
+        public class DeleteMemberRequest
+        {
+            [Required]
+            public int MembershipId { get; set; }
         }
 
         public class UpdateMemberRequest

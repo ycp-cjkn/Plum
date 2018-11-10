@@ -56,7 +56,10 @@
                                     </select>
                                 </td>
                                 <td>
-                                    <a href="#">Remove</a>
+                                    <form method="post">
+                                        <input type="hidden" name="MembershipId" value="@member.Id" />
+                                        <button class="btn btn-link btn-xs" type="submit" asp-page-handler="DeleteMember">Remove</button>
+                                    </form>
                                 </td>
                             </tr>
                         }
@@ -118,7 +121,7 @@
                     <div class="form-group">
                         <label>Name</label>
                         <div>
-                            <input class="form-control" name="Title"/>
+                            <input class="form-control" name="Title" />
                         </div>
                     </div>
                 </div>
