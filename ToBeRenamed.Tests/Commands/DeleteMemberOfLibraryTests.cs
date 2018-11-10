@@ -6,22 +6,20 @@ using Xunit;
 
 namespace ToBeRenamed.Tests.Commands
 {
-    public class DeleteMembersOfLibraryTests : IClassFixture<DatabaseFixture>
+    public class DeleteMemberOfLibraryTests : IClassFixture<DatabaseFixture>
     {
         private readonly DatabaseFixture _fixture;
 
-        public DeleteMembersOfLibraryTests(DatabaseFixture fixture)
+        public DeleteMemberOfLibraryTests(DatabaseFixture fixture)
         {
             _fixture = fixture;
         }
         [Fact]
         [ResetDatabase]
-        public async Task ItDeletesLibraryMembers()
+        public async Task ItDeletesLibraryMember()
         {
             const string title = "My Fantastic Library";
             const string description = "A suitable description.";
-            const bool isDeleted = false;
-            const int userId = 1;
 
             var userRequest = new CreateUserWithoutAuth("Alice");
             var user = await _fixture.SendAsync(userRequest);
@@ -30,8 +28,10 @@ namespace ToBeRenamed.Tests.Commands
             var request = new CreateLibrary(user.Id, title, description);
             await _fixture.SendAsync(request);
 
+            var deleteMemberRequest = new DeleteMemberOfLibrary(user.Id);
+            await _fixture.SendAsync(deleteMemberRequest);
 
-
+            Assert.True(user.Id == 0);
         }
 
     }
