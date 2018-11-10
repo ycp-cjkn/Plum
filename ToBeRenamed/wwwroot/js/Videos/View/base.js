@@ -59,5 +59,6 @@ var elements = {
 var apiUrls = {
     submitAnnotation: '/Videos/' + elements.videoId.value + '?handler=CreateAnnotation',
     submitReply: '/Videos/' + elements.videoId.value + '?handler=CreateReply',
-    editAnnotation: '/Videos/' + elements.videoId.value + '?handler=EditAnnotation'
+    editAnnotation: '/Videos/' + elements.videoId.value + '?handler=EditAnnotation',
+    deleteAnnotation: '/Videos/' + elements.videoId.value + '?handler=DeleteAnnotation'
 };

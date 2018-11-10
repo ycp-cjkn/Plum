@@ -320,6 +320,15 @@ function hideAnnotationText(annotationElementBody) {
 }
 
 /**
+ * Removes the annotation element from the view.
+ * Useful when an annotation gets deleted.
+ * @param annotationElement - The annotation to be deleted
+ */
+function removeAnnotation(annotationElement) {
+    annotationElement.parentElement.removeChild(annotationElement);
+}
+
+/**
  * Unhides the annotation text.
  * Useful when closing the edit annotation controls and showing the existing annotation text again
  * @param annotationElementBody

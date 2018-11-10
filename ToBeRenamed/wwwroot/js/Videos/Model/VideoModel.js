@@ -63,6 +63,25 @@ ExistingAnnotation.prototype.edit = function(annotationElementBody) {
     });
 };
 
+ExistingAnnotation.prototype.delete = function(annotationElement) {
+    $.ajax({
+        url: apiUrls.deleteAnnotation,
+        data: {
+            videoId: this.videoId,
+            annotationId: this.annotationId
+        },
+        method: 'POST',
+        beforeSend: function(xhr) {
+            // Set header for security
+            xhr.setRequestHeader("RequestVerificationToken",
+                $('input:hidden[name="__RequestVerificationToken"]').val());
+        },
+        success: function() {
+            removeAnnotation(annotationElement);
+        }
+    });
+};
+
 function Reply(annotationId, text) {
     this.annotationId = annotationId;
     this.text = text;
