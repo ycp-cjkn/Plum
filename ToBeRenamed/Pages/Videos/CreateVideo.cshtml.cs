@@ -7,7 +7,6 @@ using ToBeRenamed.Commands;
 using ToBeRenamed.Models;
 using ToBeRenamed.Queries;
 using ToBeRenamed.Extensions;
-using ToBeRenamed.Filters;
 
 namespace ToBeRenamed.Pages.Videos
 {
