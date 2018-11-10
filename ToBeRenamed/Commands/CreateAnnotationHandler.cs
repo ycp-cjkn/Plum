@@ -25,7 +25,7 @@ namespace ToBeRenamed.Commands
                     VALUES (@UserId, @Comment, @Timestamp, @VideoId)
                     RETURNING id, comment, timestamp, user_id, video_id
                 )
-                SELECT ANN.id, ANN.comment, ANN.timestamp, MEM.display_name FROM ANN
+                SELECT ANN.id, ANN.comment, ANN.timestamp, ANN.user_id, MEM.display_name FROM ANN
                 INNER JOIN plum.memberships MEM
                 ON MEM.user_id = ANN.user_id
                 INNER JOIN plum.videos VID

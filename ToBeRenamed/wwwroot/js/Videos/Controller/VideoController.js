@@ -1,5 +1,10 @@
 ﻿var state = {
-    player: null
+    player: null,
+    userIdsAndNames: {},
+    annotationElements: {},
+    hasAnnotations: null,
+    filterUserId : new Set(),
+    currentUserId: null
 };
 
 // Initialize Youtube API
@@ -17,16 +22,171 @@ function onYouTubeIframeAPIReady() {
         }
     });
 }
+$(document).ready(function(){
+    initialize();
+});
 
-initialize();
 
 function initialize() {
+    // Initialize state
+    initializeAnnotationElements();
+    initializeUserIdsAndNames();
+    initializeHasAnnotations();
+    initializeCurrentUserId();
+
+    // Intialize content
+    initializeAnnotationOptionDropdowns();
+    
+    // Initialize event listeners
     initializeTimestampClickEventListener();
     initializeCreateAnnotationControlDisplayEventListener();
     initializeSubmitAnnotationButtonEventListener();
     initializeShowRepliesButtonEventListener();
     initializeCreateReplyButtonEventListener();
     initializeSubmitReplyButtonEventListener();
+    initializeFilterByUserDropdownEventListener();
+    initalizeFilterByUserDropdownContentEventListener();
+    initializeCancelEditAnnotationButtonEventListener();
+
+    // Initialize mutation observers
+    initializeAnnotationElementsMutationObserver();
+}
+
+/**
+ * Initializes the event listener that listens for any clicks to the annotation options dropdown 
+ * entries
+ */
+function initalizeFilterByUserDropdownContentEventListener() {
+    document.querySelector(selectors.editAnnotation).addEventListener('click', function(e){
+        var target = e.target;
+        
+        if(target.classList.contains(classNames.editAnnotation)) {
+            // edit annotation clicked
+            
+            // Get annotation element
+            var annotationElement = target.closest(selectors.annotationWrapper);
+            
+            // Insert edit controls
+            var annotationElementBody = annotationElement.querySelector(selectors.annotationBody);
+            addEditAnnotationControls(annotationElementBody);
+            
+        } else if(target.classList.contains(classNames.deleteAnnotation)) {
+            // delete annotation clicked
+        }
+    });
+}
+
+/**
+ * Initializes an event listener that listeners for any clicks to the cancel annotation edit button
+ */
+function initializeCancelEditAnnotationButtonEventListener() {
+    elements.annotations.addEventListener('click', function(e) {
+        var target = e.target;
+        
+        if(target.classList.contains(classNames.cancelEditAnnotation)) {
+            var annotationElementBody = target.closest(selectors.annotationWrapper).querySelector(selectors.annotationBody);
+            removeEditControls(annotationElementBody);
+            unhideAnnotationText(annotationElementBody);
+        }
+    })
+}
+
+/**
+ * Removes the edit annotation controls from the view
+ * @param annotationElementBody - the body of the annotation element
+ */
+function removeEditControls(annotationElementBody) {
+    removeEditAnnotationControls(annotationElementBody);
+}
+
+/**
+ * Add the edit annotation controls to the view
+ * @param annotationElementBody - the body of the annotation element
+ */
+function addEditAnnotationControls(annotationElementBody) {
+    hideAnnotationText(annotationElementBody);
+    renderEditAnnotationControls(annotationElementBody);
+}
+
+function initializeAnnotationOptionDropdowns() {
+    renderAnnotationOptionsDropdowns();
+}
+
+function initializeCurrentUserId() {
+    setCurrentUserId();
+}
+
+function initializeHasAnnotations() {
+    state.hasAnnotations = doesVideoHaveAnnotations();
+}
+
+/**
+ * Initializes the mutation observer for the annotation elements.
+ * Helpful to catch any changes to the list of annotations
+ */
+function initializeAnnotationElementsMutationObserver() {
+    var config = { childList: true };
+    var callback = function(mutationsList, observer) {
+        for(var mutation of mutationsList) {
+            if(mutation.type === 'childList') {
+                if(mutation.addedNodes.length !== 0) {
+                    var annotationElement = mutation.addedNodes[0];
+                    // A new annotation was added, make sure name exists in names to filter by
+                    addUserIdAndNameFromElement(annotationElement, state.userIdsAndNames);
+                    
+                    // Hide/display the annotation according to the current user filter
+                    filterAnnotationByUserId(annotationElement);
+                }
+            }
+        }
+    };
+    
+    var observer = new MutationObserver(callback);
+    observer.observe(state.annotationElements, config);
+}
+
+/**
+ * Initializes the state variable that contains the user's id mapped to the user's display name
+ */
+function initializeUserIdsAndNames() {
+    if(state.annotationElements.children.length !== 0) {
+        // Only need to initialize if there are annotations
+        state.userIdsAndNames = getUserIdsAndNames(state.annotationElements.children);
+    }
+}
+
+/**
+ * Initializes the state variable that contains the annotation elements.
+ * This is helpful since the variable gets automatically updated as the DOM changes.
+ */
+function initializeAnnotationElements() {
+    state.annotationElements = getAnnotationElements();
+}
+
+/**
+ * Initializes the event listener for the filter dropdown
+ */
+function initializeFilterByUserDropdownEventListener() {
+    var filterByUserListElement = elements.annotations.querySelector(selectors.filterAnnotationsList);
+    filterByUserListElement.addEventListener('click', function(e) {
+        // Stop dropdown from closing
+        e.stopPropagation();
+        
+        var clickedEntryElement = e.target;
+        
+        // User clicked in filter dropdown
+        updateUserFilter(clickedEntryElement);
+    });
+}
+
+/**
+ * Executes after a user clicks on an entry in the filter dropdown
+ * @param clickedEntryElement - The entry in the filter dropdown that got clicked
+ */
+function updateUserFilter(clickedEntryElement) {
+    updateHighlightedUser(clickedEntryElement);
+    updateFilterUserIdState(clickedEntryElement);
+    filterAnnotationsByUserId(clickedEntryElement);
 }
 
 /**
@@ -126,10 +286,11 @@ function initializeCreateReplyButtonEventListener() {
 function initializeSubmitReplyButtonEventListener() {
     elements.annotations.addEventListener('click', function(e) {
         var target = e.target;
-        var annotationElement = target.closest('.' + classNames.annotationWrapper);
-        var annotationId = annotationElement.dataset.id;
 
         if (isClickedButtonSubmitReplyButton(target)) {
+            var annotationElement = target.closest('.' + classNames.annotationWrapper);
+            var annotationId = annotationElement.dataset.id;
+            
             var reply = new Reply(
                 annotationId,
                 getCreatedReplyText(annotationElement)

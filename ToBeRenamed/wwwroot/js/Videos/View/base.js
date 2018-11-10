@@ -3,7 +3,8 @@
     createAnnotationButton: 'create-annotation-btn',
     annotationsBody: 'annotations-body',
     noAnnotationsText: 'no-annotation-text',
-    annotations: 'annotations'
+    annotations: 'annotations',
+    filterAnnotationsList: 'filter-annotations-list'
 };
 
 var classNames = {
@@ -18,11 +19,28 @@ var classNames = {
     annotationWrapper: 'annotation-wrapper',
     cancelCreateReplyButton: 'cancel-reply',
     submitReply: 'submit-reply',
-    annotationReplies: 'annotation-replies'
+    annotationReplies: 'annotation-replies',
+    displayName: 'display-name',
+    editAnnotation: 'edit-annotation',
+    annotationBody: 'annotation-body',
+    deleteAnnotation: 'delete-annotation',
+    cancelEditAnnotation: 'cancel-edit-annotation',
+    annotationText: 'annotation-text',
+    editAnnotationTextWrapper: 'edit-annotation-text-wrapper'
 };
 
 var selectors = {
-    createAnnotationTextarea: '.create-annotation-container textarea'
+    createAnnotationTextarea: '.create-annotation-container textarea',
+    displayName: `.${classNames.displayName}`,
+    filterAnnotationsList: `#${idNames.filterAnnotationsList}`,
+    noAnnotationsText: `#${idNames.noAnnotationsText}`,
+    filterAnnotationsListEntry: `#${idNames.filterAnnotationsList} li`,
+    editAnnotation: `#${idNames.annotations} a.${classNames.editAnnotation}`,
+    annotationWrapper: `.${classNames.annotationWrapper}`,
+    annotationBody: `.${classNames.annotationBody}`,
+    annotationText: `.${classNames.annotationText}`,
+    editAnnotationTextWrapper: `.${classNames.editAnnotationTextWrapper}`,
+    editAnnotationText: `.${classNames.editAnnotationTextWrapper} textarea`
 };
 
 var elements = {
@@ -40,5 +58,7 @@ var elements = {
 
 var apiUrls = {
     submitAnnotation: '/Videos/' + elements.videoId.value + '?handler=CreateAnnotation',
-    submitReply: '/Videos/' + elements.videoId.value + '?handler=CreateReply'
+    submitReply: '/Videos/' + elements.videoId.value + '?handler=CreateReply',
+    editAnnotation: '/Videos/' + elements.videoId.value + '?handler=EditAnnotation',
+    deleteAnnotation: '/Videos/' + elements.videoId.value + '?handler=DeleteAnnotation'
 };

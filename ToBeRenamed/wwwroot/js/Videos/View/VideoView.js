@@ -204,3 +204,238 @@ function getToggleRepliesDefaultHTML() {
         </div>
     `
 }
+
+/**
+ * Using all of the annotation elements on the page, get the user id's and display names of
+ * the users who posted those annotations and return them
+ * @param annotationElements - An array of the annotation elements on the page
+ * @return {object} - An object of user id's mapped to user display names. Ex: {1: 'Kyle Jones'}
+ */
+function getUserIdsAndNames(annotationElements) {
+    var userIdsAndNames = {};
+    
+    for(var i = 0; i < annotationElements.length; i++) {
+        var annotationElement = annotationElements.item(i);
+
+        addUserIdAndNameFromElement(annotationElement, userIdsAndNames);
+    }
+    
+    return userIdsAndNames;
+}
+
+/**
+ * Add the user id and display name of an individual annotation element to the userIdsAndNames param
+ * @param annotationElement - The annotation where the user id and display name will come from
+ * @param userIdsAndNames - A reference to an object where user ids are mapped to display names
+ */
+function addUserIdAndNameFromElement(annotationElement, userIdsAndNames) {
+    var userId = annotationElement.dataset['authorId'];
+
+    if(userIdsAndNames[userId] === undefined) {
+        userIdsAndNames[userId] = annotationElement.querySelector(selectors.displayName).innerText;
+        insertIntoFilterByUserDropdown(userId, userIdsAndNames[userId]);
+    }
+}
+
+/**
+ * Gets the element where the annotations are stored
+ * @returns {HTMLElement}
+ */
+function getAnnotationElements() {
+    return document.getElementById(idNames.annotationsBody);
+}
+
+function insertIntoFilterByUserDropdown(userId, displayName) {
+    var dropdown = elements.annotations.querySelector(selectors.filterAnnotationsList);
+    
+    var listElement = document.createElement('li');
+    var listButton = document.createElement('a');
+    var text = document.createTextNode(displayName);
+    listButton.appendChild(text);
+    listElement.appendChild(listButton);
+    
+    listButton.dataset['authorId'] = userId;
+    listButton.href = '#';
+    
+    dropdown.appendChild(listElement);
+}
+
+function renderAnnotationOptionsDropdowns() {
+    for(var i = 0; i< state.annotationElements.children.length; i++) {
+        var annotation = state.annotationElements.children.item(i);
+        var annotationOptionsUl = annotation.querySelector('.annotation-options-ul');
+
+        if(annotation.dataset['authorId'] === state.currentUserId) {
+            var editListElement = document.createElement('li');
+            var editListButton = document.createElement('a');
+            var editText = document.createTextNode('Edit');
+            editListButton.appendChild(editText);
+            editListElement.appendChild(editListButton);
+            editListButton.href = '#';
+            editListButton.classList.add(classNames.editAnnotation);
+
+            annotationOptionsUl.appendChild(editListElement);
+
+            var deleteListElement = document.createElement('li');
+            var deleteListButton = document.createElement('a');
+            var deleteText = document.createTextNode('Delete');
+            deleteListButton.appendChild(deleteText);
+            deleteListElement.appendChild(deleteListButton);
+            deleteListButton.href = '#';
+            deleteListButton.classList.add(classNames.deleteAnnotation);
+
+            annotationOptionsUl.appendChild(deleteListElement);
+        } else {
+            // annotation is not owned by current user
+            var listElement = document.createElement('li');
+            var text = document.createTextNode('No Options');
+            listElement.appendChild(text);
+
+            annotationOptionsUl.appendChild(listElement);
+        }
+    }
+}
+
+/**
+ * Gets the HTML for the edit annotation controls
+ * @returns {string}
+ */
+function getEditAnnotationControlsHTML() {
+    return `
+        <div class="edit-annotation-text-wrapper row">
+            <textarea></textarea>
+            <button type="button" class="submit-edit-annotation btn btn-success btn-sm">Submit</button>
+            <button type="button" class="cancel-edit-annotation btn btn-secondary btn-sm">Cancel</button>
+        </div>
+    `;
+}
+
+/**
+ * Hides the annotation text.
+ * This is useful when you need to edit the text, and hide it before displaying the edit controls
+ * @param annotationElementBody - The annotation element's body element
+ */
+function hideAnnotationText(annotationElementBody) {
+    annotationElementBody.querySelector(selectors.annotationText).classList.add('hidden');
+}
+
+/**
+ * Removes the annotation element from the view.
+ * Useful when an annotation gets deleted.
+ * @param annotationElement - The annotation to be deleted
+ */
+function removeAnnotation(annotationElement) {
+    annotationElement.parentElement.removeChild(annotationElement);
+}
+
+/**
+ * Unhides the annotation text.
+ * Useful when closing the edit annotation controls and showing the existing annotation text again
+ * @param annotationElementBody
+ */
+function unhideAnnotationText(annotationElementBody) {
+    annotationElementBody.querySelector(selectors.annotationText).classList.remove('hidden');
+}
+
+/**
+ * Updates the annotation text.
+ * Useful after the annotation gets updated.
+ * @param annotationElementBody - The annotation element's body element
+ */
+function updateAnnotationText(annotationElementBody) {
+    annotationElementBody.querySelector(selectors.annotationText).innerText = document.querySelector(selectors.editAnnotationText).value;
+}
+
+/**
+ * Renders the edit annotation controls
+ * @param annotationElementBody - The annotation element's body element, where the controls will be displayed
+ */
+function renderEditAnnotationControls(annotationElementBody) {
+    var html = getEditAnnotationControlsHTML();
+    
+    $(annotationElementBody).prepend(html);
+    
+    // Add existing annotation text to textarea
+    var annotationText = annotationElementBody.querySelector(selectors.annotationText).innerText.trim();
+    annotationElementBody.querySelector('textarea').value = annotationText;
+}
+
+/**
+ * Removes the edit annotation controls from the view
+ * @param annotationElementBody - The annotation element's body element
+ */
+function removeEditAnnotationControls(annotationElementBody) {
+    var editAnnotationTextWrapper = annotationElementBody.querySelector(selectors.editAnnotationTextWrapper);
+    annotationElementBody.removeChild(editAnnotationTextWrapper);
+}
+
+function setCurrentUserId() {
+    state.currentUserId = document.querySelector('#user-id').value;
+}
+
+function doesVideoHaveAnnotations() {
+    return elements.annotations.querySelector(selectors.noAnnotationsText) === null;
+}
+
+/**
+ * Highlight or unhighlight (if already highlighted) the clickedEntryElement
+ * @param clickedEntryElement - the filter dropdown entry that was clicked
+ */
+function updateHighlightedUser(clickedEntryElement) {
+    // add 'active' class to classlist if it already isn't in it
+    if(clickedEntryElement.classList.contains('active')) {
+        clickedEntryElement.classList.remove('active');
+    } else {
+        clickedEntryElement.classList.add('active');
+    }
+}
+
+/**
+ * Update the state object that holds the data about which user id's are currently
+ * being filtered
+ * @param clickedEntryElement - The entry in the filter dropdown that was clicked
+ */
+function updateFilterUserIdState(clickedEntryElement) {
+    var userId = clickedEntryElement.dataset['authorId'];
+    
+    if(state.filterUserId.has(userId)) {
+        // user is already being filtered, turn filtering off for the user
+        state.filterUserId.delete(userId);
+    } else {
+        // user is not being filtered, so turn it on for the user
+        state.filterUserId.add(userId);
+    }
+}
+
+/**
+ * Filter the annotations so that the annotations that belong to any user
+ * id's in the state object that holds the filter data are displayed, and any
+ * user id's that aren't in it are hidden.
+ */
+function filterAnnotationsByUserId() {
+    var annotationElements = state.annotationElements.children;
+    
+    for(var i = 0; i< annotationElements.length; i++) {
+        var annotation = annotationElements.item(i);
+        filterAnnotationByUserId(annotation);
+    }
+}
+
+/**
+ * Hides or displays an annotation according to state's filter user data
+ * @param annotation - The annotation element that will be displayed or hidden
+ */
+function filterAnnotationByUserId(annotation) {
+    var annotationUserId = annotation.dataset['authorId'];
+
+    if(state.filterUserId.size === 0) {
+        // No annotations are being filtered, display all
+        annotation.classList.remove('hidden');
+    } else if(state.filterUserId.has(annotationUserId)) {
+        // Filter by user id, so make sure it's being displayed
+        annotation.classList.remove('hidden');
+    } else {
+        // User id is not in filter, so hide it
+        annotation.classList.add('hidden');
+    }
+}

@@ -25,8 +25,6 @@ namespace ToBeRenamed.Queries
                     videos.description,
                     videos.id
                 FROM plum.videos
-                INNER JOIN plum.memberships mem
-                ON videos.library_id = mem.library_id
                 WHERE videos.library_id = @LibraryId
                 ORDER BY videos.created_at DESC";
 

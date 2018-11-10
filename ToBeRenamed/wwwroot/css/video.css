@@ -58,6 +58,21 @@
     max-width: 100%;
 }
 
+.create-annotation-container textarea,.create-reply-container textarea {
+    width: 100%;
+    max-width: 100%;
+}
+
+.edit-annotation-text-wrapper textarea {
+    width: 100%;
+    max-width: 100%;
+}
+
+.edit-annotation-text-wrapper {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
 .create-annotation-container .panel-heading,.create-reply-container .panel-heading {
     background-color: #337ab7;
     border-color: #2e6da4;
@@ -76,4 +91,13 @@
 .create-reply-container {
     width: 80%;
     margin-left: 20%
+}
+
+#filter-annotations {
+    float: right;
+    margin-right: 5px;
+}
+
+#filter-annotations-list .active {
+    background-color: #5bc0de;
 }
