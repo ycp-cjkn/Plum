@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ToBeRenamed.Commands;
 using ToBeRenamed.Dtos;
+using ToBeRenamed.Extensions;
 using ToBeRenamed.Models;
 using ToBeRenamed.Queries;
 
@@ -27,47 +28,79 @@ namespace ToBeRenamed.Pages.Roles
         public IEnumerable<Member> Members;
         public LibraryDto Library;
         public IEnumerable<Role> Roles;
+        public Member Member;
 
         [Required]
         [BindProperty(SupportsGet = true)]
         public int LibraryId { get; set; }
 
-        public async Task OnGetAsync()
+        public async Task<IActionResult> OnGetAsync()
         {
+            Member = await _mediator.Send(new GetSignedInMember(User, LibraryId));
+
+            if (!Member.Role.Privileges.Contains(Privilege.CanManageMembersAndRoles))
+            {
+                return this.InsufficientPrivileges();
+            }
+
             Members = await _mediator.Send(new GetMembersOfLibrary(LibraryId));
             Library = await _mediator.Send(new GetLibraryDtoById(LibraryId));
             Roles = await _mediator.Send(new GetRolesForLibrary(LibraryId));
+
+            return Page();
         }
 
         public async Task<IActionResult> OnPostCreateRoleAsync(CreateRoleRequest request)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                // TODO: Should only be able to create a role if the user has the
-                // privilege and is a member of the Library
-                await _mediator.Send(new CreateRole(request.Title, LibraryId));
+                return RedirectToPage();
             }
 
+            Member = await _mediator.Send(new GetSignedInMember(User, LibraryId));
+
+            if (!Member.Role.Privileges.Contains(Privilege.CanManageMembersAndRoles))
+            {
+                return this.InsufficientPrivileges();
+            }
+
+            await _mediator.Send(new CreateRole(request.Title, LibraryId));
             return RedirectToPage();
         }
 
         public async Task<IActionResult> OnPostDeleteMemberAsync(DeleteMemberRequest request)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                await _mediator.Send(_mapper.Map<DeleteMemberOfLibrary>(request));
+                return RedirectToPage();
             }
 
+            Member = await _mediator.Send(new GetSignedInMember(User, LibraryId));
+
+            if (!Member.Role.Privileges.Contains(Privilege.CanManageMembersAndRoles))
+            {
+                return this.InsufficientPrivileges();
+            }
+
+            await _mediator.Send(_mapper.Map<DeleteMemberOfLibrary>(request));
             return RedirectToPage();
         }
 
         public async Task<IActionResult> OnPostDeleteRoleAsync(DeleteRoleRequest request)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                await _mediator.Send(_mapper.Map<DeleteRoleById>(request));
+                return RedirectToPage();
             }
 
+            Member = await _mediator.Send(new GetSignedInMember(User, LibraryId));
+
+            if (!Member.Role.Privileges.Contains(Privilege.CanManageMembersAndRoles))
+            {
+                return this.InsufficientPrivileges();
+            }
+
+            await _mediator.Send(_mapper.Map<DeleteRoleById>(request));
             return RedirectToPage();
         }
 
@@ -76,6 +109,13 @@ namespace ToBeRenamed.Pages.Roles
             if (!ModelState.IsValid)
             {
                 return RedirectToPage();
+            }
+
+            Member = await _mediator.Send(new GetSignedInMember(User, LibraryId));
+
+            if (!Member.Role.Privileges.Contains(Privilege.CanManageMembersAndRoles))
+            {
+                return this.InsufficientPrivileges();
             }
 
             var updates = _mapper.Map<IEnumerable<UpdateRoleOfMember>>(requests);
@@ -94,9 +134,15 @@ namespace ToBeRenamed.Pages.Roles
                 return RedirectToPage();
             }
 
+            Member = await _mediator.Send(new GetSignedInMember(User, LibraryId));
+
+            if (!Member.Role.Privileges.Contains(Privilege.CanManageMembersAndRoles))
+            {
+                return this.InsufficientPrivileges();
+            }
+
             var set = _mapper.Map<ISet<Privilege>>(request.Privileges);
             await _mediator.Send(new ReplacePrivilegesOfRole(request.RoleId, set));
-
             return RedirectToPage();
         }
 
