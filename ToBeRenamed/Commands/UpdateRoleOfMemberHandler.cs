@@ -19,7 +19,7 @@ namespace ToBeRenamed.Commands
         {
             const string sql = @"
                 UPDATE plum.memberships
-                SET role_id = @RoleId, display_name = @DisplayName
+                SET role_id = @RoleId
                 WHERE id = @MemberId";
 
             using (var cnn = _sqlConnectionFactory.GetSqlConnection())

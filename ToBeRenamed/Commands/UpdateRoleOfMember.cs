@@ -6,13 +6,11 @@ namespace ToBeRenamed.Commands
     {
         public int MemberId { get; }
         public int RoleId { get; }
-        public string DisplayName { get; }
 
-        public UpdateRoleOfMember(int memberId, int roleId, string displayName)
+        public UpdateRoleOfMember(int memberId, int roleId)
         {
             MemberId = memberId;
             RoleId = roleId;
-            DisplayName = displayName;
         }
     }
 }
