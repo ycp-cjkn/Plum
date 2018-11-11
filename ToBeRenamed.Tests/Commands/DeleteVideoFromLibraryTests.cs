@@ -46,15 +46,30 @@ namespace ToBeRenamed.Tests.Commands
             const string videoUrl = "https://www.youtube.com/watch?v=-O5kNPlUV7w";
             const string vidDescription = "Video description";
 
-            var createVideosRequest1 = new CreateVideo(user.Id, libraryId, vidTitle, videoUrl, vidDescription);
+            var createVideosRequest = new CreateVideo(user.Id, libraryId, vidTitle, videoUrl, vidDescription);
+            await _fixture.SendAsync(createVideosRequest);
 
-            await _fixture.SendAsync(createVideosRequest1);
+            // Get videos just created by user
+            var getVideosRequest = new GetVideosOfLibrary(libraryId);
+            var videos = await _fixture.SendAsync(getVideosRequest);
 
-            // Get videos for library
-            var getVideoIdRequest = new GetVideoById(libraryId);
+            // Make sure there's only one video
+            var videoDtos = videos.ToList();
+            Assert.Single(videoDtos);
+
+            var videoId = videoDtos.ToList().ElementAt(0).Id;
 
             //delete video from library 
-            //var deleteVideoRequest = new DeleteVideoFromLibrary();
+            var deleteVideoRequest = new DeleteVideoFromLibrary(videoId);
+            await _fixture.SendAsync(deleteVideoRequest);
+
+            // Check for any remaining videos (should be 0)
+            var getVideosRequest1 = new GetVideosOfLibrary(libraryId);
+            var videosLeft = await _fixture.SendAsync(getVideosRequest1);
+
+            var videoCount = videosLeft.Count();
+
+            Assert.Equal(0, videoCount);
         }
     }
 }

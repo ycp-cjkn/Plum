@@ -22,7 +22,7 @@ namespace ToBeRenamed.Commands
             const string sql = @"
                 UPDATE plum.videos
                 SET deleted_at = NOW()
-                WHERE video_id = @videoId";
+                WHERE id = @videoId";
 
             using (var cnn = _sqlConnectionFactory.GetSqlConnection())
             {
