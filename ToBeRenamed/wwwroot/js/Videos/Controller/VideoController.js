@@ -47,6 +47,7 @@ function initialize() {
     initializeFilterByUserDropdownEventListener();
     initalizeFilterByUserDropdownContentEventListener();
     initializeCancelEditAnnotationButtonEventListener();
+    initalizeSubmitEditAnnotationButtonEventListener();
 
     // Initialize mutation observers
     initializeAnnotationElementsMutationObserver();
@@ -57,7 +58,7 @@ function initialize() {
  * entries
  */
 function initalizeFilterByUserDropdownContentEventListener() {
-    document.querySelector(selectors.editAnnotation).addEventListener('click', function(e){
+    elements.annotations.addEventListener('click', function(e){
         var target = e.target;
         
         if(target.classList.contains(classNames.editAnnotation)) {
@@ -87,6 +88,27 @@ function initializeCancelEditAnnotationButtonEventListener() {
             var annotationElementBody = target.closest(selectors.annotationWrapper).querySelector(selectors.annotationBody);
             removeEditControls(annotationElementBody);
             unhideAnnotationText(annotationElementBody);
+        }
+    })
+}
+
+/**
+ * Initialize the event listener for the submit edited annotation button
+ */
+function initalizeSubmitEditAnnotationButtonEventListener() {
+    elements.annotations.addEventListener('click', function(e) {
+        var target = e.target;
+        
+        if(target.classList.contains('submit-edit-annotation')) {
+            // submit edited annotation
+            var annotationElement = target.closest(selectors.annotationWrapper);
+            var annotationElementBody = annotationElement.querySelector(selectors.annotationBody);
+            var annotationUserId = annotationElement.dataset['authorId'];
+            var annotationId = annotationElement.dataset['id'];
+            var newAnnotationComment = annotationElementBody.querySelector(selectors.editAnnotationText).value;
+            
+            var existingAnnotation = new ExistingAnnotation(annotationUserId, newAnnotationComment, annotationId);
+            existingAnnotation.edit(annotationElementBody);
         }
     })
 }
@@ -136,6 +158,10 @@ function initializeAnnotationElementsMutationObserver() {
                     
                     // Hide/display the annotation according to the current user filter
                     filterAnnotationByUserId(annotationElement);
+                    
+                    // Add the HTML for the annotation options dropdown
+                    // TODO - Check permissions before adding this
+                    renderAnnotationOptionsDropdown(annotationElement);
                 }
             }
         }

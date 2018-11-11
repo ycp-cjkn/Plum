@@ -260,39 +260,50 @@ function insertIntoFilterByUserDropdown(userId, displayName) {
     dropdown.appendChild(listElement);
 }
 
+/**
+ * Renders the annotation options dropdown html for all annotations on the page
+ */
 function renderAnnotationOptionsDropdowns() {
     for(var i = 0; i< state.annotationElements.children.length; i++) {
         var annotation = state.annotationElements.children.item(i);
-        var annotationOptionsUl = annotation.querySelector('.annotation-options-ul');
+        renderAnnotationOptionsDropdown(annotation);
+    }
+}
 
-        if(annotation.dataset['authorId'] === state.currentUserId) {
-            var editListElement = document.createElement('li');
-            var editListButton = document.createElement('a');
-            var editText = document.createTextNode('Edit');
-            editListButton.appendChild(editText);
-            editListElement.appendChild(editListButton);
-            editListButton.href = '#';
-            editListButton.classList.add(classNames.editAnnotation);
+/**
+ * Renders the annotation options dropdown html for a single annotation element
+ * @param annotation -  the annotation element
+ */
+function renderAnnotationOptionsDropdown(annotation) {
+    var annotationOptionsUl = annotation.querySelector('.annotation-options-ul');
 
-            annotationOptionsUl.appendChild(editListElement);
+    if(annotation.dataset['authorId'] === state.currentUserId) {
+        var editListElement = document.createElement('li');
+        var editListButton = document.createElement('a');
+        var editText = document.createTextNode('Edit');
+        editListButton.appendChild(editText);
+        editListElement.appendChild(editListButton);
+        editListButton.href = '#';
+        editListButton.classList.add(classNames.editAnnotation);
 
-            var deleteListElement = document.createElement('li');
-            var deleteListButton = document.createElement('a');
-            var deleteText = document.createTextNode('Delete');
-            deleteListButton.appendChild(deleteText);
-            deleteListElement.appendChild(deleteListButton);
-            deleteListButton.href = '#';
-            deleteListButton.classList.add(classNames.deleteAnnotation);
+        annotationOptionsUl.appendChild(editListElement);
 
-            annotationOptionsUl.appendChild(deleteListElement);
-        } else {
-            // annotation is not owned by current user
-            var listElement = document.createElement('li');
-            var text = document.createTextNode('No Options');
-            listElement.appendChild(text);
+        var deleteListElement = document.createElement('li');
+        var deleteListButton = document.createElement('a');
+        var deleteText = document.createTextNode('Delete');
+        deleteListButton.appendChild(deleteText);
+        deleteListElement.appendChild(deleteListButton);
+        deleteListButton.href = '#';
+        deleteListButton.classList.add(classNames.deleteAnnotation);
 
-            annotationOptionsUl.appendChild(listElement);
-        }
+        annotationOptionsUl.appendChild(deleteListElement);
+    } else {
+        // annotation is not owned by current user
+        var listElement = document.createElement('li');
+        var text = document.createTextNode('No Options');
+        listElement.appendChild(text);
+
+        annotationOptionsUl.appendChild(listElement);
     }
 }
 

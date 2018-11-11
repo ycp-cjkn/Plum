@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using ToBeRenamed.Commands;
 using ToBeRenamed.Dtos;
@@ -54,6 +55,12 @@ namespace ToBeRenamed.Pages.Videos
                 ViewName = "_Replies",
                 ViewData = new ViewDataDictionary<ReplyDto>(ViewData, reply)
             };
+        }
+        
+        public async Task<ContentResult> OnPostEditAnnotation(int userId, int annotationId, string comment)
+        {
+            await _mediator.Send(new EditAnnotation(userId, comment, annotationId));
+            return Content("{ \"response\": true }", "application/json");
         }
     }
 }
