@@ -26,6 +26,7 @@ namespace ToBeRenamed.Queries
                     videos.id
                 FROM plum.videos
                 WHERE videos.library_id = @LibraryId
+                AND videos.deleted_at IS NULL
                 ORDER BY videos.created_at DESC";
 
             using (var cnn = _sqlConnectionFactory.GetSqlConnection())
