@@ -17,7 +17,7 @@
 @Html.AntiForgeryToken()
 <input class="video-id" type="hidden" value="@Model.Video.Id"/>
 <input id="video-url" type="hidden" value="@Model.Video.Url"/>
-<input id="user-id" type="hidden" value="@Model.CurrentUser.Id"/>
+<input id="user-id" type="hidden" value="@Model.CurrentMember.UserId"/>
 
 <div class="container">
     <div class="row">
@@ -49,8 +49,7 @@
                     <div class="panel panel-heading annotation-header">
                         <span class="annotation-options glyphicon glyphicon-option-horizontal" aria-hidden="true"></span>
                         <span class="annotation-author-time block">
-                            @* TODO - Use membership display name instead of user display name *@
-                            @User.Identity.Name @@ <span class="timestamp"></span>
+                            @Model.CurrentMember.DisplayName @@ <span class="timestamp"></span>
                         </span>
                     </div>
                     <div class="panel-body annotation-body">
