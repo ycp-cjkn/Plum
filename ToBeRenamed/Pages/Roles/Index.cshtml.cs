@@ -66,7 +66,7 @@ namespace ToBeRenamed.Pages.Roles
             return RedirectToPage();
         }
 
-        public async Task<IActionResult> OnPostDeleteMemberAsync(DeleteMemberRequest request)
+        public async Task<IActionResult> OnGetDeleteMemberAsync(DeleteMemberRequest request)
         {
             await SetUp();
 

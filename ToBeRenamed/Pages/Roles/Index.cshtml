@@ -63,10 +63,7 @@
                                 <td>
                                     @if (member.Id != Model.Member.Id)
                                     {
-                                        @*<form method="post">
-                                                <input type="hidden" name="Request.MembershipId" value="@member.Id" />
-                                                <button class="btn-link btn-xs" type="submit" asp-page-handler="DeleteMember">Remove</button>
-                                            </form>*@
+                                        <a asp-page-handler="DeleteMember" asp-route-MembershipId="@member.Id">Remove</a>
                                     }
                                 </td>
                             </tr>
