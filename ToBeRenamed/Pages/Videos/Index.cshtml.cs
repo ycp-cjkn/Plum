@@ -62,5 +62,11 @@ namespace ToBeRenamed.Pages.Videos
             await _mediator.Send(new EditAnnotation(userId, comment, annotationId));
             return Content("{ \"response\": true }", "application/json");
         }
+        
+        public async Task<ContentResult> OnPostDeleteAnnotation(int userId, int annotationId)
+        {
+            await _mediator.Send(new DeleteAnnotation(userId, annotationId));
+            return Content("{ \"response\": true }", "application/json");
+        }
     }
 }

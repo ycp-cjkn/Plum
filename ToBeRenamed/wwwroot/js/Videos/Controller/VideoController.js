@@ -36,6 +36,7 @@ function initialize() {
 
     // Intialize content
     initializeAnnotationOptionDropdowns();
+    initializeNoAnnotationText();
     
     // Initialize event listeners
     initializeTimestampClickEventListener();
@@ -48,9 +49,20 @@ function initialize() {
     initalizeFilterByUserDropdownContentEventListener();
     initializeCancelEditAnnotationButtonEventListener();
     initalizeSubmitEditAnnotationButtonEventListener();
+    initializeDeleteAnnotationButtonEventListener();
 
     // Initialize mutation observers
     initializeAnnotationElementsMutationObserver();
+}
+
+/**
+ * Display the no annotations message to the user if there are no annotations
+ */
+function initializeNoAnnotationText() {
+    if(state.annotationElements.children.length === 0) {
+        // unhide no annotation text message
+        unhideNoAnnotationText();
+    }
 }
 
 /**
@@ -114,6 +126,25 @@ function initalizeSubmitEditAnnotationButtonEventListener() {
 }
 
 /**
+ * Initializes the delete annotation button event listener
+ */
+function initializeDeleteAnnotationButtonEventListener() {
+    elements.annotations.addEventListener('click', function(e) {
+        var target = e.target;
+
+        if(target.classList.contains('delete-annotation')) {
+            // delete annotation
+            var annotationElement = target.closest(selectors.annotationWrapper);
+            var annotationUserId = annotationElement.dataset['authorId'];
+            var annotationId = annotationElement.dataset['id'];
+
+            var existingAnnotation = new ExistingAnnotation(annotationUserId, null, annotationId);
+            existingAnnotation.delete(annotationElement);
+        }
+    })
+}
+
+/**
  * Removes the edit annotation controls from the view
  * @param annotationElementBody - the body of the annotation element
  */
@@ -153,6 +184,11 @@ function initializeAnnotationElementsMutationObserver() {
             if(mutation.type === 'childList') {
                 if(mutation.addedNodes.length !== 0) {
                     var annotationElement = mutation.addedNodes[0];
+                    // If there were previously no annotations, hide the no annotations text
+                    if(mutation.target.children.length === 1) {
+                        // Annotation count was previously 0 before this created one
+                        hideNoAnnotationText();
+                    }
                     // A new annotation was added, make sure name exists in names to filter by
                     addUserIdAndNameFromElement(annotationElement, state.userIdsAndNames);
                     
@@ -162,6 +198,11 @@ function initializeAnnotationElementsMutationObserver() {
                     // Add the HTML for the annotation options dropdown
                     // TODO - Check permissions before adding this
                     renderAnnotationOptionsDropdown(annotationElement);
+                } else if (mutation.removedNodes.length === 1) {
+                    // Put up "No annotations" text if no more annotations
+                    if(mutation.target.children.length === 0) {
+                        unhideNoAnnotationText();
+                    }
                 }
             }
         }

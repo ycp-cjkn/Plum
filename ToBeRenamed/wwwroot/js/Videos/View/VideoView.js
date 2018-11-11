@@ -271,6 +271,20 @@ function renderAnnotationOptionsDropdowns() {
 }
 
 /**
+ * Unhides the message that tells the user that there are no annotations
+ */
+function unhideNoAnnotationText() {
+    elements.annotations.querySelector(selectors.noAnnotationsText).classList.remove('hidden');
+}
+
+/**
+ * Hides the message that tells the user that there are no annotations
+ */
+function hideNoAnnotationText() {
+    elements.annotations.querySelector(selectors.noAnnotationsText).classList.add('hidden');
+}
+
+/**
  * Renders the annotation options dropdown html for a single annotation element
  * @param annotation -  the annotation element
  */

@@ -63,12 +63,9 @@
                 </div>
                 <hr>
             </div>
-             @if (!Model.Annotations.Any())
-             {
-                 <div id="no-annotation-text" class="text-center">
-                     <p>No annotations to show</p>
-                 </div>
-             }
+            <div id="no-annotation-text" class="text-center hidden">
+                <p>No annotations to show</p>
+            </div>
             <div id="annotations-body">
                 @foreach (var annotation in Model.Annotations)
                 {

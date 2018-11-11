@@ -25,7 +25,7 @@ Annotation.prototype.submit = function(player) {
 
             if (state.hasAnnotations === false) {
                 // Remove element, since there is now annotations to show
-                elements.noAnnotationsText.parentElement.removeChild(elements.noAnnotationsText);
+                elements.annotations.querySelector(selectors.noAnnotationsText).classList.add('hidden');
                 state.hasAnnotations = true;
             }
 
@@ -72,6 +72,7 @@ ExistingAnnotation.prototype.delete = function(annotationElement) {
             annotationId: this.annotationId
         },
         method: 'POST',
+        dataType: 'json',
         beforeSend: function(xhr) {
             // Set header for security
             xhr.setRequestHeader("RequestVerificationToken",
