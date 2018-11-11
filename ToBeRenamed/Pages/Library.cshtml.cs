@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using ToBeRenamed.Commands;
 using ToBeRenamed.Dtos;
+using ToBeRenamed.Extensions;
 using ToBeRenamed.Models;
 using ToBeRenamed.Queries;
 
@@ -39,6 +40,9 @@ namespace ToBeRenamed.Pages
         [Required]
         public int Id { get; set; }
 
+        [BindProperty(SupportsGet = true)]
+        public int LibraryId { get; set; }
+
         public async Task OnGetAsync()
         {
             await SetUpPage();
@@ -53,6 +57,19 @@ namespace ToBeRenamed.Pages
             }
 
             await _mediator.Send(new UpdateDisplayName(MembershipId, NewDisplayName));
+            return RedirectToPage();
+        }
+
+        public async Task<IActionResult> OnPostDeleteVideo(int videoId)
+        {
+            var member = await _mediator.Send(new GetSignedInMember(User, LibraryId));
+
+            if (!member.Role.Privileges.Contains(Privilege.CanRemoveAnyVideo))
+            {
+                return this.InsufficientPrivileges();
+            }
+
+            await _mediator.Send(new DeleteVideoFromLibrary(videoId));
             return RedirectToPage();
         }
 

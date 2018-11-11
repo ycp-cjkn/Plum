@@ -1,4 +1,5 @@
 ﻿@page "{id:int}"
+@using ToBeRenamed.Models
 @model LibraryModel
 @{
     ViewData["Title"] = @Model.Library.Title;
@@ -113,6 +114,13 @@
                                     </h4>
                                 </div>
                             </a>
+                            @if (Model.Member.Role.Privileges.Contains(Privilege.CanRemoveAnyVideo))
+                            {
+                                <form method="post">
+                                    <input type="hidden" name="VideoId" value="@video.Id" />
+                                    <button class="btn btn-link btn-xs" type="submit" asp-page-handler="DeleteVideo">Remove</button>
+                                </form>
+                            }
                         </div>
                     }
                 </div>
