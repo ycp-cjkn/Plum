@@ -1,0 +1,3 @@
+ALTER TABLE plum.annotations
+  ADD COLUMN modified_at TIMESTAMPTZ NULL,
+  ADD COLUMN deleted_at TIMESTAMPTZ NULL;
