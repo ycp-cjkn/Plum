@@ -25,9 +25,20 @@ namespace ToBeRenamed.Commands
                     VALUES (@UserId, @Comment, @Timestamp, @VideoId)
                     RETURNING id, comment, timestamp, user_id, video_id
                 )
-                SELECT ANN.id, ANN.comment, ANN.timestamp, ANN.user_id, MEM.display_name FROM ANN
+                SELECT 
+                    ANN.id, 
+                    ANN.comment,
+                    ANN.timestamp,
+                    ANN.user_id,
+                    (CASE
+                        WHEN MEM.display_name = ''
+                        THEN USR.display_name
+                        ELSE MEM.display_name END)
+                FROM ANN
                 INNER JOIN plum.memberships MEM
                 ON MEM.user_id = ANN.user_id
+                INNER JOIN plum.users USR
+                ON MEM.user_id = USR.id
                 INNER JOIN plum.videos VID
                 ON MEM.library_id = VID.library_id AND VID.id = ANN.video_id";
 

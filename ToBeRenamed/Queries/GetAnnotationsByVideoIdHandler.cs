@@ -35,7 +35,9 @@ namespace ToBeRenamed.Queries
                 ON ann.user_id = usr.id
                 INNER JOIN plum.memberships mem
                 ON ann.user_id = mem.user_id
-                WHERE ann.video_id = @VideoId
+                WHERE 
+                    ann.video_id = @VideoId
+                    AND ann.deleted_at IS NULL
                 ORDER BY ann.timestamp DESC";
 
             const string repliesSql = @"

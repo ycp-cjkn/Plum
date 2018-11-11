@@ -16,6 +16,11 @@
 
 <div class="row">
     <div class="col-md-12">
+        @if (!ViewData.ModelState.IsValid)
+        {
+            @Html.ValidationSummary(false, null, new { @class = "alert alert-danger" })
+        }
+
         <div class="panel panel-default">
             <div class="panel-heading">Members</div>
             <form method="post">
@@ -38,7 +43,7 @@
                             <tr>
                                 <th scope="row">@member.Id</th>
                                 <td>@member.FullName</td>
-                                <td>@member.DisplayName</td>
+                                <td><input type="text" name="Requests[@member.Id].DisplayName" value="@member.DisplayName" /></td>
                                 <td>@member.CreatedAt</td>
                                 <td>
                                     <select name="Requests[@member.Id].RoleId">
@@ -56,10 +61,10 @@
                                     </select>
                                 </td>
                                 <td>
-                                    <form method="post">
-                                        <input type="hidden" name="MembershipId" value="@member.Id" />
-                                        <button class="btn btn-link btn-xs" type="submit" asp-page-handler="DeleteMember">Remove</button>
-                                    </form>
+                                    @if (member.Id != Model.Member.Id)
+                                    {
+                                        <a asp-page-handler="DeleteMember" asp-route-MembershipId="@member.Id">Remove</a>
+                                    }
                                 </td>
                             </tr>
                         }
@@ -102,7 +107,14 @@
                         <button class="btn btn-primary" type="submit" asp-page-handler="UpdateRole">Update</button>
                         <form method="post">
                             <input hidden="" name="roleId" value="@role.Id" />
-                            <button class="btn btn-default" type="submit" asp-page-handler="DeleteRole">Delete</button>
+                            @if (Model.Members.Any(m => m.Role.Id == role.Id))
+                            {
+                                <button class="btn btn-default" disabled="">Delete</button>
+                            }
+                            else
+                            {
+                                <button class="btn btn-default" type="submit" asp-page-handler="DeleteRole">Delete</button>
+                            }
                         </form>
                     </div>
                 </form>

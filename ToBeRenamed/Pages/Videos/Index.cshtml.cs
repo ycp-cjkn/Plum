@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using ToBeRenamed.Commands;
 using ToBeRenamed.Dtos;
+using ToBeRenamed.Models;
 using ToBeRenamed.Queries;
 
 namespace ToBeRenamed.Pages.Videos
@@ -22,12 +24,13 @@ namespace ToBeRenamed.Pages.Videos
         public VideoDto Video { get; set; }
         public IEnumerable<AnnotationDto> Annotations { get; set; }
         public IEnumerable<ReplyDto> Replies { get; set; }
-        public UserDto CurrentUser { get; set; }
+        public Member CurrentMember { get; set; }
 
         public async Task OnGetAsync(int id)
         {
-            CurrentUser = await _mediator.Send(new GetSignedInUserDto(User));
+            
             Video = await _mediator.Send(new GetVideoById(id));
+            CurrentMember = await _mediator.Send(new GetSignedInMember(User, Video.LibraryId));
             Annotations = await _mediator.Send(new GetAnnotationsByVideoId(id));
             Replies = await _mediator.Send(new GetAnnotationRepliesByVideoId(id));
         }
@@ -54,6 +57,18 @@ namespace ToBeRenamed.Pages.Videos
                 ViewName = "_Replies",
                 ViewData = new ViewDataDictionary<ReplyDto>(ViewData, reply)
             };
+        }
+        
+        public async Task<ContentResult> OnPostEditAnnotation(int userId, int annotationId, string comment)
+        {
+            await _mediator.Send(new EditAnnotation(userId, comment, annotationId));
+            return Content("{ \"response\": true }", "application/json");
+        }
+        
+        public async Task<ContentResult> OnPostDeleteAnnotation(int userId, int annotationId)
+        {
+            await _mediator.Send(new DeleteAnnotation(userId, annotationId));
+            return Content("{ \"response\": true }", "application/json");
         }
     }
 }

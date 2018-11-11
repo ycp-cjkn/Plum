@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
 using ToBeRenamed.Commands;
 using ToBeRenamed.Dtos;
+using ToBeRenamed.Extensions;
+using ToBeRenamed.Models;
 using ToBeRenamed.Queries;
 
 namespace ToBeRenamed.Pages.Libraries
@@ -24,6 +23,7 @@ namespace ToBeRenamed.Pages.Libraries
         }
 
         public LibraryDto Library { get; set; }
+        public Member Member { get; set; }
 
         [BindProperty]
         [Required]
@@ -36,6 +36,13 @@ namespace ToBeRenamed.Pages.Libraries
         public async Task<IActionResult> OnGetAsync(int id)
         {
             Library = await _mediator.Send(new GetLibraryDtoById(id));
+            Member = await _mediator.Send(new GetSignedInMember(User, id));
+
+            if (!Member.Role.Privileges.Contains(Privilege.CanEditLibrary))
+            {
+                return this.InsufficientPrivileges();
+            }
+            
             return Page();
         }
 
@@ -44,6 +51,13 @@ namespace ToBeRenamed.Pages.Libraries
             if (!ModelState.IsValid)
             {
                 return Page();
+            }
+
+            Member = await _mediator.Send(new GetSignedInMember(User, id));
+
+            if (!Member.Role.Privileges.Contains(Privilege.CanEditLibrary))
+            {
+                return this.InsufficientPrivileges();
             }
 
             await _mediator.Send(new UpdateLibraryInfo(id, NewTitle, NewDescription));

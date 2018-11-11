@@ -1,5 +1,5 @@
 ﻿@page "{id:int}"
-@using ToBeRenamed.Models
+@using Models
 @model LibraryModel
 @{
     ViewData["Title"] = @Model.Library.Title;
@@ -16,7 +16,10 @@
 <div class="row">
     <div class="col-md-12">
         <div class="page-header">
-            <a asp-page="Libraries/Edit"><span class="glyphicon glyphicon-edit pull-right" aria-hidden="true"></span></a>
+            @if (Model.Member.Role.Privileges.Contains(Privilege.CanEditLibrary))
+            {
+                <a asp-page="Libraries/Edit"><span class="glyphicon glyphicon-edit pull-right" aria-hidden="true"></span></a>
+            }
             <h1>@Model.Library.Title</h1>
         </div>
     </div>
@@ -28,9 +31,12 @@
             <div class="panel-heading">
                 <h3 class="panel-title">
                     Members
-                    <a asp-page="/Roles/Index" asp-route-libraryId="@Model.Library.Id">
-                        <span class="glyphicon glyphicon-edit pull-right" aria-hidden="true"></span>
-                    </a>
+                    @if (Model.Member.Role.Privileges.Contains(Privilege.CanManageMembersAndRoles))
+                    {
+                        <a asp-page="/Roles/Index" asp-route-libraryId="@Model.Library.Id">
+                            <span class="glyphicon glyphicon-edit pull-right" aria-hidden="true"></span>
+                        </a>
+                    }
                 </h3>
             </div>
             <div class="panel-body">
@@ -89,9 +95,12 @@
             <div class="panel-heading">
                 <h3 class="panel-title">
                     Videos
-                    <a asp-page="/Videos/CreateVideo" asp-route-libraryId="@Model.Library.Id">
-                        <span class="glyphicon glyphicon-plus-sign pull-right" aria-hidden="true"></span>
-                    </a>
+                    @if (Model.Member.Role.Privileges.Contains(Privilege.CanSubmitVideo))
+                    {
+                        <a asp-page="/Videos/CreateVideo" asp-route-libraryId="@Model.Library.Id">
+                            <span class="glyphicon glyphicon-plus-sign pull-right" aria-hidden="true"></span>
+                        </a>
+                    }
                 </h3>
             </div>
             <div class="panel-body">
