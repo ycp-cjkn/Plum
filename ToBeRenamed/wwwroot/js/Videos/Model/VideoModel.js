@@ -25,7 +25,7 @@ Annotation.prototype.submit = function(player) {
 
             if (state.hasAnnotations === false) {
                 // Remove element, since there is now annotations to show
-                elements.noAnnotationsText.parentElement.removeChild(elements.noAnnotationsText);
+                elements.annotations.querySelector(selectors.noAnnotationsText).classList.add('hidden');
                 state.hasAnnotations = true;
             }
 
@@ -35,8 +35,8 @@ Annotation.prototype.submit = function(player) {
     });
 };
 
-function ExistingAnnotation(videoId, comment, annotationId) {
-    this.videoId = videoId;
+function ExistingAnnotation(userId, comment, annotationId) {
+    this.userId = userId;
     this.comment = comment;
     this.annotationId = annotationId;
 } 
@@ -46,10 +46,11 @@ ExistingAnnotation.prototype.edit = function(annotationElementBody) {
         url: apiUrls.editAnnotation,
         data: {
             comment: this.comment,
-            videoId: this.videoId,
+            userId: this.userId,
             annotationId: this.annotationId
         },
         method: 'POST',
+        dataType: 'json',
         beforeSend: function(xhr) {
             // Set header for security
             xhr.setRequestHeader("RequestVerificationToken",
@@ -67,10 +68,11 @@ ExistingAnnotation.prototype.delete = function(annotationElement) {
     $.ajax({
         url: apiUrls.deleteAnnotation,
         data: {
-            videoId: this.videoId,
+            userId: this.userId,
             annotationId: this.annotationId
         },
         method: 'POST',
+        dataType: 'json',
         beforeSend: function(xhr) {
             // Set header for security
             xhr.setRequestHeader("RequestVerificationToken",
