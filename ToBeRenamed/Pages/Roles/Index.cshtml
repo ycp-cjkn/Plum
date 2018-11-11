@@ -10,6 +10,7 @@
         <div class="page-header">
             <h1>Members and Roles <small></small></h1>
             <p>Manage members and roles for <b>@Model.Library.Title</b></p>
+            <a asp-route-id="@Model.Library.Id" asp-page="/Library">Back to library</a>
         </div>
     </div>
 </div>
@@ -131,7 +132,7 @@
             <form class="form-inline" autocomplete="off" method="post">
                 <div class="panel-body">
                     <div class="form-group">
-                        <label>Name</label>
+                        <label>Title</label>
                         <div>
                             <input class="form-control" name="Title" />
                         </div>
