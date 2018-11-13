@@ -36,7 +36,10 @@
                         <a asp-page="/Roles/Index" asp-route-libraryId="@Model.Library.Id">
                             <span class="glyphicon glyphicon-edit pull-right" aria-hidden="true"></span>
                         </a>
-                    }
+                    }                    
+                    <a asp-page="/Invitations/Index" asp-route-libraryId="@Model.Library.Id">
+                        <span class="glyphicon glyphicon-plus pull-right" aria-hidden="true"></span>
+                    </a>
                 </h3>
             </div>
             <div class="panel-body">
