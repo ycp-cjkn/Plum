@@ -464,3 +464,7 @@ function filterAnnotationByUserId(annotation) {
         annotation.classList.add('hidden');
     }
 }
+
+function getLibraryId() {
+    return document.querySelector(selectors.libraryId).value;
+}

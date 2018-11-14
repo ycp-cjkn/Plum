@@ -4,7 +4,8 @@
     annotationElements: {},
     hasAnnotations: null,
     filterUserId : new Set(),
-    currentUserId: null
+    currentUserId: null,
+    userRole: null
 };
 
 // Initialize Youtube API
@@ -33,6 +34,8 @@ function initialize() {
     initializeUserIdsAndNames();
     initializeHasAnnotations();
     initializeCurrentUserId();
+    initializeLibraryId();
+    initializeUserRole(state.libraryId);
 
     // Intialize content
     initializeAnnotationOptionDropdowns();
@@ -167,6 +170,15 @@ function initializeAnnotationOptionDropdowns() {
 
 function initializeCurrentUserId() {
     setCurrentUserId();
+}
+
+function initializeLibraryId() {
+    state.libraryId = getLibraryId();
+}
+
+function initializeUserRole(libraryId) {
+    state.userRole = new Role(libraryId);
+    state.userRole.fetchAndSet();
 }
 
 function initializeHasAnnotations() {

@@ -70,5 +70,15 @@ namespace ToBeRenamed.Pages.Videos
             await _mediator.Send(new DeleteAnnotation(userId, annotationId));
             return Content("{ \"response\": true }", "application/json");
         }
+        
+        public async Task<JsonResult> OnPostFetchRole(int libraryId)
+        {
+            var member = await _mediator.Send(new GetSignedInMember(User, libraryId));
+            var memberList = new List<int>();
+            memberList.Add(member.Id);
+            var role = await _mediator.Send(new GetRolesForMembers(memberList));
+            
+            return new JsonResult(role);
+        }
     }
 }
