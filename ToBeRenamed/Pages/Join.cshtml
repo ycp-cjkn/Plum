@@ -1,0 +1,17 @@
+﻿@page "{urlKey}"
+@model ToBeRenamed.Pages.JoinModel
+@{
+    ViewData["Title"] = "Join";
+
+    var member = string.IsNullOrEmpty(Model.Invitation.DisplayName) ? Model.Invitation.FullName : Model.Invitation.DisplayName;
+    var a = "aeiouAEIOU".Contains(Model.Invitation.RoleTitle[0]) ? "an" : "a";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <h2>Hi!</h2>
+        <p>You have been invited by <b>@member</b> to join <b>@Model.Invitation.LibraryTitle</b> as @a <b>@Model.Invitation.RoleTitle</b>.</p>
+        <button class="btn btn-success">Accept</button>
+        <button class="btn btn-default">Decline</button>
+    </div>
+</div>
