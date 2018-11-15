@@ -20,16 +20,16 @@ namespace ToBeRenamed.Commands
         public async Task<Unit> Handle(CreateInvitation request, CancellationToken cancellationToken)
         {
             const string sql = @"
-                INSERT INTO plum.invitations (url_segment, role_id, created_by, expires_at)
-                VALUES (@UrlSegment, @RoleId, @CreatedBy, @ExpiresAt)";
+                INSERT INTO plum.invitations (url_key, role_id, membership_id, expires_at)
+                VALUES (@UrlKey, @RoleId, @MembershipId, @ExpiresAt)";
 
             using (var cnn = _sqlConnectionFactory.GetSqlConnection())
             {
                 await cnn.ExecuteAsync(sql, new
                 {
-                    UrlSegment = GenerateUrlSegment(),
+                    UrlKey = GenerateUrlKey(),
                     request.RoleId,
-                    request.CreatedBy,
+                    request.MembershipId,
                     request.ExpiresAt
                 });
             }
@@ -37,7 +37,7 @@ namespace ToBeRenamed.Commands
             return Unit.Value;
         }
 
-        private static string GenerateUrlSegment()
+        private static string GenerateUrlKey()
         {
             const string chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456789";
 

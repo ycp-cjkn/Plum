@@ -6,13 +6,13 @@ namespace ToBeRenamed.Commands
     public class CreateInvitation : IRequest
     {
         public int RoleId { get; }
-        public int CreatedBy { get; }
+        public int MembershipId { get; }
         public DateTime? ExpiresAt { get; }
 
-        public CreateInvitation(int roleId, int createdBy, DateTime? expiresAt)
+        public CreateInvitation(int roleId, int membershipId, DateTime? expiresAt)
         {
             RoleId = roleId;
-            CreatedBy = createdBy;
+            MembershipId = membershipId;
             ExpiresAt = expiresAt;
         }
     }
