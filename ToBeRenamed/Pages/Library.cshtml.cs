@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Collections.Generic;
@@ -12,6 +13,7 @@ using ToBeRenamed.Queries;
 
 namespace ToBeRenamed.Pages
 {
+    [Authorize]
     public class LibraryModel : PageModel
     {
         private readonly IMediator _mediator;
@@ -71,6 +73,16 @@ namespace ToBeRenamed.Pages
 
             await _mediator.Send(new DeleteVideoFromLibrary(videoId));
             return RedirectToPage();
+        }
+
+        public async Task<IActionResult> OnGetAcceptInvitationAsync(string urlKey)
+        {
+            var invitation = await _mediator.Send(new GetInvitationByKey(urlKey));
+
+            var request = new AddSignedInUserToLibrary(User, invitation.LibraryId, invitation.RoleId);
+            await _mediator.Send(request);
+
+            return RedirectToPage("/Library", new { id = invitation.LibraryId });
         }
 
         // TODO: Don't do it this way

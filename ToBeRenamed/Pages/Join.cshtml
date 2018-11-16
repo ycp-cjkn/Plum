@@ -1,4 +1,4 @@
-﻿@page "{urlKey}"
+﻿@page "{UrlKey}"
 @model ToBeRenamed.Pages.JoinModel
 @{
     ViewData["Title"] = "Join";
@@ -8,10 +8,12 @@
 }
 
 <div class="row">
-    <div class="col-md-12">
-        <h2>Hi!</h2>
-        <p>You have been invited by <b>@member</b> to join <b>@Model.Invitation.LibraryTitle</b> as @a <b>@Model.Invitation.RoleTitle</b>.</p>
-        <button class="btn btn-success">Accept</button>
-        <button class="btn btn-default">Decline</button>
+    <div class="col-md-12">        
+        <form method="post">
+            <h2>Hi!</h2>
+            <p>You have been invited by <b>@member</b> to join <b>@Model.Invitation.LibraryTitle</b> as @a <b>@Model.Invitation.RoleTitle</b>.</p>
+            <button class="btn btn-success" type="submit">Accept</button>
+            <a class="btn btn-default" href="/">Decline</a>
+        </form>
     </div>
 </div>

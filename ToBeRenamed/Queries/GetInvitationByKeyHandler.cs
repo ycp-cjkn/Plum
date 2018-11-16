@@ -42,7 +42,7 @@ namespace ToBeRenamed.Queries
                 ON lib.id = rol.library_id
                 WHERE
                     inv.deleted_at IS NULL
-                    AND inv.expires_at > NOW()
+                    AND (inv.expires_at > NOW() OR inv.expires_at IS NULL)
                     AND inv.url_key = @Key";
 
             using (var cnn = _sqlConnectionFactory.GetSqlConnection())
