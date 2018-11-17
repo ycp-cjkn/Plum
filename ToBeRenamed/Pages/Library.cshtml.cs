@@ -73,6 +73,19 @@ namespace ToBeRenamed.Pages
             return RedirectToPage();
         }
 
+        public async Task<IActionResult> OnPostDeleteLibrary(int libraryId)
+        {
+            var member = await _mediator.Send(new GetSignedInMember(User, LibraryId));
+
+            if (!member.Role.Privileges.Contains(Privilege.CanRemoveLibrary))
+            {
+                return this.InsufficientPrivileges();
+            }
+
+            await _mediator.Send(new DeleteLibrary(libraryId));
+            return RedirectToPage();
+        }
+
         // TODO: Don't do it this way
         private async Task SetUpPage()
         {

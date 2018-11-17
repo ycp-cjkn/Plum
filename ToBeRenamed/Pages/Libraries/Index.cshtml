@@ -47,6 +47,10 @@
                                 <a asp-page="/Library" asp-route-id="@library.Id">@library.Title</a>
                             </h4>
                             @library.Description
+                            <form method="post">
+                                <input type="hidden" name="LibraryId" value="@library.Id" />
+                                <button class="btn btn-link btn-xs" type="submit" asp-page-handler="DeleteLibrary">Remove</button>
+                            </form>
                         </div>
                     </div>
                 }
