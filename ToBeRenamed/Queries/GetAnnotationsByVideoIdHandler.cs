@@ -42,6 +42,8 @@ namespace ToBeRenamed.Queries
 
             const string repliesSql = @"
                 SELECT
+                    rep.id,
+                    rep.user_id,
                     rep.annotation_id,
                     rep.text,
                     (CASE

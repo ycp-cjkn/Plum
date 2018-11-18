@@ -4,7 +4,8 @@
     annotationElements: {},
     hasAnnotations: null,
     filterUserId : new Set(),
-    currentUserId: null
+    currentUserId: null,
+    replyElements: {}
 };
 
 // Initialize Youtube API
@@ -33,10 +34,12 @@ function initialize() {
     initializeUserIdsAndNames();
     initializeHasAnnotations();
     initializeCurrentUserId();
+    initializeReplyElements();
 
     // Intialize content
     initializeAnnotationOptionDropdowns();
     initializeNoAnnotationText();
+    initializeReplyOptionDropdowns();
     
     // Initialize event listeners
     initializeTimestampClickEventListener();
@@ -48,11 +51,13 @@ function initialize() {
     initializeFilterByUserDropdownEventListener();
     initalizeFilterByUserDropdownContentEventListener();
     initializeCancelEditAnnotationButtonEventListener();
-    initalizeSubmitEditAnnotationButtonEventListener();
+    initializeSubmitEditAnnotationButtonEventListener();
     initializeDeleteAnnotationButtonEventListener();
+    initializeReplyOptionsDropdownContentEventListener();
 
     // Initialize mutation observers
     initializeAnnotationElementsMutationObserver();
+    initializeReplyElementsMutationObserver();
 }
 
 /**
@@ -90,6 +95,30 @@ function initalizeFilterByUserDropdownContentEventListener() {
 }
 
 /**
+ * Initializes the event listener that listens for any clicks to the annotation options dropdown
+ * entries
+ */
+function initializeReplyOptionsDropdownContentEventListener() {
+    elements.annotations.addEventListener('click', function(e){
+        var target = e.target;
+
+        if(target.classList.contains(classNames.editReply)) {
+            // edit reply clicked
+
+            // Get reply element
+            var replyElement = target.closest(selectors.replyContainer);
+
+            // Insert edit controls
+            var replyElementBody = replyElement.querySelector(selectors.replyBody);
+            addEditReplyControls(replyElementBody);
+
+        } else if(target.classList.contains(classNames.deleteAnnotation)) {
+            // delete annotation clicked
+        }
+    });
+}
+
+/**
  * Initializes an event listener that listeners for any clicks to the cancel annotation edit button
  */
 function initializeCancelEditAnnotationButtonEventListener() {
@@ -107,7 +136,7 @@ function initializeCancelEditAnnotationButtonEventListener() {
 /**
  * Initialize the event listener for the submit edited annotation button
  */
-function initalizeSubmitEditAnnotationButtonEventListener() {
+function initializeSubmitEditAnnotationButtonEventListener() {
     elements.annotations.addEventListener('click', function(e) {
         var target = e.target;
         
@@ -161,8 +190,21 @@ function addEditAnnotationControls(annotationElementBody) {
     renderEditAnnotationControls(annotationElementBody);
 }
 
+/**
+ * Add the edit reply controls to the view
+ * @param replyElementBody - the body of the reply element
+ */
+function addEditReplyControls(replyElementBody) {
+    hideReplyText(replyElementBody);
+    renderEditReplyControls(replyElementBody);
+}
+
 function initializeAnnotationOptionDropdowns() {
     renderAnnotationOptionsDropdowns();
+}
+
+function initializeReplyOptionDropdowns() {
+    renderReplyOptionsDropdowns();
 }
 
 function initializeCurrentUserId() {
@@ -198,6 +240,9 @@ function initializeAnnotationElementsMutationObserver() {
                     // Add the HTML for the annotation options dropdown
                     // TODO - Check permissions before adding this
                     renderAnnotationOptionsDropdown(annotationElement);
+                    
+                    // Add the mutation observer for the new replies container
+                    createReplyElementsMutationObserver(annotationElement);
                 } else if (mutation.removedNodes.length === 1) {
                     // Put up "No annotations" text if no more annotations
                     if(mutation.target.children.length === 0) {
@@ -210,6 +255,38 @@ function initializeAnnotationElementsMutationObserver() {
     
     var observer = new MutationObserver(callback);
     observer.observe(state.annotationElements, config);
+}
+
+/**
+ * Initializes the mutation observer for the reply elements.
+ * Helpful to catch any changes to the list of replies
+ */
+function createReplyElementsMutationObserver(annotationElement) {
+    var config = { childList: true };
+    var callback = function(mutationsList, observer) {
+        for(var mutation of mutationsList) {
+            if(mutation.type === 'childList') {
+                if(mutation.addedNodes.length !== 0) {
+                    var replyElement = mutation.addedNodes[0];
+                    
+                    // Add the HTML for the reply options dropdown
+                    // TODO - Check permissions before adding this
+                    renderReplyOptionsDropdown(replyElement);
+                }
+            }
+        }
+    };
+    
+    var observer = new MutationObserver(callback);
+    var repliesContainer = annotationElement.querySelector('.annotation-replies');
+    observer.observe(repliesContainer, config);
+}
+
+function initializeReplyElementsMutationObserver() {
+    for(var i = 0; i < state.annotationElements.children.length; i++){
+        var annotationElement = state.annotationElements.children.item(i);
+        createReplyElementsMutationObserver(annotationElement);
+    }
 }
 
 /**
@@ -228,6 +305,14 @@ function initializeUserIdsAndNames() {
  */
 function initializeAnnotationElements() {
     state.annotationElements = getAnnotationElements();
+}
+
+/**
+ * Initializes the state variable that contains the reply elements.
+ * This is helpful since the variable gets automatically updated as the DOM changes.
+ */
+function initializeReplyElements() {
+    state.replyElements = getReplyElements();
 }
 
 /**

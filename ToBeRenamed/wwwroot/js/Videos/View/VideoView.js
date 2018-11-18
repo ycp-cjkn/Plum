@@ -245,6 +245,14 @@ function getAnnotationElements() {
     return document.getElementById(idNames.annotationsBody);
 }
 
+/**
+ * Gets the elements where the replies are stored
+ * @returns {HTMLCollectionOf<Element>}
+ */
+function getReplyElements() {
+    return document.getElementsByClassName('reply-container');
+}
+
 function insertIntoFilterByUserDropdown(userId, displayName) {
     var dropdown = elements.annotations.querySelector(selectors.filterAnnotationsList);
     
@@ -267,6 +275,54 @@ function renderAnnotationOptionsDropdowns() {
     for(var i = 0; i< state.annotationElements.children.length; i++) {
         var annotation = state.annotationElements.children.item(i);
         renderAnnotationOptionsDropdown(annotation);
+    }
+}
+
+/**
+ * Renders the reply options dropdown html for all annotations on the page
+ */
+function renderReplyOptionsDropdowns() {
+    for(var i = 0; i< state.replyElements.length; i++) {
+        var reply = state.replyElements.item(i);
+        
+        renderReplyOptionsDropdown(reply);
+    }
+}
+
+/**
+ * Renders the reply options dropdown html for a single reply element
+ * @param reply -  the reply element
+ */
+function renderReplyOptionsDropdown(reply) {
+    var replyOptionsUl = reply.querySelector('.reply-options-ul');
+
+    if(reply.dataset['authorId'] === state.currentUserId) {
+        var editListElement = document.createElement('li');
+        var editListButton = document.createElement('a');
+        var editText = document.createTextNode('Edit');
+        editListButton.appendChild(editText);
+        editListElement.appendChild(editListButton);
+        editListButton.href = '#';
+        editListButton.classList.add(classNames.editReply);
+
+        replyOptionsUl.appendChild(editListElement);
+
+        var deleteListElement = document.createElement('li');
+        var deleteListButton = document.createElement('a');
+        var deleteText = document.createTextNode('Delete');
+        deleteListButton.appendChild(deleteText);
+        deleteListElement.appendChild(deleteListButton);
+        deleteListButton.href = '#';
+        deleteListButton.classList.add(classNames.deleteReply);
+
+        replyOptionsUl.appendChild(deleteListElement);
+    } else {
+        // reply is not owned by current user
+        var listElement = document.createElement('li');
+        var text = document.createTextNode('No Options');
+        listElement.appendChild(text);
+
+        replyOptionsUl.appendChild(listElement);
     }
 }
 
@@ -336,12 +392,35 @@ function getEditAnnotationControlsHTML() {
 }
 
 /**
+ * Gets the HTML for the edit annotation controls
+ * @returns {string}
+ */
+function getEditReplyControlsHTML() {
+    return `
+        <div class="edit-annotation-text-wrapper row">
+            <textarea></textarea>
+            <button type="button" class="submit-edit-reply btn btn-success btn-sm">Submit</button>
+            <button type="button" class="cancel-edit-reply btn btn-secondary btn-sm">Cancel</button>
+        </div>
+    `;
+}
+
+/**
  * Hides the annotation text.
  * This is useful when you need to edit the text, and hide it before displaying the edit controls
  * @param annotationElementBody - The annotation element's body element
  */
 function hideAnnotationText(annotationElementBody) {
     annotationElementBody.querySelector(selectors.annotationText).classList.add('hidden');
+}
+
+/**
+ * Hides the reply text.
+ * This is useful when you need to edit the text, and hide it before displaying the edit controls
+ * @param replyElementBody - The reply element's body element
+ */
+function hideReplyText(replyElementBody) {
+    replyElementBody.querySelector(selectors.replyText).classList.add('hidden');
 }
 
 /**
@@ -383,6 +462,20 @@ function renderEditAnnotationControls(annotationElementBody) {
     // Add existing annotation text to textarea
     var annotationText = annotationElementBody.querySelector(selectors.annotationText).innerText.trim();
     annotationElementBody.querySelector('textarea').value = annotationText;
+}
+
+/**
+ * Renders the edit reply controls
+ * @param replyElementBody - The reply element's body element, where the controls will be displayed
+ */
+function renderEditReplyControls(replyElementBody) {
+    var html = getEditReplyControlsHTML();
+
+    $(replyElementBody).prepend(html);
+
+    // Add existing annotation text to textarea
+    var replyText = replyElementBody.querySelector(selectors.replyText).innerText.trim();
+    replyElementBody.querySelector('textarea').value = replyText;
 }
 
 /**

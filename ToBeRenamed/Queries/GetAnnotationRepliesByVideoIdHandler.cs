@@ -20,7 +20,7 @@ namespace ToBeRenamed.Queries
         public async Task<IEnumerable<ReplyDto>> Handle(GetAnnotationRepliesByVideoId request, CancellationToken cancellationToken)
         {
             const string sql = @"
-                SELECT annotation_id, text
+                SELECT replies.id, annotation_id, text, replies.user_id
                 FROM plum.replies
                 INNER JOIN plum.annotations ON annotations.id = replies.annotation_id
                 WHERE annotations.video_id = @videoId";

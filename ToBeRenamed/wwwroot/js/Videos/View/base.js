@@ -26,7 +26,12 @@ var classNames = {
     deleteAnnotation: 'delete-annotation',
     cancelEditAnnotation: 'cancel-edit-annotation',
     annotationText: 'annotation-text',
-    editAnnotationTextWrapper: 'edit-annotation-text-wrapper'
+    editAnnotationTextWrapper: 'edit-annotation-text-wrapper',
+    editReply: 'edit-reply',
+    deleteReply: 'delete-reply',
+    replyContainer: 'reply-container',
+    replyBody: 'reply-body',
+    replyText: 'reply-text'
 };
 
 var selectors = {
@@ -40,7 +45,10 @@ var selectors = {
     annotationBody: `.${classNames.annotationBody}`,
     annotationText: `.${classNames.annotationText}`,
     editAnnotationTextWrapper: `.${classNames.editAnnotationTextWrapper}`,
-    editAnnotationText: `.${classNames.editAnnotationTextWrapper} textarea`
+    editAnnotationText: `.${classNames.editAnnotationTextWrapper} textarea`,
+    replyContainer: `.${classNames.replyContainer}`,
+    replyBody: `.${classNames.replyBody}`,
+    replyText: `.${classNames.replyText}`
 };
 
 var elements = {
