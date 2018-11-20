@@ -113,3 +113,32 @@ Reply.prototype.submit = function(annotationElement) {
         }
     });
 };
+
+function ExistingReply(text, replyId, userId) {
+    this.text = text;
+    this.replyId = replyId;
+    this.userId = userId;
+}
+
+ExistingReply.prototype.edit = function(replyElementBody) {
+    $.ajax({
+        url: apiUrls.editReply,
+        data: {
+            replyId: this.replyId,
+            text: this.text,
+            userId: this.userId
+        },
+        method: 'POST',
+        dataType: 'json',
+        beforeSend: function(xhr) {
+            // Set header for security
+            xhr.setRequestHeader("RequestVerificationToken",
+                $('input:hidden[name="__RequestVerificationToken"]').val());
+        },
+        success: function() {
+            unhideReplyText(replyElementBody);
+            updateReplyText(replyElementBody);
+            removeEditReplyControls(replyElementBody);
+        }
+    });
+};

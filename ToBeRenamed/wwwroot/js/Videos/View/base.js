@@ -33,7 +33,8 @@ var classNames = {
     replyBody: 'reply-body',
     replyText: 'reply-text',
     cancelEditReply: 'cancel-edit-reply',
-    editReplyTextWrapper: 'edit-reply-text-wrapper'
+    editReplyTextWrapper: 'edit-reply-text-wrapper',
+    submitEditReply: 'submit-edit-reply'
 };
 
 var selectors = {
@@ -52,7 +53,9 @@ var selectors = {
     replyBody: `.${classNames.replyBody}`,
     replyText: `.${classNames.replyText}`,
     cancelEditReply: `.${classNames.cancelEditReply}`,
-    editReplyTextWrapper: `.${classNames.editReplyTextWrapper}`
+    editReplyTextWrapper: `.${classNames.editReplyTextWrapper}`,
+    editReplyText: `.${classNames.editReplyTextWrapper} textarea`,
+    submitEditReply: `.${classNames.submitEditReply}`
 };
 
 var elements = {
@@ -72,5 +75,6 @@ var apiUrls = {
     submitAnnotation: '/Videos/' + elements.videoId.value + '?handler=CreateAnnotation',
     submitReply: '/Videos/' + elements.videoId.value + '?handler=CreateReply',
     editAnnotation: '/Videos/' + elements.videoId.value + '?handler=EditAnnotation',
-    deleteAnnotation: '/Videos/' + elements.videoId.value + '?handler=DeleteAnnotation'
+    deleteAnnotation: '/Videos/' + elements.videoId.value + '?handler=DeleteAnnotation',
+    editReply: '/Videos/' + elements.videoId.value + '?handler=EditReply'
 };

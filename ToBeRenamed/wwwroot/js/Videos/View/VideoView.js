@@ -450,6 +450,10 @@ function updateAnnotationText(annotationElementBody) {
     annotationElementBody.querySelector(selectors.annotationText).innerText = document.querySelector(selectors.editAnnotationText).value;
 }
 
+function updateReplyText(replyElementBody) {
+    replyElementBody.querySelector(selectors.replyText).innerText = document.querySelector(selectors.editReplyText).value;
+}
+
 /**
  * Renders the edit annotation controls
  * @param annotationElementBody - The annotation element's body element, where the controls will be displayed

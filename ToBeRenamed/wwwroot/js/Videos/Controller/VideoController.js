@@ -55,6 +55,7 @@ function initialize() {
     initializeDeleteAnnotationButtonEventListener();
     initializeReplyOptionsDropdownContentEventListener();
     initializeCancelReplyButtonEventListener();
+    initializeSubmitEditReplyButtonEventListener();
 
     // Initialize mutation observers
     initializeAnnotationElementsMutationObserver();
@@ -462,6 +463,27 @@ function initializeCancelReplyButtonEventListener() {
             var replyElementBody = target.closest(selectors.replyContainer).querySelector(selectors.replyBody);
             removeEditReplyControls(replyElementBody);
             unhideReplyText(replyElementBody);
+        }
+    })
+}
+
+/**
+ * Initialize the event listener for the submit edited reply button
+ */
+function initializeSubmitEditReplyButtonEventListener() {
+    elements.annotations.addEventListener('click', function(e) {
+        var target = e.target;
+
+        if(target.classList.contains(classNames.submitEditReply)) {
+            // submit edited reply
+            var replyElement = target.closest(selectors.replyContainer);
+            var replyElementBody = replyElement.querySelector(selectors.replyBody);
+            var replyUserId = replyElement.dataset['authorId'];
+            var replyId = replyElement.dataset['id'];
+            var newReplyText = replyElementBody.querySelector(selectors.editReplyText).value;
+
+            var existingReply = new ExistingReply(newReplyText, replyId, replyUserId);
+            existingReply.edit(replyElementBody);
         }
     })
 }
