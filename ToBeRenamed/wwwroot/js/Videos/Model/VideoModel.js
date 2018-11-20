@@ -142,3 +142,23 @@ ExistingReply.prototype.edit = function(replyElementBody) {
         }
     });
 };
+
+ExistingReply.prototype.delete = function(replyElement) {
+    $.ajax({
+        url: apiUrls.deleteReply,
+        data: {
+            userId: this.userId,
+            replyId: this.replyId
+        },
+        method: 'POST',
+        dataType: 'json',
+        beforeSend: function(xhr) {
+            // Set header for security
+            xhr.setRequestHeader("RequestVerificationToken",
+                $('input:hidden[name="__RequestVerificationToken"]').val());
+        },
+        success: function() {
+            removeReply(replyElement);
+        }
+    });
+};

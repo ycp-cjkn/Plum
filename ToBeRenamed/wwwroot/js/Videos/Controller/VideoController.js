@@ -56,6 +56,7 @@ function initialize() {
     initializeReplyOptionsDropdownContentEventListener();
     initializeCancelReplyButtonEventListener();
     initializeSubmitEditReplyButtonEventListener();
+    initializeDeleteReplyButtonEventListener();
 
     // Initialize mutation observers
     initializeAnnotationElementsMutationObserver();
@@ -171,6 +172,25 @@ function initializeDeleteAnnotationButtonEventListener() {
 
             var existingAnnotation = new ExistingAnnotation(annotationUserId, null, annotationId);
             existingAnnotation.delete(annotationElement);
+        }
+    })
+}
+
+/**
+ * Initializes the delete reply button event listener
+ */
+function initializeDeleteReplyButtonEventListener() {
+    elements.annotations.addEventListener('click', function(e) {
+        var target = e.target;
+
+        if(target.classList.contains(classNames.deleteReply)) {
+            // delete reply
+            var replyElement = target.closest(selectors.replyContainer);
+            var replyUserId = replyElement.dataset['authorId'];
+            var replyId = replyElement.dataset['id'];
+
+            var existingReply = new ExistingReply(null, replyId, replyUserId);
+            existingReply.delete(replyElement);
         }
     })
 }

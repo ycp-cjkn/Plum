@@ -76,5 +76,6 @@ var apiUrls = {
     submitReply: '/Videos/' + elements.videoId.value + '?handler=CreateReply',
     editAnnotation: '/Videos/' + elements.videoId.value + '?handler=EditAnnotation',
     deleteAnnotation: '/Videos/' + elements.videoId.value + '?handler=DeleteAnnotation',
-    editReply: '/Videos/' + elements.videoId.value + '?handler=EditReply'
+    editReply: '/Videos/' + elements.videoId.value + '?handler=EditReply',
+    deleteReply: '/Videos/' + elements.videoId.value + '?handler=DeleteReply',
 };

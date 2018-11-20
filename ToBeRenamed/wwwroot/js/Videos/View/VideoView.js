@@ -432,6 +432,10 @@ function removeAnnotation(annotationElement) {
     annotationElement.parentElement.removeChild(annotationElement);
 }
 
+function removeReply(replyElement) {
+    replyElement.parentElement.removeChild(replyElement);
+}
+
 /**
  * Unhides the annotation text.
  * Useful when closing the edit annotation controls and showing the existing annotation text again

@@ -57,7 +57,7 @@ namespace ToBeRenamed.Queries
                 ON rep.user_id = usr.id
                 INNER JOIN plum.memberships mem
                 ON rep.user_id = mem.user_id
-                WHERE ann.video_id = @videoId
+                WHERE ann.video_id = @videoId AND rep.deleted_at IS NULL
                 ORDER BY rep.annotation_id ASC, rep.created_at DESC, rep.modified_at DESC";
             
             using (var conn = _sqlConnectionFactory.GetSqlConnection())
