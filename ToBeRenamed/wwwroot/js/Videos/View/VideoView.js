@@ -397,7 +397,7 @@ function getEditAnnotationControlsHTML() {
  */
 function getEditReplyControlsHTML() {
     return `
-        <div class="edit-annotation-text-wrapper row">
+        <div class="edit-reply-text-wrapper row">
             <textarea></textarea>
             <button type="button" class="submit-edit-reply btn btn-success btn-sm">Submit</button>
             <button type="button" class="cancel-edit-reply btn btn-secondary btn-sm">Cancel</button>
@@ -556,4 +556,17 @@ function filterAnnotationByUserId(annotation) {
         // User id is not in filter, so hide it
         annotation.classList.add('hidden');
     }
+}
+
+function isClickedButtonCancelEditReplyButton(clickedElement) {
+    return clickedElement.classList.contains(classNames.cancelEditReply);
+}
+
+function removeEditReplyControls(replyElementBody) {
+    var editReplyTextWrapper = replyElementBody.querySelector(selectors.editReplyTextWrapper);
+    replyElementBody.removeChild(editReplyTextWrapper);
+}
+
+function unhideReplyText(replyElementBody) {
+    replyElementBody.querySelector(selectors.replyText).classList.remove('hidden');
 }

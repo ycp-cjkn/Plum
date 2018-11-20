@@ -54,6 +54,7 @@ function initialize() {
     initializeSubmitEditAnnotationButtonEventListener();
     initializeDeleteAnnotationButtonEventListener();
     initializeReplyOptionsDropdownContentEventListener();
+    initializeCancelReplyButtonEventListener();
 
     // Initialize mutation observers
     initializeAnnotationElementsMutationObserver();
@@ -449,6 +450,18 @@ function initializeSubmitReplyButtonEventListener() {
             );
 
             reply.submit(annotationElement);
+        }
+    })
+}
+
+function initializeCancelReplyButtonEventListener() {
+    elements.annotations.addEventListener('click', function(e) {
+        var target = e.target;
+        
+        if(isClickedButtonCancelEditReplyButton(target)) {
+            var replyElementBody = target.closest(selectors.replyContainer).querySelector(selectors.replyBody);
+            removeEditReplyControls(replyElementBody);
+            unhideReplyText(replyElementBody);
         }
     })
 }

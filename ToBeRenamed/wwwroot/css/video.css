@@ -64,12 +64,12 @@
     max-width: 100%;
 }
 
-.edit-annotation-text-wrapper textarea {
+.edit-annotation-text-wrapper textarea, .edit-reply-text-wrapper textarea {
     width: 100%;
     max-width: 100%;
 }
 
-.edit-annotation-text-wrapper {
+.edit-annotation-text-wrapper, .edit-reply-text-wrapper {
     margin-left: 10px;
     margin-right: 10px;
 }

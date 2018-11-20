@@ -31,7 +31,9 @@ var classNames = {
     deleteReply: 'delete-reply',
     replyContainer: 'reply-container',
     replyBody: 'reply-body',
-    replyText: 'reply-text'
+    replyText: 'reply-text',
+    cancelEditReply: 'cancel-edit-reply',
+    editReplyTextWrapper: 'edit-reply-text-wrapper'
 };
 
 var selectors = {
@@ -48,7 +50,9 @@ var selectors = {
     editAnnotationText: `.${classNames.editAnnotationTextWrapper} textarea`,
     replyContainer: `.${classNames.replyContainer}`,
     replyBody: `.${classNames.replyBody}`,
-    replyText: `.${classNames.replyText}`
+    replyText: `.${classNames.replyText}`,
+    cancelEditReply: `.${classNames.cancelEditReply}`,
+    editReplyTextWrapper: `.${classNames.editReplyTextWrapper}`
 };
 
 var elements = {
