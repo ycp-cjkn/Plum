@@ -67,21 +67,24 @@ namespace ToBeRenamed.Tests.Commands
             // create reply
             var replyText1 = "Such a great annotation";
             var createReplyRequest1 = new CreateAnnotationReply(user.Id, annotation.Id, replyText1);
-            
             await _fixture.SendAsync(createReplyRequest1);
-
-            //delete reply
-            var deleteReplyRequest = new DeleteAnnotationReply(user.Id, annotation.Id, replyText1);
-
+            
+            // Get reply
+            var getReplyRequest = new GetAnnotationRepliesByVideoId(video.Id);
+            var replyResults1 = await _fixture.SendAsync(getReplyRequest);
+            var reply = replyResults1.Single();
+           
+            // delete reply
+            var deleteReplyRequest = new DeleteAnnotationReply(user.Id, reply.Id);
             await _fixture.SendAsync(deleteReplyRequest);
 
             // get replies
-            var getRepliesRequest = new GetAnnotationRepliesByAnnotationId(annotation.Id);
+            var getRepliesRequest = new GetAnnotationRepliesByVideoId(video.Id);
             var replyResults = await _fixture.SendAsync(getRepliesRequest);
             var replies = replyResults.ToList();
             
             // Check that no replies are in database
-            Assert.Equal(0, replies.Count);
+            Assert.Empty(replies);
         }
     }
 }

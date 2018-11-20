@@ -23,7 +23,7 @@ namespace ToBeRenamed.Queries
                 SELECT replies.id, annotation_id, text, replies.user_id
                 FROM plum.replies
                 INNER JOIN plum.annotations ON annotations.id = replies.annotation_id
-                WHERE annotations.video_id = @videoId";
+                WHERE annotations.video_id = @videoId AND replies.deleted_at IS NULL";
 
             using (var conn = _sqlConnectionFactory.GetSqlConnection())
             {
