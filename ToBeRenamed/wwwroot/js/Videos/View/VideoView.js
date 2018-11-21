@@ -578,3 +578,7 @@ function removeEditReplyControls(replyElementBody) {
 function unhideReplyText(replyElementBody) {
     replyElementBody.querySelector(selectors.replyText).classList.remove('hidden');
 }
+
+function getLibraryId() {
+    return document.querySelector(selectors.libraryId).value;
+}

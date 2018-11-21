@@ -76,11 +76,21 @@ namespace ToBeRenamed.Pages.Videos
             await _mediator.Send(new EditAnnotationReply(userId, replyId, text));
             return Content("{ \"response\": true }", "application/json");
         }
-        
+
         public async Task<ContentResult> OnPostDeleteReply(int userId, int replyId)
         {
             await _mediator.Send(new DeleteAnnotationReply(userId, replyId));
             return Content("{ \"response\": true }", "application/json");
+        }
+
+        public async Task<JsonResult> OnPostFetchRole(int libraryId)
+        {
+            var member = await _mediator.Send(new GetSignedInMember(User, libraryId));
+            var memberList = new List<int>();
+            memberList.Add(member.Id);
+            var role = await _mediator.Send(new GetRolesForMembers(memberList));
+            
+            return new JsonResult(role);
         }
     }
 }

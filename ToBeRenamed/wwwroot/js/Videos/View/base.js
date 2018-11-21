@@ -4,7 +4,8 @@
     annotationsBody: 'annotations-body',
     noAnnotationsText: 'no-annotation-text',
     annotations: 'annotations',
-    filterAnnotationsList: 'filter-annotations-list'
+    filterAnnotationsList: 'filter-annotations-list',
+    libraryId: 'library-id'
 };
 
 var classNames = {
@@ -55,7 +56,8 @@ var selectors = {
     cancelEditReply: `.${classNames.cancelEditReply}`,
     editReplyTextWrapper: `.${classNames.editReplyTextWrapper}`,
     editReplyText: `.${classNames.editReplyTextWrapper} textarea`,
-    submitEditReply: `.${classNames.submitEditReply}`
+    submitEditReply: `.${classNames.submitEditReply}`,
+    libraryId: `#${idNames.libraryId}`
 };
 
 var elements = {
@@ -78,4 +80,5 @@ var apiUrls = {
     deleteAnnotation: '/Videos/' + elements.videoId.value + '?handler=DeleteAnnotation',
     editReply: '/Videos/' + elements.videoId.value + '?handler=EditReply',
     deleteReply: '/Videos/' + elements.videoId.value + '?handler=DeleteReply',
+    fetchRole: '/Videos/' + elements.videoId.value + '?handler=FetchRole'
 };

@@ -162,3 +162,47 @@ ExistingReply.prototype.delete = function(replyElement) {
         }
     });
 };
+
+function Role(libraryId) {
+    this.libraryId = libraryId;
+    this.id = null;
+    this.privileges = null;
+    this.title = null;
+}
+
+Role.prototype.fetchAndSet = function () {
+    $.ajax({
+        url: apiUrls.fetchRole,
+        data: {
+            libraryId: this.libraryId
+        },
+        method: 'POST',
+        dataType: 'json',
+        beforeSend: function(xhr) {
+            // Set header for security
+            xhr.setRequestHeader("RequestVerificationToken",
+                $('input:hidden[name="__RequestVerificationToken"]').val());
+        },
+        success: function(roleData) {
+            state.userRole.id = roleData[1].id;
+            state.userRole.privileges = roleData[1].privileges;
+            state.userRole.title = roleData[1].title;
+        }
+    });
+};
+
+Role.prototype.hasPrivilege = function(possiblePrivilege) {
+    if(this.privileges === null) {
+        alert('Error: User does not have any privileges set');
+        return;
+    }
+
+    for (let privilege of this.privileges) {
+        if(possiblePrivilege === privilege.alias) {
+            return true;
+        }
+    }
+
+    return false;
+};
+
