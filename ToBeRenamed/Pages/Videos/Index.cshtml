@@ -33,22 +33,26 @@
         </div>
         <div id="annotations" class="col-md-5">
             <div class="annotations-header">
-                <span id="annotations-header-text">Annotations</span>
-                <button type="button" class="btn btn-primary" id="create-annotation-btn" style="float: right">Create</button>
-                <div class="dropdown" style="float: right;">
+                <div>
+                    <span id="annotations-header-text">Annotations</span>
+                </div>
+                <div style="display: inline-block">
+                    <button type="button" class="btn btn-primary" id="create-annotation-btn">Create</button>
+                </div>
+                <div class="dropdown" style="display: inline-block">
                     <button id="filter-annotations" type="button" class="btn btn-default" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Filter
                         <span class="caret"></span>
                     </button>
                     <ul id="filter-annotations-list" class="dropdown-menu" aria-labelledby="filter-annotations">
-                        
+
                     </ul>
                 </div>
-                <div id="change-mode-select-wrapper" style="float: right;">
+                <div id="change-mode-select-wrapper" style="display: inline-block">
                     <select id="change-mode-select" class="form-control">
                         <option disabled>Choose Mode</option>
-                        <option>Default</option>
-                        <option>Stream</option>
+                        <option value="default">Default</option>
+                        <option value="stream">Stream</option>
                     </select>
                 </div>
             </div>
@@ -91,12 +95,30 @@
 
 <link rel="stylesheet" href="~/css/video.css" />
 
+
+@* Youtube API *@
+<script>
+    // Initialize Youtube API
+    var player;
+    var tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+    function onYouTubeIframeAPIReady() {
+        player = new YT.Player('player', {
+            height: '390',
+            width: '640',
+            videoId: '@Model.Video.Url',
+            events: {}
+        });
+    }
+</script>
 @* Stream mode files *@
 @* <script type="module" src="/js/Videos/View/StreamModeBase.js"></script> *@
 <script type="module" src="/js/Videos/Controller/StreamModeController.js"></script>
 <link rel="stylesheet" href="~/css/Videos/StreamingMode.css"/>
 @* Video files *@
-<script type="text/javascript" src="/js/Videos/View/base.js"></script>
-<script type="text/javascript" src="/js/Videos/View/VideoView.js"></script>
-<script type="text/javascript" src="/js/Videos/Model/VideoModel.js"></script>
-<script type="text/javascript" src="/js/Videos/Controller/VideoController.js"></script>
+<script type="module" src="/js/Videos/View/base.js"></script>
+<script type="module" src="/js/Videos/View/VideoView.js"></script>
+<script type="module" src="/js/Videos/Model/VideoModel.js"></script>
+<script type="module" src="/js/Videos/Controller/VideoController.js"></script>

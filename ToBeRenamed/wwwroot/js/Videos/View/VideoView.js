@@ -1,75 +1,69 @@
-﻿/**
- * 
- */
-function loadIFramePlayerAPI() {
-    
-}
+﻿import * as videoController from '../Controller/VideoController.js' // TODO - Pass in any state vars as parameters for functions
+import * as videoBase from './base.js';
 
 /**
  * Gets the video url
  * @returns {string} - The video url (identifier) used by the youtube API to get the video
  */
-function getVideoUrl() {
-    return elements.videoUrl.value;
+export function getVideoUrl() {
+    return videoBase.elements.videoUrl.value;
 }
 
 /**
  * Gets the video id
  * @returns {string} - The id of the video used in the database
  */
-function getVideoId() {
-    return elements.videoId.value;
+export function getVideoId() {
+    return videoBase.elements.videoId.value;
 }
 
-function getCreatedAnnotationComment() {
-    return elements.createAnnotationTextarea.value;
+export function getCreatedAnnotationComment() {
+    return videoBase.elements.createAnnotationTextarea.value;
 }
 
-function getCurrentYoutubeTime(player) {
-    return player.getCurrentTime();
+export function getCurrentYoutubeTime() {
+    return window.player.getCurrentTime();
 }
 
 /**
  * Hides the create annotation controls
  */
-function hideCreateAnnotationControls() {
-    elements.createAnnotation.classList.add('hidden');
-    elements.createAnnotationTextarea.value = '';
+export function hideCreateAnnotationControls() {
+    videoBase.elements.createAnnotation.classList.add('hidden');
+    videoBase.elements.createAnnotationTextarea.value = '';
 }
 
 /**
  * Pauses the video
- * @param player - The youtube player
  */
-function pauseVideo(player) {
-    player.pauseVideo();
+export function pauseVideo() {
+    window.player.pauseVideo();
 }
 
 /**
  * Plays the video
- * @param player - the youtube player
  */
-function playVideo(player) {
-    player.playVideo();
+export function playVideo() {
+    window.player.playVideo();
 }
 
 /**
  * Sets up the annotation controls for the user so that they can write a new annotation. This should only be called
  * when the controls are already hidden, and they need to be displayed to the user.
  */
-function setupAnnotationControls() {
+export function setupAnnotationControls() {
     // Set up controls
-    elements.newAnnotationTimestamp.innerText = getTimestampToDisplay(state.player.getCurrentTime());
+    videoBase.elements.newAnnotationTimestamp.innerText = videoController.getTimestampToDisplay(window.player.getCurrentTime());
     // Create annotation controls are hidden, so display them
-    elements.createAnnotation.classList.remove('hidden');
+    videoBase.elements.createAnnotation.classList.remove('hidden');
 }
 
 /**
  * Checks if the create annotation controls are hidden
  * @returns {boolean} - true if create annotation controls are hidden, false otherwise
  */
-function areCreateAnnotationControlsHidden() {
-    return elements.createAnnotation.classList.contains('hidden');
+export function areCreateAnnotationControlsHidden() {
+    return videoBase.elements.createAnnotation.classList.contains('hidden');
 }
 
 /**
@@ -77,12 +71,12 @@ function areCreateAnnotationControlsHidden() {
  * @param target
  * @returns {boolean}
  */
-function isClickedButtonSubmitAnnotationButton(target) {
-    return target.classList.contains(classNames.submitAnnotation);
+export function isClickedButtonSubmitAnnotationButton(target) {
+    return target.classList.contains(videoBase.classNames.submitAnnotation);
 }
 
-function isClickedButtonShowRepliesButton(target) {
-    return target.classList.contains(classNames.toggleRepliesButton);
+export function isClickedButtonShowRepliesButton(target) {
+    return target.classList.contains(videoBase.classNames.toggleRepliesButton);
 }
 
 /**
@@ -90,33 +84,33 @@ function isClickedButtonShowRepliesButton(target) {
  * @param target - The annotation HTML element
  * @returns {boolean} - True if hidden, false otherwise
  */
-function areRepliesHidden(target) {
-    return $(target.closest('.annotation-wrapper').lastElementChild).hasClass('hidden');;
+export function areRepliesHidden(target) {
+    return $(target.closest('.annotation-wrapper').lastElementChild).hasClass('hidden');
 }
 
-function displayReplies(annotationElement) {
+export function displayReplies(annotationElement) {
     $(annotationElement.lastElementChild).removeClass('hidden');
     changeToggleRepliesTextToHide(annotationElement);
 }
 
-function hideReplies(annotationElement) {
+export function hideReplies(annotationElement) {
     $(annotationElement.lastElementChild).addClass('hidden');
     changeToggleRepliesTextToShow(annotationElement);
 }
 
-function changeToggleRepliesTextToShow(annotationElement) {
-    annotationElement.querySelector('.' + classNames.toggleRepliesButton).innerHTML = getToggleRepliesShowHTML();
+export function changeToggleRepliesTextToShow(annotationElement) {
+    annotationElement.querySelector('.' + videoBase.classNames.toggleRepliesButton).innerHTML = getToggleRepliesShowHTML();
 }
 
-function getToggleRepliesShowHTML() {
+export function getToggleRepliesShowHTML() {
     return 'Show Replies<span class="glyphicon glyphicon-menu-down"></span>';
 }
 
-function changeToggleRepliesTextToHide(annotationElement) {
-    annotationElement.querySelector('.' + classNames.toggleRepliesButton).innerHTML = getToggleRepliesHideHTML();
+export function changeToggleRepliesTextToHide(annotationElement) {
+    annotationElement.querySelector('.' + videoBase.classNames.toggleRepliesButton).innerHTML = getToggleRepliesHideHTML();
 }
 
-function getToggleRepliesHideHTML() {
+export function getToggleRepliesHideHTML() {
     return 'Hide Replies<span class="glyphicon glyphicon-menu-up"></span>';
 }
 
@@ -124,17 +118,17 @@ function getToggleRepliesHideHTML() {
  * Prepends the annotation HTML to the annotations body
  * @param annotationHTML - HTML created by the backend that represents a single annotation
  */
-function prependAnnotationToAnnotationsBody(annotationHTML){
-    $(elements.annotationsBody).prepend(annotationHTML);
+export function prependAnnotationToAnnotationsBody(annotationHTML){
+    $(videoBase.elements.annotationsBody).prepend(annotationHTML);
 }
 
-function renderReplyControls(annotationElement) {
+export function renderReplyControls(annotationElement) {
     var html = getCreateReplyControlsHTML();
     
     annotationElement.querySelector('.panel').insertAdjacentHTML('afterend', html);
 }
 
-function getCreateReplyControlsHTML() {
+export function getCreateReplyControlsHTML() {
 
     return `<div class="create-reply-container">
                 <div class="panel panel-default">
@@ -155,49 +149,49 @@ function getCreateReplyControlsHTML() {
             </div>`;
 }
 
-function isClickedButtonCreateReplyButton(target) {
+export function isClickedButtonCreateReplyButton(target) {
     return target.classList.contains('reply-button');
 }
 
-function isClickedButtonCancelCreateReplyButton(target) {
-    return target.classList.contains(classNames.cancelCreateReplyButton);
+export function isClickedButtonCancelCreateReplyButton(target) {
+    return target.classList.contains(videoBase.classNames.cancelCreateReplyButton);
 }
 
-function areCreateReplyControlsDisplayed(target) {
-    return target.closest('.' + classNames.annotationWrapper).getElementsByClassName(classNames.createReplyControls).length > 0;
+export function areCreateReplyControlsDisplayed(target) {
+    return target.closest('.' + videoBase.classNames.annotationWrapper).getElementsByClassName(videoBase.classNames.createReplyControls).length > 0;
 }
 
-function doesAnnotationHaveReplies(annotationElement) {
-    return annotationElement.getElementsByClassName(classNames.toggleRepliesButton).length > 0;
+export function doesAnnotationHaveReplies(annotationElement) {
+    return annotationElement.querySelector(videoBase.selectors.annotationReplies).innerHTML.trim() !== '';
 }
 
-function isClickedButtonSubmitReplyButton(target) {
-    return target.classList.contains(classNames.submitReply);
+export function isClickedButtonSubmitReplyButton(target) {
+    return target.classList.contains(videoBase.classNames.submitReply);
 }
 
-function prependReplyToRepliesBody(annotationElement, replyHTML){
-    var repliesBody = annotationElement.querySelector('.' + classNames.annotationReplies);
+export function prependReplyToRepliesBody(annotationElement, replyHTML){
+    var repliesBody = annotationElement.querySelector('.' + videoBase.classNames.annotationReplies);
     $(repliesBody).prepend(replyHTML);
 }
 
-function removeCreateReplyControls(annotationElement) {
-    var createReplyControls = annotationElement.querySelector('.' + classNames.createReplyControls);
+export function removeCreateReplyControls(annotationElement) {
+    var createReplyControls = annotationElement.querySelector('.' + videoBase.classNames.createReplyControls);
     annotationElement.removeChild(createReplyControls);
 }
 
-function getCreatedReplyText(annotationElement) {
+export function getCreatedReplyText(annotationElement) {
     return annotationElement.querySelector('textarea').value;
 }
 
-function doesAnnotationElementHaveToggleRepliesButton(annotationElement) {
-    return annotationElement.getElementsByClassName(classNames.toggleRepliesButton).length > 0;
+export function doesAnnotationElementHaveToggleRepliesButton(annotationElement) {
+    return annotationElement.getElementsByClassName(videoBase.classNames.toggleRepliesButton).length > 0;
 }
 
-function renderToggleRepliesButton(annotationElement) {
+export function renderToggleRepliesButton(annotationElement) {
     annotationElement.querySelector('.panel-body').insertAdjacentHTML('beforeend', getToggleRepliesDefaultHTML());
 }
 
-function getToggleRepliesDefaultHTML() {
+export function getToggleRepliesDefaultHTML() {
     return `
         <div class="toggle-replies-wrapper">
             <a class="annotation-text toggle-replies" href="#">${getToggleRepliesShowHTML()}</a>
@@ -211,7 +205,7 @@ function getToggleRepliesDefaultHTML() {
  * @param annotationElements - An array of the annotation elements on the page
  * @return {object} - An object of user id's mapped to user display names. Ex: {1: 'Kyle Jones'}
  */
-function getUserIdsAndNames(annotationElements) {
+export function getUserIdsAndNames(annotationElements) {
     var userIdsAndNames = {};
     
     for(var i = 0; i < annotationElements.length; i++) {
@@ -228,11 +222,11 @@ function getUserIdsAndNames(annotationElements) {
  * @param annotationElement - The annotation where the user id and display name will come from
  * @param userIdsAndNames - A reference to an object where user ids are mapped to display names
  */
-function addUserIdAndNameFromElement(annotationElement, userIdsAndNames) {
+export function addUserIdAndNameFromElement(annotationElement, userIdsAndNames) {
     var userId = annotationElement.dataset['authorId'];
 
     if(userIdsAndNames[userId] === undefined) {
-        userIdsAndNames[userId] = annotationElement.querySelector(selectors.displayName).innerText;
+        userIdsAndNames[userId] = annotationElement.querySelector(videoBase.selectors.displayName).innerText;
         insertIntoFilterByUserDropdown(userId, userIdsAndNames[userId]);
     }
 }
@@ -241,20 +235,20 @@ function addUserIdAndNameFromElement(annotationElement, userIdsAndNames) {
  * Gets the element where the annotations are stored
  * @returns {HTMLElement}
  */
-function getAnnotationElements() {
-    return document.getElementById(idNames.annotationsBody);
+export function getAnnotationElements() {
+    return document.getElementById(videoBase.idNames.annotationsBody);
 }
 
 /**
  * Gets the elements where the replies are stored
  * @returns {HTMLCollectionOf<Element>}
  */
-function getReplyElements() {
+export function getReplyElements() {
     return document.getElementsByClassName('reply-container');
 }
 
-function insertIntoFilterByUserDropdown(userId, displayName) {
-    var dropdown = elements.annotations.querySelector(selectors.filterAnnotationsList);
+export function insertIntoFilterByUserDropdown(userId, displayName) {
+    var dropdown = videoBase.elements.annotations.querySelector(videoBase.selectors.filterAnnotationsList);
     
     var listElement = document.createElement('li');
     var listButton = document.createElement('a');
@@ -271,9 +265,9 @@ function insertIntoFilterByUserDropdown(userId, displayName) {
 /**
  * Renders the annotation options dropdown html for all annotations on the page
  */
-function renderAnnotationOptionsDropdowns() {
-    for(var i = 0; i< state.annotationElements.children.length; i++) {
-        var annotation = state.annotationElements.children.item(i);
+export function renderAnnotationOptionsDropdowns() {
+    for(var i = 0; i< videoController.state.annotationElements.children.length; i++) {
+        var annotation = videoController.state.annotationElements.children.item(i);
         renderAnnotationOptionsDropdown(annotation);
     }
 }
@@ -281,9 +275,9 @@ function renderAnnotationOptionsDropdowns() {
 /**
  * Renders the reply options dropdown html for all annotations on the page
  */
-function renderReplyOptionsDropdowns() {
-    for(var i = 0; i< state.replyElements.length; i++) {
-        var reply = state.replyElements.item(i);
+export function renderReplyOptionsDropdowns() {
+    for(var i = 0; i< videoController.state.replyElements.length; i++) {
+        var reply = videoController.state.replyElements.item(i);
         
         renderReplyOptionsDropdown(reply);
     }
@@ -293,17 +287,17 @@ function renderReplyOptionsDropdowns() {
  * Renders the reply options dropdown html for a single reply element
  * @param reply -  the reply element
  */
-function renderReplyOptionsDropdown(reply) {
+export function renderReplyOptionsDropdown(reply) {
     var replyOptionsUl = reply.querySelector('.reply-options-ul');
 
-    if(reply.dataset['authorId'] === state.currentUserId) {
+    if(reply.dataset['authorId'] === videoController.state.currentUserId) {
         var editListElement = document.createElement('li');
         var editListButton = document.createElement('a');
         var editText = document.createTextNode('Edit');
         editListButton.appendChild(editText);
         editListElement.appendChild(editListButton);
         editListButton.href = '#';
-        editListButton.classList.add(classNames.editReply);
+        editListButton.classList.add(videoBase.classNames.editReply);
 
         replyOptionsUl.appendChild(editListElement);
 
@@ -313,7 +307,7 @@ function renderReplyOptionsDropdown(reply) {
         deleteListButton.appendChild(deleteText);
         deleteListElement.appendChild(deleteListButton);
         deleteListButton.href = '#';
-        deleteListButton.classList.add(classNames.deleteReply);
+        deleteListButton.classList.add(videoBase.classNames.deleteReply);
 
         replyOptionsUl.appendChild(deleteListElement);
     } else {
@@ -329,32 +323,32 @@ function renderReplyOptionsDropdown(reply) {
 /**
  * Unhides the message that tells the user that there are no annotations
  */
-function unhideNoAnnotationText() {
-    elements.annotations.querySelector(selectors.noAnnotationsText).classList.remove('hidden');
+export function unhideNoAnnotationText() {
+    videoBase.elements.annotations.querySelector(videoBase.selectors.noAnnotationsText).classList.remove('hidden');
 }
 
 /**
  * Hides the message that tells the user that there are no annotations
  */
-function hideNoAnnotationText() {
-    elements.annotations.querySelector(selectors.noAnnotationsText).classList.add('hidden');
+export function hideNoAnnotationText() {
+    videoBase.elements.annotations.querySelector(videoBase.selectors.noAnnotationsText).classList.add('hidden');
 }
 
 /**
  * Renders the annotation options dropdown html for a single annotation element
  * @param annotation -  the annotation element
  */
-function renderAnnotationOptionsDropdown(annotation) {
+export function renderAnnotationOptionsDropdown(annotation) {
     var annotationOptionsUl = annotation.querySelector('.annotation-options-ul');
 
-    if(annotation.dataset['authorId'] === state.currentUserId) {
+    if(annotation.dataset['authorId'] === videoController.state.currentUserId) {
         var editListElement = document.createElement('li');
         var editListButton = document.createElement('a');
         var editText = document.createTextNode('Edit');
         editListButton.appendChild(editText);
         editListElement.appendChild(editListButton);
         editListButton.href = '#';
-        editListButton.classList.add(classNames.editAnnotation);
+        editListButton.classList.add(videoBase.classNames.editAnnotation);
 
         annotationOptionsUl.appendChild(editListElement);
 
@@ -364,7 +358,7 @@ function renderAnnotationOptionsDropdown(annotation) {
         deleteListButton.appendChild(deleteText);
         deleteListElement.appendChild(deleteListButton);
         deleteListButton.href = '#';
-        deleteListButton.classList.add(classNames.deleteAnnotation);
+        deleteListButton.classList.add(videoBase.classNames.deleteAnnotation);
 
         annotationOptionsUl.appendChild(deleteListElement);
     } else {
@@ -381,7 +375,7 @@ function renderAnnotationOptionsDropdown(annotation) {
  * Gets the HTML for the edit annotation controls
  * @returns {string}
  */
-function getEditAnnotationControlsHTML() {
+export function getEditAnnotationControlsHTML() {
     return `
         <div class="edit-annotation-text-wrapper row">
             <textarea></textarea>
@@ -395,7 +389,7 @@ function getEditAnnotationControlsHTML() {
  * Gets the HTML for the edit annotation controls
  * @returns {string}
  */
-function getEditReplyControlsHTML() {
+export function getEditReplyControlsHTML() {
     return `
         <div class="edit-reply-text-wrapper row">
             <textarea></textarea>
@@ -410,8 +404,8 @@ function getEditReplyControlsHTML() {
  * This is useful when you need to edit the text, and hide it before displaying the edit controls
  * @param annotationElementBody - The annotation element's body element
  */
-function hideAnnotationText(annotationElementBody) {
-    annotationElementBody.querySelector(selectors.annotationText).classList.add('hidden');
+export function hideAnnotationText(annotationElementBody) {
+    annotationElementBody.querySelector(videoBase.selectors.annotationText).classList.add('hidden');
 }
 
 /**
@@ -419,8 +413,8 @@ function hideAnnotationText(annotationElementBody) {
  * This is useful when you need to edit the text, and hide it before displaying the edit controls
  * @param replyElementBody - The reply element's body element
  */
-function hideReplyText(replyElementBody) {
-    replyElementBody.querySelector(selectors.replyText).classList.add('hidden');
+export function hideReplyText(replyElementBody) {
+    replyElementBody.querySelector(videoBase.selectors.replyText).classList.add('hidden');
 }
 
 /**
@@ -428,11 +422,11 @@ function hideReplyText(replyElementBody) {
  * Useful when an annotation gets deleted.
  * @param annotationElement - The annotation to be deleted
  */
-function removeAnnotation(annotationElement) {
+export function removeAnnotation(annotationElement) {
     annotationElement.parentElement.removeChild(annotationElement);
 }
 
-function removeReply(replyElement) {
+export function removeReply(replyElement) {
     replyElement.parentElement.removeChild(replyElement);
 }
 
@@ -441,8 +435,8 @@ function removeReply(replyElement) {
  * Useful when closing the edit annotation controls and showing the existing annotation text again
  * @param annotationElementBody
  */
-function unhideAnnotationText(annotationElementBody) {
-    annotationElementBody.querySelector(selectors.annotationText).classList.remove('hidden');
+export function unhideAnnotationText(annotationElementBody) {
+    annotationElementBody.querySelector(videoBase.selectors.annotationText).classList.remove('hidden');
 }
 
 /**
@@ -450,25 +444,25 @@ function unhideAnnotationText(annotationElementBody) {
  * Useful after the annotation gets updated.
  * @param annotationElementBody - The annotation element's body element
  */
-function updateAnnotationText(annotationElementBody) {
-    annotationElementBody.querySelector(selectors.annotationText).innerText = document.querySelector(selectors.editAnnotationText).value;
+export function updateAnnotationText(annotationElementBody) {
+    annotationElementBody.querySelector(videoBase.selectors.annotationText).innerText = document.querySelector(videoBase.selectors.editAnnotationText).value;
 }
 
-function updateReplyText(replyElementBody) {
-    replyElementBody.querySelector(selectors.replyText).innerText = document.querySelector(selectors.editReplyText).value;
+export function updateReplyText(replyElementBody) {
+    replyElementBody.querySelector(videoBase.selectors.replyText).innerText = document.querySelector(videoBase.selectors.editReplyText).value;
 }
 
 /**
  * Renders the edit annotation controls
  * @param annotationElementBody - The annotation element's body element, where the controls will be displayed
  */
-function renderEditAnnotationControls(annotationElementBody) {
+export function renderEditAnnotationControls(annotationElementBody) {
     var html = getEditAnnotationControlsHTML();
     
     $(annotationElementBody).prepend(html);
     
     // Add existing annotation text to textarea
-    var annotationText = annotationElementBody.querySelector(selectors.annotationText).innerText.trim();
+    var annotationText = annotationElementBody.querySelector(videoBase.selectors.annotationText).innerText.trim();
     annotationElementBody.querySelector('textarea').value = annotationText;
 }
 
@@ -476,13 +470,13 @@ function renderEditAnnotationControls(annotationElementBody) {
  * Renders the edit reply controls
  * @param replyElementBody - The reply element's body element, where the controls will be displayed
  */
-function renderEditReplyControls(replyElementBody) {
+export function renderEditReplyControls(replyElementBody) {
     var html = getEditReplyControlsHTML();
 
     $(replyElementBody).prepend(html);
 
     // Add existing annotation text to textarea
-    var replyText = replyElementBody.querySelector(selectors.replyText).innerText.trim();
+    var replyText = replyElementBody.querySelector(videoBase.selectors.replyText).innerText.trim();
     replyElementBody.querySelector('textarea').value = replyText;
 }
 
@@ -490,24 +484,24 @@ function renderEditReplyControls(replyElementBody) {
  * Removes the edit annotation controls from the view
  * @param annotationElementBody - The annotation element's body element
  */
-function removeEditAnnotationControls(annotationElementBody) {
-    var editAnnotationTextWrapper = annotationElementBody.querySelector(selectors.editAnnotationTextWrapper);
+export function removeEditAnnotationControls(annotationElementBody) {
+    var editAnnotationTextWrapper = annotationElementBody.querySelector(videoBase.selectors.editAnnotationTextWrapper);
     annotationElementBody.removeChild(editAnnotationTextWrapper);
 }
 
-function setCurrentUserId() {
-    state.currentUserId = document.querySelector('#user-id').value;
+export function setCurrentUserId() {
+    videoController.state.currentUserId = document.querySelector('#user-id').value;
 }
 
-function doesVideoHaveAnnotations() {
-    return elements.annotations.querySelector(selectors.noAnnotationsText) === null;
+export function doesVideoHaveAnnotations() {
+    return videoBase.elements.annotations.querySelector(videoBase.selectors.noAnnotationsText) === null;
 }
 
 /**
  * Highlight or unhighlight (if already highlighted) the clickedEntryElement
  * @param clickedEntryElement - the filter dropdown entry that was clicked
  */
-function updateHighlightedUser(clickedEntryElement) {
+export function updateHighlightedUser(clickedEntryElement) {
     // add 'active' class to classlist if it already isn't in it
     if(clickedEntryElement.classList.contains('active')) {
         clickedEntryElement.classList.remove('active');
@@ -521,15 +515,15 @@ function updateHighlightedUser(clickedEntryElement) {
  * being filtered
  * @param clickedEntryElement - The entry in the filter dropdown that was clicked
  */
-function updateFilterUserIdState(clickedEntryElement) {
+export function updateFilterUserIdState(clickedEntryElement) {
     var userId = clickedEntryElement.dataset['authorId'];
     
-    if(state.filterUserId.has(userId)) {
+    if(videoController.state.filterUserId.has(userId)) {
         // user is already being filtered, turn filtering off for the user
-        state.filterUserId.delete(userId);
+        videoController.state.filterUserId.delete(userId);
     } else {
         // user is not being filtered, so turn it on for the user
-        state.filterUserId.add(userId);
+        videoController.state.filterUserId.add(userId);
     }
 }
 
@@ -538,8 +532,8 @@ function updateFilterUserIdState(clickedEntryElement) {
  * id's in the state object that holds the filter data are displayed, and any
  * user id's that aren't in it are hidden.
  */
-function filterAnnotationsByUserId() {
-    var annotationElements = state.annotationElements.children;
+export function filterAnnotationsByUserId() {
+    var annotationElements = videoController.state.annotationElements.children;
     
     for(var i = 0; i< annotationElements.length; i++) {
         var annotation = annotationElements.item(i);
@@ -551,13 +545,13 @@ function filterAnnotationsByUserId() {
  * Hides or displays an annotation according to state's filter user data
  * @param annotation - The annotation element that will be displayed or hidden
  */
-function filterAnnotationByUserId(annotation) {
+export function filterAnnotationByUserId(annotation) {
     var annotationUserId = annotation.dataset['authorId'];
 
-    if(state.filterUserId.size === 0) {
+    if(videoController.state.filterUserId.size === 0) {
         // No annotations are being filtered, display all
         annotation.classList.remove('hidden');
-    } else if(state.filterUserId.has(annotationUserId)) {
+    } else if(videoController.state.filterUserId.has(annotationUserId)) {
         // Filter by user id, so make sure it's being displayed
         annotation.classList.remove('hidden');
     } else {
@@ -566,19 +560,24 @@ function filterAnnotationByUserId(annotation) {
     }
 }
 
-function isClickedButtonCancelEditReplyButton(clickedElement) {
-    return clickedElement.classList.contains(classNames.cancelEditReply);
+export function isClickedButtonCancelEditReplyButton(clickedElement) {
+    return clickedElement.classList.contains(videoBase.classNames.cancelEditReply);
 }
 
-function removeEditReplyControls(replyElementBody) {
-    var editReplyTextWrapper = replyElementBody.querySelector(selectors.editReplyTextWrapper);
+export function removeEditReplyControls(replyElementBody) {
+    var editReplyTextWrapper = replyElementBody.querySelector(videoBase.selectors.editReplyTextWrapper);
     replyElementBody.removeChild(editReplyTextWrapper);
 }
 
-function unhideReplyText(replyElementBody) {
-    replyElementBody.querySelector(selectors.replyText).classList.remove('hidden');
+export function unhideReplyText(replyElementBody) {
+    replyElementBody.querySelector(videoBase.selectors.replyText).classList.remove('hidden');
 }
 
-function getLibraryId() {
-    return document.querySelector(selectors.libraryId).value;
+export function getLibraryId() {
+    return document.querySelector(videoBase.selectors.libraryId).value;
+}
+
+export function removeToggleRepliesWrapper(annotationElement) {
+    var toggleRepliesWrapper = annotationElement.querySelector(videoBase.selectors.toggleRepliesWrapper);
+    toggleRepliesWrapper.parentElement.removeChild(toggleRepliesWrapper);
 }

@@ -1,4 +1,4 @@
-﻿var idNames = {
+﻿export var idNames = {
     videoUrl: 'video-url',
     createAnnotationButton: 'create-annotation-btn',
     annotationsBody: 'annotations-body',
@@ -8,7 +8,7 @@
     libraryId: 'library-id'
 };
 
-var classNames = {
+export var classNames = {
     createAnnotation: 'create-annotation-container',
     cancelAnnotation: 'cancel-annotation',
     newAnnotationTimestamp: 'timestamp',
@@ -35,10 +35,11 @@ var classNames = {
     replyText: 'reply-text',
     cancelEditReply: 'cancel-edit-reply',
     editReplyTextWrapper: 'edit-reply-text-wrapper',
-    submitEditReply: 'submit-edit-reply'
+    submitEditReply: 'submit-edit-reply',
+    toggleRepliesWrapper: 'toggle-replies-wrapper'
 };
 
-var selectors = {
+export var selectors = {
     createAnnotationTextarea: '.create-annotation-container textarea',
     displayName: `.${classNames.displayName}`,
     filterAnnotationsList: `#${idNames.filterAnnotationsList}`,
@@ -57,10 +58,12 @@ var selectors = {
     editReplyTextWrapper: `.${classNames.editReplyTextWrapper}`,
     editReplyText: `.${classNames.editReplyTextWrapper} textarea`,
     submitEditReply: `.${classNames.submitEditReply}`,
-    libraryId: `#${idNames.libraryId}`
+    libraryId: `#${idNames.libraryId}`,
+    toggleRepliesWrapper: `.${classNames.toggleRepliesWrapper}`,
+    annotationReplies: `.${classNames.annotationReplies}`
 };
 
-var elements = {
+export var elements = {
     videoUrl: document.getElementById(idNames.videoUrl),
     createAnnotation: document.querySelector('.' + classNames.createAnnotation),
     createAnnotationButton: document.getElementById(idNames.createAnnotationButton),
@@ -73,7 +76,7 @@ var elements = {
     annotations: document.getElementById(idNames.annotations),
 };
 
-var apiUrls = {
+export var apiUrls = {
     submitAnnotation: '/Videos/' + elements.videoId.value + '?handler=CreateAnnotation',
     submitReply: '/Videos/' + elements.videoId.value + '?handler=CreateReply',
     editAnnotation: '/Videos/' + elements.videoId.value + '?handler=EditAnnotation',

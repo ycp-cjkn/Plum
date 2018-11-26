@@ -1,30 +1,21 @@
-﻿var state = {
-    player: null,
-    userIdsAndNames: {},
-    annotationElements: {},
-    hasAnnotations: null,
-    filterUserId : new Set(),
-    currentUserId: null,
-    replyElements: {},
-    userRole: null
-};
+﻿import * as streamModeController from './StreamModeController.js';
+import * as videoBase from '../View/base.js';
+import * as videoView from '../View/VideoView.js';
+import * as videoModel from '../Model/VideoModel.js';
 
-// Initialize Youtube API
-var tag = document.createElement('script');
-tag.src = "https://www.youtube.com/iframe_api";
-var firstScriptTag = document.getElementsByTagName('script')[0];
-firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-function onYouTubeIframeAPIReady() {
-    state.player = new YT.Player('player', {
-        height: '390',
-        width: '640',
-        videoId: getVideoUrl(),
-        events: {
-            'onReady': onPlayerReady
-        }
-    });
-}
+export var state = {};
+
 $(document).ready(function(){
+    state = {
+        userIdsAndNames: {},
+        annotationElements: {},
+        hasAnnotations: null,
+        filterUserId : new Set(),
+        currentUserId: null,
+        replyElements: {},
+        userRole: null
+    };
+    
     initialize();
 });
 
@@ -39,7 +30,7 @@ function initialize() {
     initializeLibraryId();
     initializeUserRole(state.libraryId);
 
-    // Intialize content
+    // Initialize content
     initializeAnnotationOptionDropdowns();
     initializeNoAnnotationText();
     initializeReplyOptionDropdowns();
@@ -60,6 +51,7 @@ function initialize() {
     initializeCancelReplyButtonEventListener();
     initializeSubmitEditReplyButtonEventListener();
     initializeDeleteReplyButtonEventListener();
+    streamModeController.initializeChangeModeSelectEventListener(state.annotationElements.children);
 
     // Initialize mutation observers
     initializeAnnotationElementsMutationObserver();
@@ -72,7 +64,7 @@ function initialize() {
 function initializeNoAnnotationText() {
     if(state.annotationElements.children.length === 0) {
         // unhide no annotation text message
-        unhideNoAnnotationText();
+        videoView.unhideNoAnnotationText();
     }
 }
 
@@ -81,20 +73,20 @@ function initializeNoAnnotationText() {
  * entries
  */
 function initalizeFilterByUserDropdownContentEventListener() {
-    elements.annotations.addEventListener('click', function(e){
+    videoBase.elements.annotations.addEventListener('click', function(e){
         var target = e.target;
         
-        if(target.classList.contains(classNames.editAnnotation)) {
+        if(target.classList.contains(videoBase.classNames.editAnnotation)) {
             // edit annotation clicked
             
             // Get annotation element
-            var annotationElement = target.closest(selectors.annotationWrapper);
+            var annotationElement = target.closest(videoBase.selectors.annotationWrapper);
             
             // Insert edit controls
-            var annotationElementBody = annotationElement.querySelector(selectors.annotationBody);
+            var annotationElementBody = annotationElement.querySelector(videoBase.selectors.annotationBody);
             addEditAnnotationControls(annotationElementBody);
             
-        } else if(target.classList.contains(classNames.deleteAnnotation)) {
+        } else if(target.classList.contains(videoBase.classNames.deleteAnnotation)) {
             // delete annotation clicked
         }
     });
@@ -105,20 +97,20 @@ function initalizeFilterByUserDropdownContentEventListener() {
  * entries
  */
 function initializeReplyOptionsDropdownContentEventListener() {
-    elements.annotations.addEventListener('click', function(e){
+    videoBase.elements.annotations.addEventListener('click', function(e){
         var target = e.target;
 
-        if(target.classList.contains(classNames.editReply)) {
+        if(target.classList.contains(videoBase.classNames.editReply)) {
             // edit reply clicked
 
             // Get reply element
-            var replyElement = target.closest(selectors.replyContainer);
+            var replyElement = target.closest(videoBase.selectors.replyContainer);
 
             // Insert edit controls
-            var replyElementBody = replyElement.querySelector(selectors.replyBody);
+            var replyElementBody = replyElement.querySelector(videoBase.selectors.replyBody);
             addEditReplyControls(replyElementBody);
 
-        } else if(target.classList.contains(classNames.deleteAnnotation)) {
+        } else if(target.classList.contains(videoBase.classNames.deleteAnnotation)) {
             // delete annotation clicked
         }
     });
@@ -128,13 +120,13 @@ function initializeReplyOptionsDropdownContentEventListener() {
  * Initializes an event listener that listeners for any clicks to the cancel annotation edit button
  */
 function initializeCancelEditAnnotationButtonEventListener() {
-    elements.annotations.addEventListener('click', function(e) {
+    videoBase.elements.annotations.addEventListener('click', function(e) {
         var target = e.target;
         
-        if(target.classList.contains(classNames.cancelEditAnnotation)) {
-            var annotationElementBody = target.closest(selectors.annotationWrapper).querySelector(selectors.annotationBody);
+        if(target.classList.contains(videoBase.classNames.cancelEditAnnotation)) {
+            var annotationElementBody = target.closest(videoBase.selectors.annotationWrapper).querySelector(videoBase.selectors.annotationBody);
             removeEditControls(annotationElementBody);
-            unhideAnnotationText(annotationElementBody);
+            videoView.unhideAnnotationText(annotationElementBody);
         }
     })
 }
@@ -143,16 +135,16 @@ function initializeCancelEditAnnotationButtonEventListener() {
  * Initialize the event listener for the submit edited annotation button
  */
 function initializeSubmitEditAnnotationButtonEventListener() {
-    elements.annotations.addEventListener('click', function(e) {
+    videoBase.elements.annotations.addEventListener('click', function(e) {
         var target = e.target;
         
         if(target.classList.contains('submit-edit-annotation')) {
             // submit edited annotation
-            var annotationElement = target.closest(selectors.annotationWrapper);
-            var annotationElementBody = annotationElement.querySelector(selectors.annotationBody);
+            var annotationElement = target.closest(videoBase.selectors.annotationWrapper);
+            var annotationElementBody = annotationElement.querySelector(videoBase.selectors.annotationBody);
             var annotationUserId = annotationElement.dataset['authorId'];
             var annotationId = annotationElement.dataset['id'];
-            var newAnnotationComment = annotationElementBody.querySelector(selectors.editAnnotationText).value;
+            var newAnnotationComment = annotationElementBody.querySelector(videoBase.selectors.editAnnotationText).value;
             
             var existingAnnotation = new ExistingAnnotation(annotationUserId, newAnnotationComment, annotationId);
             existingAnnotation.edit(annotationElementBody);
@@ -164,16 +156,16 @@ function initializeSubmitEditAnnotationButtonEventListener() {
  * Initializes the delete annotation button event listener
  */
 function initializeDeleteAnnotationButtonEventListener() {
-    elements.annotations.addEventListener('click', function(e) {
+    videoBase.elements.annotations.addEventListener('click', function(e) {
         var target = e.target;
 
         if(target.classList.contains('delete-annotation')) {
             // delete annotation
-            var annotationElement = target.closest(selectors.annotationWrapper);
+            var annotationElement = target.closest(videoBase.selectors.annotationWrapper);
             var annotationUserId = annotationElement.dataset['authorId'];
             var annotationId = annotationElement.dataset['id'];
 
-            var existingAnnotation = new ExistingAnnotation(annotationUserId, null, annotationId);
+            var existingAnnotation = new videoModel.ExistingAnnotation(annotationUserId, null, annotationId);
             existingAnnotation.delete(annotationElement);
         }
     })
@@ -183,16 +175,16 @@ function initializeDeleteAnnotationButtonEventListener() {
  * Initializes the delete reply button event listener
  */
 function initializeDeleteReplyButtonEventListener() {
-    elements.annotations.addEventListener('click', function(e) {
+    videoBase.elements.annotations.addEventListener('click', function(e) {
         var target = e.target;
 
-        if(target.classList.contains(classNames.deleteReply)) {
+        if(target.classList.contains(videoBase.classNames.deleteReply)) {
             // delete reply
-            var replyElement = target.closest(selectors.replyContainer);
+            var replyElement = target.closest(videoBase.selectors.replyContainer);
             var replyUserId = replyElement.dataset['authorId'];
             var replyId = replyElement.dataset['id'];
 
-            var existingReply = new ExistingReply(null, replyId, replyUserId);
+            var existingReply = new videoModel.ExistingReply(null, replyId, replyUserId);
             existingReply.delete(replyElement);
         }
     })
@@ -202,8 +194,8 @@ function initializeDeleteReplyButtonEventListener() {
  * Removes the edit annotation controls from the view
  * @param annotationElementBody - the body of the annotation element
  */
-function removeEditControls(annotationElementBody) {
-    removeEditAnnotationControls(annotationElementBody);
+export function removeEditControls(annotationElementBody) {
+    videoView.removeEditAnnotationControls(annotationElementBody);
 }
 
 /**
@@ -211,8 +203,8 @@ function removeEditControls(annotationElementBody) {
  * @param annotationElementBody - the body of the annotation element
  */
 function addEditAnnotationControls(annotationElementBody) {
-    hideAnnotationText(annotationElementBody);
-    renderEditAnnotationControls(annotationElementBody);
+    videoView.hideAnnotationText(annotationElementBody);
+    videoView.renderEditAnnotationControls(annotationElementBody);
 }
 
 /**
@@ -220,33 +212,33 @@ function addEditAnnotationControls(annotationElementBody) {
  * @param replyElementBody - the body of the reply element
  */
 function addEditReplyControls(replyElementBody) {
-    hideReplyText(replyElementBody);
-    renderEditReplyControls(replyElementBody);
+    videoView.hideReplyText(replyElementBody);
+    videoView.renderEditReplyControls(replyElementBody);
 }
 
 function initializeAnnotationOptionDropdowns() {
-    renderAnnotationOptionsDropdowns();
+    videoView.renderAnnotationOptionsDropdowns();
 }
 
 function initializeReplyOptionDropdowns() {
-    renderReplyOptionsDropdowns();
+    videoView.renderReplyOptionsDropdowns();
 }
 
 function initializeCurrentUserId() {
-    setCurrentUserId();
+    videoView.setCurrentUserId();
 }
 
 function initializeLibraryId() {
-    state.libraryId = getLibraryId();
+    state.libraryId = videoView.getLibraryId();
 }
 
 function initializeUserRole(libraryId) {
-    state.userRole = new Role(libraryId);
+    state.userRole = new videoModel.Role(libraryId);
     state.userRole.fetchAndSet();
 }
 
 function initializeHasAnnotations() {
-    state.hasAnnotations = doesVideoHaveAnnotations();
+    state.hasAnnotations = videoView.doesVideoHaveAnnotations();
 }
 
 /**
@@ -263,24 +255,24 @@ function initializeAnnotationElementsMutationObserver() {
                     // If there were previously no annotations, hide the no annotations text
                     if(mutation.target.children.length === 1) {
                         // Annotation count was previously 0 before this created one
-                        hideNoAnnotationText();
+                        videoView.hideNoAnnotationText();
                     }
                     // A new annotation was added, make sure name exists in names to filter by
-                    addUserIdAndNameFromElement(annotationElement, state.userIdsAndNames);
+                    videoView.addUserIdAndNameFromElement(annotationElement, state.userIdsAndNames);
                     
                     // Hide/display the annotation according to the current user filter
-                    filterAnnotationByUserId(annotationElement);
+                    videoView.filterAnnotationByUserId(annotationElement);
                     
                     // Add the HTML for the annotation options dropdown
                     // TODO - Check permissions before adding this
-                    renderAnnotationOptionsDropdown(annotationElement);
+                    videoView.renderAnnotationOptionsDropdown(annotationElement);
                     
                     // Add the mutation observer for the new replies container
                     createReplyElementsMutationObserver(annotationElement);
                 } else if (mutation.removedNodes.length === 1) {
                     // Put up "No annotations" text if no more annotations
                     if(mutation.target.children.length === 0) {
-                        unhideNoAnnotationText();
+                        videoView.unhideNoAnnotationText();
                     }
                 }
             }
@@ -305,7 +297,7 @@ function createReplyElementsMutationObserver(annotationElement) {
                     
                     // Add the HTML for the reply options dropdown
                     // TODO - Check permissions before adding this
-                    renderReplyOptionsDropdown(replyElement);
+                    videoView.renderReplyOptionsDropdown(replyElement);
                 }
             }
         }
@@ -329,7 +321,7 @@ function initializeReplyElementsMutationObserver() {
 function initializeUserIdsAndNames() {
     if(state.annotationElements.children.length !== 0) {
         // Only need to initialize if there are annotations
-        state.userIdsAndNames = getUserIdsAndNames(state.annotationElements.children);
+        state.userIdsAndNames = videoView.getUserIdsAndNames(state.annotationElements.children);
     }
 }
 
@@ -338,7 +330,7 @@ function initializeUserIdsAndNames() {
  * This is helpful since the variable gets automatically updated as the DOM changes.
  */
 function initializeAnnotationElements() {
-    state.annotationElements = getAnnotationElements();
+    state.annotationElements = videoView.getAnnotationElements();
 }
 
 /**
@@ -346,14 +338,14 @@ function initializeAnnotationElements() {
  * This is helpful since the variable gets automatically updated as the DOM changes.
  */
 function initializeReplyElements() {
-    state.replyElements = getReplyElements();
+    state.replyElements = videoView.getReplyElements();
 }
 
 /**
  * Initializes the event listener for the filter dropdown
  */
 function initializeFilterByUserDropdownEventListener() {
-    var filterByUserListElement = elements.annotations.querySelector(selectors.filterAnnotationsList);
+    var filterByUserListElement = videoBase.elements.annotations.querySelector(videoBase.selectors.filterAnnotationsList);
     filterByUserListElement.addEventListener('click', function(e) {
         // Stop dropdown from closing
         e.stopPropagation();
@@ -370,9 +362,9 @@ function initializeFilterByUserDropdownEventListener() {
  * @param clickedEntryElement - The entry in the filter dropdown that got clicked
  */
 function updateUserFilter(clickedEntryElement) {
-    updateHighlightedUser(clickedEntryElement);
-    updateFilterUserIdState(clickedEntryElement);
-    filterAnnotationsByUserId(clickedEntryElement);
+    videoView.updateHighlightedUser(clickedEntryElement);
+    videoView.updateFilterUserIdState(clickedEntryElement);
+    videoView.filterAnnotationsByUserId(clickedEntryElement);
 }
 
 /**
@@ -385,7 +377,7 @@ function initializeTimestampClickEventListener() {
 
         if (targetElement.classList.contains('timestamp')) {
             var time = parseFloat(targetElement.dataset.timestamp);
-            state.player.seekTo(time);
+            window.player.seekTo(time);
         }
     });
 }
@@ -394,27 +386,26 @@ function initializeTimestampClickEventListener() {
  * Handles displaying and hiding the create annotation controls
  */
 function initializeCreateAnnotationControlDisplayEventListener() {
-    var createAnnotationElement = elements.createAnnotation;
-    var createAnnotationButtonElement = elements.createAnnotationButton;
+    var createAnnotationElement = videoBase.elements.createAnnotation;
+    var createAnnotationButtonElement = videoBase.elements.createAnnotationButton;
     // var createAnnotationTextarea = document.querySelector('.create-annotation-container textarea');
-    var createAnnotationCancelButton = elements.cancelAnnotation;
-    var newAnnotationTimestampElement = elements.newAnnotationTimestamp;
+    var createAnnotationCancelButton = videoBase.elements.cancelAnnotation;
+    var newAnnotationTimestampElement = videoBase.elements.newAnnotationTimestamp;
     // var noAnnotationTextElement = document.getElementById('no-annotation-text');
 
     createAnnotationButtonElement.addEventListener('click', function(e) {
-        if (areCreateAnnotationControlsHidden()) {
-            pauseVideo(state.player);
-            setupAnnotationControls();
+        if (videoView.areCreateAnnotationControlsHidden()) {
+            videoView.pauseVideo(window.player);
+            videoView.setupAnnotationControls();
         } else {
             // Create annotation controls are displayed, so hide them
-            hideCreateAnnotationControls();
+            videoView.hideCreateAnnotationControls();
         }
     });
 
     createAnnotationCancelButton.addEventListener('click', function(e) {
-            hideCreateAnnotationControls();
-        }
-    );
+        videoView.hideCreateAnnotationControls();
+    });
 }
 
 
@@ -423,11 +414,11 @@ function initializeSubmitAnnotationButtonEventListener() {
     createAnnotationElement.addEventListener('click', function(e) {
         var target = e.target;
 
-        if (isClickedButtonSubmitAnnotationButton(target)) {
-            var annotation = new Annotation(
-                getVideoId(),
-                getCreatedAnnotationComment(),
-                getCurrentYoutubeTime(state.player)
+        if (videoView.isClickedButtonSubmitAnnotationButton(target)) {
+            var annotation = new videoModel.Annotation(
+                videoView.getVideoId(),
+                videoView.getCreatedAnnotationComment(),
+                videoView.getCurrentYoutubeTime(window.player)
             );
             
             annotation.submit();
@@ -436,50 +427,50 @@ function initializeSubmitAnnotationButtonEventListener() {
 }
 
 function initializeShowRepliesButtonEventListener() {
-    elements.annotations.addEventListener('click', function(e) {
+    videoBase.elements.annotations.addEventListener('click', function(e) {
         var target = e.target;
-        var annotationElement = target.closest('.' + classNames.annotationWrapper);
+        var annotationElement = target.closest('.' + videoBase.classNames.annotationWrapper);
         
-        if(isClickedButtonShowRepliesButton(target) && areRepliesHidden(target)) {
+        if(videoView.isClickedButtonShowRepliesButton(target) && videoView.areRepliesHidden(target)) {
             // show replies
-            displayReplies(annotationElement);
-        } else if (isClickedButtonShowRepliesButton(target) && !areRepliesHidden(target)) {
+            videoView.displayReplies(annotationElement);
+        } else if (videoView.isClickedButtonShowRepliesButton(target) && !videoView.areRepliesHidden(target)) {
             // hide replies
-            hideReplies(annotationElement);
+            videoView.hideReplies(annotationElement);
         }
     })
 }
 
 function initializeCreateReplyButtonEventListener() {
-    elements.annotations.addEventListener('click', function(e) {
+    videoBase.elements.annotations.addEventListener('click', function(e) {
         var target = e.target;
-        var annotationElement = target.closest('.' + classNames.annotationWrapper);
+        var annotationElement = target.closest('.' + videoBase.classNames.annotationWrapper);
         
-        if(isClickedButtonCreateReplyButton(target) && !areCreateReplyControlsDisplayed(target)) {
+        if(videoView.isClickedButtonCreateReplyButton(target) && !videoView.areCreateReplyControlsDisplayed(target)) {
             // Display create reply controls
-            renderReplyControls(annotationElement);
-            if(doesAnnotationHaveReplies(annotationElement)) {
-                displayReplies(annotationElement);
+            videoView.renderReplyControls(annotationElement);
+            if(videoView.doesAnnotationHaveReplies(annotationElement)) {
+                videoView.displayReplies(annotationElement);
             }
-        } else if ((isClickedButtonCreateReplyButton(target) && areCreateReplyControlsDisplayed(target))
-                    || isClickedButtonCancelCreateReplyButton(target)) {
+        } else if ((videoView.isClickedButtonCreateReplyButton(target) && videoView.areCreateReplyControlsDisplayed(target))
+                    || videoView.isClickedButtonCancelCreateReplyButton(target)) {
             // Remove create reply controls
-            removeCreateReplyControls(annotationElement);
+            videoView.removeCreateReplyControls(annotationElement);
         }
     })
 }
 
 function initializeSubmitReplyButtonEventListener() {
-    elements.annotations.addEventListener('click', function(e) {
+    videoBase.elements.annotations.addEventListener('click', function(e) {
         var target = e.target;
 
-        if (isClickedButtonSubmitReplyButton(target)) {
-            var annotationElement = target.closest('.' + classNames.annotationWrapper);
+        if (videoView.isClickedButtonSubmitReplyButton(target)) {
+            var annotationElement = target.closest('.' + videoBase.classNames.annotationWrapper);
             var annotationId = annotationElement.dataset.id;
             
-            var reply = new Reply(
+            var reply = new videoModel.Reply(
                 annotationId,
-                getCreatedReplyText(annotationElement)
+                videoView.getCreatedReplyText(annotationElement)
             );
 
             reply.submit(annotationElement);
@@ -488,13 +479,13 @@ function initializeSubmitReplyButtonEventListener() {
 }
 
 function initializeCancelReplyButtonEventListener() {
-    elements.annotations.addEventListener('click', function(e) {
+    videoBase.elements.annotations.addEventListener('click', function(e) {
         var target = e.target;
         
-        if(isClickedButtonCancelEditReplyButton(target)) {
-            var replyElementBody = target.closest(selectors.replyContainer).querySelector(selectors.replyBody);
-            removeEditReplyControls(replyElementBody);
-            unhideReplyText(replyElementBody);
+        if(videoView.isClickedButtonCancelEditReplyButton(target)) {
+            var replyElementBody = target.closest(videoBase.selectors.replyContainer).querySelector(videoBase.selectors.replyBody);
+            videoView.removeEditReplyControls(replyElementBody);
+            videoView.unhideReplyText(replyElementBody);
         }
     })
 }
@@ -503,30 +494,27 @@ function initializeCancelReplyButtonEventListener() {
  * Initialize the event listener for the submit edited reply button
  */
 function initializeSubmitEditReplyButtonEventListener() {
-    elements.annotations.addEventListener('click', function(e) {
+    videoBase.elements.annotations.addEventListener('click', function(e) {
         var target = e.target;
 
-        if(target.classList.contains(classNames.submitEditReply)) {
+        if(target.classList.contains(videoBase.classNames.submitEditReply)) {
             // submit edited reply
-            var replyElement = target.closest(selectors.replyContainer);
-            var replyElementBody = replyElement.querySelector(selectors.replyBody);
+            var replyElement = target.closest(videoBase.selectors.replyContainer);
+            var replyElementBody = replyElement.querySelector(videoBase.selectors.replyBody);
             var replyUserId = replyElement.dataset['authorId'];
             var replyId = replyElement.dataset['id'];
-            var newReplyText = replyElementBody.querySelector(selectors.editReplyText).value;
+            var newReplyText = replyElementBody.querySelector(videoBase.selectors.editReplyText).value;
 
-            var existingReply = new ExistingReply(newReplyText, replyId, replyUserId);
+            var existingReply = new videoModel.ExistingReply(newReplyText, replyId, replyUserId);
             existingReply.edit(replyElementBody);
         }
     })
 }
 
-
-
-
-function getTimestampToDisplay(timestampNumber) {
+export function getTimestampToDisplay(timestampNumber) {
     var totalSeconds = Math.floor(timestampNumber);
-    var minutes = (totalSeconds / 60 < 10) ? "0" + Math.floor(totalSeconds / 60).toString() : Math.floor(totalSeconds / 60).toString()
-    var seconds = (totalSeconds % 60 < 10) ? "0" + (totalSeconds % 60).toString() : (totalSeconds % 60).toString()
+    var minutes = (totalSeconds / 60 < 10) ? "0" + Math.floor(totalSeconds / 60).toString() : Math.floor(totalSeconds / 60).toString();
+    var seconds = (totalSeconds % 60 < 10) ? "0" + (totalSeconds % 60).toString() : (totalSeconds % 60).toString();
 
     return minutes+ ":" + seconds;
 }
@@ -537,23 +525,23 @@ function getTimestampToDisplay(timestampNumber) {
  * Loads IFrame player API. Used by Youtube API.
  * Creates an <iframe> (and Youtube player) after the API code downloads
  */
-function createYoutubePlayer() {
-    var tag = document.createElement('script');
-
-    tag.src = "https://www.youtube.com/iframe_api";
-    var firstScriptTag = document.getElementsByTagName('script')[0];
-    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-    function onYouTubeIframeAPIReady() {
-        player = new YT.Player('player', {
-            height: '390',
-            width: '640',
-            videoId: getVideoUrl(),
-            events: {
-                'onReady': onPlayerReady
-            }
-        });
-    }
-}
+// function createYoutubePlayer() {
+//     var tag = document.createElement('script');
+//
+//     tag.src = "https://www.youtube.com/iframe_api";
+//     var firstScriptTag = document.getElementsByTagName('script')[0];
+//     firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+//     function onYouTubeIframeAPIReady() {
+//         player = new YT.Player('player', {
+//             height: '390',
+//             width: '640',
+//             videoId: getVideoUrl(),
+//             events: {
+//                 'onReady': onPlayerReady
+//             }
+//         });
+//     }
+// }
 
 // var tag = document.createElement('script');
 //
@@ -569,13 +557,3 @@ function createYoutubePlayer() {
 //         'onReady': onPlayerReady
 //     }
 // });
-
-/**
- * Gets called when the video is ready
- * @param {object} event - This function should only ever have the onReady event as a parameter
- * @see {@link https://developers.google.com/youtube/iframe_api_reference#Events}
- */
-function onPlayerReady(event) {
-    // This function currently does nothing
-    // event.target.playVideo();
-}

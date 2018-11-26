@@ -1,12 +1,16 @@
-function Annotation(videoId, comment, timestamp) {
+import * as videoController from '../Controller/VideoController.js';
+import * as videoView from '../View/VideoView.js';
+import * as videoBase from '../View/base.js';
+
+export function Annotation(videoId, comment, timestamp) {
     this.videoId = videoId;
     this.comment = comment;
     this.timestamp = timestamp;
 }
 
-Annotation.prototype.submit = function(player) {
+Annotation.prototype.submit = function() {
     $.ajax({
-        url: apiUrls.submitAnnotation,
+        url: videoBase.apiUrls.submitAnnotation,
         data: {
             comment: this.comment,
             timestamp: this.timestamp,
@@ -20,22 +24,22 @@ Annotation.prototype.submit = function(player) {
                 $('input:hidden[name="__RequestVerificationToken"]').val());
         },
         success: function(annotationHTML) {
-            prependAnnotationToAnnotationsBody(annotationHTML);
-            hideCreateAnnotationControls();
+            videoView.prependAnnotationToAnnotationsBody(annotationHTML);
+            videoView.hideCreateAnnotationControls();
 
-            if (state.hasAnnotations === false) {
+            if (videoController.state.hasAnnotations === false) {
                 // Remove element, since there is now annotations to show
-                elements.annotations.querySelector(selectors.noAnnotationsText).classList.add('hidden');
-                state.hasAnnotations = true;
+                videoBase.elements.annotations.querySelector(videoBase.selectors.noAnnotationsText).classList.add('hidden');
+                videoController.state.hasAnnotations = true;
             }
 
             // Continue playing video
-            playVideo(state.player);
+            videoView.playVideo(window.player);
         }
     });
 };
 
-function ExistingAnnotation(userId, comment, annotationId) {
+export function ExistingAnnotation(userId, comment, annotationId) {
     this.userId = userId;
     this.comment = comment;
     this.annotationId = annotationId;
@@ -43,7 +47,7 @@ function ExistingAnnotation(userId, comment, annotationId) {
 
 ExistingAnnotation.prototype.edit = function(annotationElementBody) {
     $.ajax({
-        url: apiUrls.editAnnotation,
+        url: videoBase.apiUrls.editAnnotation,
         data: {
             comment: this.comment,
             userId: this.userId,
@@ -57,16 +61,16 @@ ExistingAnnotation.prototype.edit = function(annotationElementBody) {
                 $('input:hidden[name="__RequestVerificationToken"]').val());
         },
         success: function() {
-            unhideAnnotationText(annotationElementBody);
-            updateAnnotationText(annotationElementBody);
-            removeEditControls(annotationElementBody);
+            videoView.unhideAnnotationText(annotationElementBody);
+            videoView.updateAnnotationText(annotationElementBody);
+            videoController.removeEditControls(annotationElementBody);
         }
     });
 };
 
 ExistingAnnotation.prototype.delete = function(annotationElement) {
     $.ajax({
-        url: apiUrls.deleteAnnotation,
+        url: videoBase.apiUrls.deleteAnnotation,
         data: {
             userId: this.userId,
             annotationId: this.annotationId
@@ -79,19 +83,19 @@ ExistingAnnotation.prototype.delete = function(annotationElement) {
                 $('input:hidden[name="__RequestVerificationToken"]').val());
         },
         success: function() {
-            removeAnnotation(annotationElement);
+            videoView.removeAnnotation(annotationElement);
         }
     });
 };
 
-function Reply(annotationId, text) {
+export function Reply(annotationId, text) {
     this.annotationId = annotationId;
     this.text = text;
 }
 
 Reply.prototype.submit = function(annotationElement) {
     $.ajax({
-        url: apiUrls.submitReply,
+        url: videoBase.apiUrls.submitReply,
         data: {
             annotationId: this.annotationId,
             text: this.text
@@ -104,17 +108,17 @@ Reply.prototype.submit = function(annotationElement) {
                 $('input:hidden[name="__RequestVerificationToken"]').val());
         },
         success: function(replyHTML) {
-            prependReplyToRepliesBody(annotationElement, replyHTML);
-            removeCreateReplyControls(annotationElement);
+            videoView.prependReplyToRepliesBody(annotationElement, replyHTML);
+            videoView.removeCreateReplyControls(annotationElement);
             
-            if(!doesAnnotationElementHaveToggleRepliesButton(annotationElement)) {
-                renderToggleRepliesButton(annotationElement);
+            if(!videoView.doesAnnotationElementHaveToggleRepliesButton(annotationElement)) {
+                videoView.renderToggleRepliesButton(annotationElement);
             }
         }
     });
 };
 
-function ExistingReply(text, replyId, userId) {
+export function ExistingReply(text, replyId, userId) {
     this.text = text;
     this.replyId = replyId;
     this.userId = userId;
@@ -122,7 +126,7 @@ function ExistingReply(text, replyId, userId) {
 
 ExistingReply.prototype.edit = function(replyElementBody) {
     $.ajax({
-        url: apiUrls.editReply,
+        url: videoBase.apiUrls.editReply,
         data: {
             replyId: this.replyId,
             text: this.text,
@@ -136,16 +140,16 @@ ExistingReply.prototype.edit = function(replyElementBody) {
                 $('input:hidden[name="__RequestVerificationToken"]').val());
         },
         success: function() {
-            unhideReplyText(replyElementBody);
-            updateReplyText(replyElementBody);
-            removeEditReplyControls(replyElementBody);
+            videoView.unhideReplyText(replyElementBody);
+            videoView.updateReplyText(replyElementBody);
+            videoView.removeEditReplyControls(replyElementBody);
         }
     });
 };
 
 ExistingReply.prototype.delete = function(replyElement) {
     $.ajax({
-        url: apiUrls.deleteReply,
+        url: videoBase.apiUrls.deleteReply,
         data: {
             userId: this.userId,
             replyId: this.replyId
@@ -158,12 +162,18 @@ ExistingReply.prototype.delete = function(replyElement) {
                 $('input:hidden[name="__RequestVerificationToken"]').val());
         },
         success: function() {
-            removeReply(replyElement);
+            var annotationElement = replyElement.closest(videoBase.selectors.annotationWrapper);
+            
+            videoView.removeReply(replyElement);
+
+            if(!videoView.doesAnnotationHaveReplies(annotationElement)) {
+                videoView.removeToggleRepliesWrapper(annotationElement);
+            }
         }
     });
 };
 
-function Role(libraryId) {
+export function Role(libraryId) {
     this.libraryId = libraryId;
     this.id = null;
     this.privileges = null;
@@ -172,7 +182,7 @@ function Role(libraryId) {
 
 Role.prototype.fetchAndSet = function () {
     $.ajax({
-        url: apiUrls.fetchRole,
+        url: videoBase.apiUrls.fetchRole,
         data: {
             libraryId: this.libraryId
         },
@@ -184,9 +194,9 @@ Role.prototype.fetchAndSet = function () {
                 $('input:hidden[name="__RequestVerificationToken"]').val());
         },
         success: function(roleData) {
-            state.userRole.id = roleData[1].id;
-            state.userRole.privileges = roleData[1].privileges;
-            state.userRole.title = roleData[1].title;
+            videoController.state.userRole.id = roleData[1].id;
+            videoController.state.userRole.privileges = roleData[1].privileges;
+            videoController.state.userRole.title = roleData[1].title;
         }
     });
 };
