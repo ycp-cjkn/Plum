@@ -44,6 +44,16 @@
                         
                     </ul>
                 </div>
+                <div class="dropdown" style="float: right;">
+                    <button id="change-mode-btn" type="button" class="btn btn-default" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Change Mode
+                        <span class="caret"></span>
+                    </button>
+                    <ul id="filter-annotations-list" class="dropdown-menu" aria-labelledby="change-mode-btn">
+                        <li><a href="#">Default</a></li>
+                        <li><a href="#">Stream</a></li>
+                    </ul>
+                </div>
             </div>
             <div class="create-annotation-container hidden">
                 <div class="panel panel-default annotation-wrapper">
@@ -83,6 +93,12 @@
     crossorigin="anonymous"></script>
 
 <link rel="stylesheet" href="~/css/video.css" />
+
+@* Stream mode files *@
+@* <script type="module" src="/js/Videos/View/StreamModeBase.js"></script> *@
+<script type="module" src="/js/Videos/Controller/StreamModeController.js"></script>
+<link rel="stylesheet" href="~/css/Videos/StreamingMode.css"/>
+@* Video files *@
 <script type="text/javascript" src="/js/Videos/View/base.js"></script>
 <script type="text/javascript" src="/js/Videos/View/VideoView.js"></script>
 <script type="text/javascript" src="/js/Videos/Model/VideoModel.js"></script>
