@@ -44,15 +44,12 @@
                         
                     </ul>
                 </div>
-                <div class="dropdown" style="float: right;">
-                    <button id="change-mode-btn" type="button" class="btn btn-default" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Change Mode
-                        <span class="caret"></span>
-                    </button>
-                    <ul id="filter-annotations-list" class="dropdown-menu" aria-labelledby="change-mode-btn">
-                        <li><a href="#">Default</a></li>
-                        <li><a href="#">Stream</a></li>
-                    </ul>
+                <div id="change-mode-select-wrapper" style="float: right;">
+                    <select id="change-mode-select" class="form-control">
+                        <option disabled>Choose Mode</option>
+                        <option>Default</option>
+                        <option>Stream</option>
+                    </select>
                 </div>
             </div>
             <div class="create-annotation-container hidden">
