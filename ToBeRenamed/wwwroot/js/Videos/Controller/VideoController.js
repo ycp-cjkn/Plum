@@ -51,7 +51,7 @@ function initialize() {
     initializeCancelReplyButtonEventListener();
     initializeSubmitEditReplyButtonEventListener();
     initializeDeleteReplyButtonEventListener();
-    streamModeController.initializeChangeModeSelectEventListener(state.annotationElements.children);
+    streamModeController.initializeChangeModeSelectEventListener();
 
     // Initialize mutation observers
     initializeAnnotationElementsMutationObserver();
