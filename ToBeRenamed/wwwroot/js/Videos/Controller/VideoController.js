@@ -518,6 +518,15 @@ export function getTimestampToDisplay(timestampNumber) {
 
     return minutes+ ":" + seconds;
 }
+
+export function getVideoTimestamp() {
+    return videoView.getCurrentYoutubeTime();
+}
+
+export function getAnnotationTimestamp(annotationElement) {
+    return videoView.getAnnotationTimestamp(annotationElement);
+}
+
 // YOUTUBE API
 
 /**

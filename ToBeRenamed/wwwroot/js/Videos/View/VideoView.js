@@ -581,3 +581,7 @@ export function removeToggleRepliesWrapper(annotationElement) {
     var toggleRepliesWrapper = annotationElement.querySelector(videoBase.selectors.toggleRepliesWrapper);
     toggleRepliesWrapper.parentElement.removeChild(toggleRepliesWrapper);
 }
+
+export function getAnnotationTimestamp(annotationElement) {
+    return annotationElement.dataset['timestamp'];
+}

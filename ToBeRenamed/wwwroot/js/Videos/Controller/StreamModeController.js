@@ -1,9 +1,9 @@
 import { elements as changeModeElements } from '../View/StreamModeBase.js';
 import * as videoView from '../View/VideoView.js';
-import {state as videoState}  from './VideoController.js';
+import * as videoController from './VideoController.js';
 
 var streamModeState = {
-    annotationsData: {}
+    isStreamModeEnabled: false
 };
 
 $(document).ready(function(){
@@ -12,8 +12,9 @@ $(document).ready(function(){
 
 export function initializeChangeModeSelectEventListener() {
     changeModeElements.changeModeSelect.addEventListener('change', function(e) {
-        var annotationElements = videoState.annotationElements.children;
+        var annotationElements = videoController.state.annotationElements.children;
         var selectionValue = e.target.value;
+        let currentTimestamp = videoController.getVideoTimestamp();
         
         if(selectionValue === 'default') {
             // unhide all annotations
@@ -21,9 +22,14 @@ export function initializeChangeModeSelectEventListener() {
                 annotationElements[i].classList.remove('hidden');
             }
         } else if (selectionValue === 'stream') {
-            // hide all annotations
+            // hide all annotations that have timestamp greater than current timestamp
             for(let i = 0; i < annotationElements.length; i++) {
-                annotationElements[i].classList.add('hidden');
+                let annotationElement = annotationElements[i];
+                let annotationTimestamp = videoController.getAnnotationTimestamp(annotationElement);
+                
+                if(annotationTimestamp > currentTimestamp){
+                    annotationElement.classList.add('hidden');
+                }
             }
         }
     });
