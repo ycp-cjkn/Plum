@@ -53,7 +53,8 @@ namespace ToBeRenamed.Queries
                 ON usr.id = mem.user_id
                 INNER JOIN plum.libraries lib
                 ON lib.id = mem.library_id
-                WHERE usr.google_claim_nameidentifier = @nameIdentifier";
+                WHERE usr.google_claim_nameidentifier = @nameIdentifier
+                AND mem.library_id = @LibraryId";
 
             using (var cnn = _sqlConnectionFactory.GetSqlConnection())
             {
