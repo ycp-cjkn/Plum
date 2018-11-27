@@ -109,8 +109,17 @@
             height: '390',
             width: '640',
             videoId: '@Model.Video.Url',
-            events: {}
+            events: {
+                'onStateChange': onPlayerStateChange
+            }
         });
+    }
+    
+    function onPlayerStateChange(event) {
+        console.log(event);
+//        if (window.streamModeState.isStreamModeEnabled) {
+//            if(event == YT.PlayerState.)
+//        }
     }
 </script>
 @* Stream mode files *@
