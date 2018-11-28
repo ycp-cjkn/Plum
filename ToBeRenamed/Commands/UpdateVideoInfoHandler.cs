@@ -24,7 +24,7 @@ namespace ToBeRenamed.Commands
             const string sql = @"
                 UPDATE plum.videos
                 SET title = @newTitle, description = @newDescription
-                WHERE id = @vibraryId";
+                WHERE id = @videoId";
 
             using (var cnn = _sqlConnectionFactory.GetSqlConnection())
             {
