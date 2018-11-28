@@ -1,0 +1,33 @@
+﻿@page "{id:int}"
+@model ToBeRenamed.Pages.Videos.EditModel
+@{
+    ViewData["Title"] = "Edit Video";
+}
+
+<h2>Edit Video</h2>
+
+<form method="POST">
+    <div class="form-group">
+        <h3 class="panel-title"><b>New Title</b></h3>
+        <input asp-for="NewTitle" class="form-control" value="@Model.Video.Title" />
+        <span asp-validation-for="NewTitle" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <h3 class="panel-title"><b>New Description</b></h3>
+        <input asp-for="NewDescription" class="form-control" value="@Model.Video.Description" />
+        <span asp-validation-for="NewDescription" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <button type="submit" class="btn btn-default">Edit</button>
+    </div>
+</form>
+
+<div>
+    <a asp-page="/Videos/Index">Back to videos</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
