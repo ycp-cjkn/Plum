@@ -1,4 +1,5 @@
 @page "{id:int}"
+@using ToBeRenamed.Models
 @model IndexModel
 @{
     ViewData["Title"] = Model.Video.Title;
@@ -80,7 +81,10 @@
             <div id="annotations-body">
                 @foreach (var annotation in Model.Annotations)
                 {
-                    <partial name="_Annotation" model="@annotation"/>
+                    if (Model.Role.Privileges.Contains(Privilege.CanSeeAllAnnotations) || annotation.UserId == Model.CurrentMember.UserId)
+                     {
+                         <partial name="_Annotation" model="@annotation"/>
+                     }
                 }
             </div>
         </div>
