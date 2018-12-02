@@ -25,12 +25,13 @@ namespace ToBeRenamed.Pages.Videos
         public IEnumerable<AnnotationDto> Annotations { get; set; }
         public IEnumerable<ReplyDto> Replies { get; set; }
         public Member CurrentMember { get; set; }
-
+        public Role Role { get; set; }
+        
         public async Task OnGetAsync(int id)
         {
-            
             Video = await _mediator.Send(new GetVideoById(id));
             CurrentMember = await _mediator.Send(new GetSignedInMember(User, Video.LibraryId));
+            Role = await _mediator.Send(new GetRoleForMember(CurrentMember.Id));
             Annotations = await _mediator.Send(new GetAnnotationsByVideoId(id));
             Replies = await _mediator.Send(new GetAnnotationRepliesByVideoId(id));
         }
