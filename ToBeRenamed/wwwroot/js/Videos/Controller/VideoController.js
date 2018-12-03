@@ -146,7 +146,7 @@ function initializeSubmitEditAnnotationButtonEventListener() {
             var annotationId = annotationElement.dataset['id'];
             var newAnnotationComment = annotationElementBody.querySelector(videoBase.selectors.editAnnotationText).value;
             
-            var existingAnnotation = new ExistingAnnotation(annotationUserId, newAnnotationComment, annotationId);
+            var existingAnnotation = new videoModel.ExistingAnnotation(annotationUserId, newAnnotationComment, annotationId);
             existingAnnotation.edit(annotationElementBody);
         }
     })
