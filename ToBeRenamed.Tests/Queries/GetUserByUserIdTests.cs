@@ -21,10 +21,11 @@ namespace ToBeRenamed.Tests.Queries
         [ResetDatabase]
         public async Task It_Gets_User_By_UserId()
         {
-
+            //Create user named Alice
             var request = new CreateUserWithoutAuth("Alice");
             var result = await _fixture.SendAsync(request);
 
+            //Retrieve user by id, should be Alice
             var userId = result.Id;
             var request1 = new GetUserByUserId(userId);
             var result1 = await _fixture.SendAsync(request1);
