@@ -24,7 +24,8 @@ namespace ToBeRenamed.Queries
                 FROM plum.libraries lib
                 INNER JOIN plum.memberships mem
                 ON lib.id = mem.library_id
-                WHERE mem.user_id = @UserId";
+                WHERE mem.user_id = @UserId
+                AND lib.deleted_at IS NULL";
 
             using (var cnn = _sqlConnectionFactory.GetSqlConnection())
             {
