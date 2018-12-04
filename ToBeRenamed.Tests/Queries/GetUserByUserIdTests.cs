@@ -30,7 +30,6 @@ namespace ToBeRenamed.Tests.Queries
             var result1 = await _fixture.SendAsync(request1);
 
             Assert.Equal("Alice", result1.DisplayName);
-            Assert.Equal(1, result1.Id);
         }
     }
 }
