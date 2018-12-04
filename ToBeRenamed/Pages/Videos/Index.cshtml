@@ -1,9 +1,10 @@
 @page "{id:int}"
+@using Models
 @model IndexModel
 @{
     ViewData["Title"] = Model.Video.Title;
     var annotationsIdsWithReplies = new List<int>();
-    foreach (var annotation in Model.Annotations) 
+    foreach (var annotation in Model.Annotations)
     {
         foreach (var reply in Model.Replies)
         {
@@ -15,15 +16,16 @@
     }
 }
 @Html.AntiForgeryToken()
-<input class="video-id" type="hidden" value="@Model.Video.Id"/>
-<input id="video-url" type="hidden" value="@Model.Video.Url"/>
-<input id="user-id" type="hidden" value="@Model.CurrentMember.UserId"/>
+<input class="video-id" type="hidden" value="@Model.Video.Id" />
+<input id="video-url" type="hidden" value="@Model.Video.Url" />
+<input id="user-id" type="hidden" value="@Model.CurrentMember.UserId" />
 
 <div class="container">
     <div class="row">
         <div class="col-md-7">
             <h1>@Model.Video.Title</h1>
             <h4>@Model.Video.Description</h4>
+            @*<a asp-route-id="@Model.Library.Id" asp-page="/Library">Back to library</a>*@
             <br>
             @* 1. The <iframe> (and video player) will replace this <div> tag.  *@
             <div id="player">
@@ -39,9 +41,7 @@
                         Filter
                         <span class="caret"></span>
                     </button>
-                    <ul id="filter-annotations-list" class="dropdown-menu" aria-labelledby="filter-annotations">
-                        
-                    </ul>
+                    <ul id="filter-annotations-list" class="dropdown-menu" aria-labelledby="filter-annotations"></ul>
                 </div>
             </div>
             <div class="create-annotation-container hidden">
@@ -68,7 +68,7 @@
             <div id="annotations-body">
                 @foreach (var annotation in Model.Annotations)
                 {
-                    <partial name="_Annotation" model="@annotation"/>
+                    <partial name="_Annotation" model="@annotation" />
                 }
             </div>
         </div>
@@ -76,10 +76,9 @@
 </div>
 
 @* TODO - Remove this and use the jQuery in lib/jquery/dist *@
-<script
-    src="https://code.jquery.com/jquery-3.3.1.js"
-    integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
-    crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.js"
+        integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+        crossorigin="anonymous"></script>
 
 <link rel="stylesheet" href="~/css/video.css" />
 <script type="text/javascript" src="/js/Videos/View/base.js"></script>

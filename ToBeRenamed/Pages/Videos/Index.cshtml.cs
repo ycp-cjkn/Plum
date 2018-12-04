@@ -21,14 +21,21 @@ namespace ToBeRenamed.Pages.Videos
             _mediator = mediator;
         }
 
+        public LibraryDto Library;
         public VideoDto Video { get; set; }
         public IEnumerable<AnnotationDto> Annotations { get; set; }
         public IEnumerable<ReplyDto> Replies { get; set; }
         public Member CurrentMember { get; set; }
+        public int LibraryId { get; set; }
+
+        public async Task<IActionResult> OnGetAsyncReturnPage()
+        {
+            await SetUp();
+            return Page();
+        }
 
         public async Task OnGetAsync(int id)
         {
-            
             Video = await _mediator.Send(new GetVideoById(id));
             CurrentMember = await _mediator.Send(new GetSignedInMember(User, Video.LibraryId));
             Annotations = await _mediator.Send(new GetAnnotationsByVideoId(id));
@@ -69,6 +76,11 @@ namespace ToBeRenamed.Pages.Videos
         {
             await _mediator.Send(new DeleteAnnotation(userId, annotationId));
             return Content("{ \"response\": true }", "application/json");
+        }
+        private async Task SetUp()
+        {
+            var libraryTask = _mediator.Send(new GetLibraryDtoById(LibraryId));
+            Library = await libraryTask.ConfigureAwait(false);
         }
     }
 }
