@@ -4,7 +4,7 @@
 @{
     ViewData["Title"] = Model.Video.Title;
     var annotationsIdsWithReplies = new List<int>();
-    foreach (var annotation in Model.Annotations) 
+    foreach (var annotation in Model.Annotations)
     {
         foreach (var reply in Model.Replies)
         {
@@ -25,6 +25,10 @@
     <div class="row">
         <div class="col-md-7">
             <h1>@Model.Video.Title</h1>
+            @if (Model.CurrentMember.Role.Privileges.Contains(Privilege.CanEditVideo))
+            {
+                <a asp-page="/Videos/Edit"><span class="glyphicon glyphicon-edit pull-right" aria-hidden="true"></span></a>
+            }
             <h4>@Model.Video.Description</h4>
             <br>
             @* 1. The <iframe> (and video player) will replace this <div> tag.  *@
@@ -92,10 +96,9 @@
 </div>
 
 @* TODO - Remove this and use the jQuery in lib/jquery/dist *@
-<script
-    src="https://code.jquery.com/jquery-3.3.1.js"
-    integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
-    crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.js"
+        integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+        crossorigin="anonymous"></script>
 
 <link rel="stylesheet" href="~/css/video.css" />
 
