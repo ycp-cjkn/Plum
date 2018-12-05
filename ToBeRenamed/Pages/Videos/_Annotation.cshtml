@@ -1,5 +1,5 @@
 @model Dtos.AnnotationDto
-<div class="annotation-wrapper" data-id="@Model.Id" data-author-id="@Model.UserId">
+<div class="annotation-wrapper" data-id="@Model.Id" data-author-id="@Model.UserId" data-timestamp="@Math.Floor(Model.Timestamp)">
     <div class="panel panel-default">
         <div class="panel panel-heading annotation-header">
             <div class="dropdown" style="display: inline-block">

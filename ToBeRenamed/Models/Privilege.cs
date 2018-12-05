@@ -12,6 +12,7 @@ namespace ToBeRenamed.Models
         public static Privilege CanSubmitVideo = new Privilege("can_submit_video");
         public static Privilege CanRemoveOwnVideo = new Privilege("can_remove_own_video");
         public static Privilege CanRemoveAnyVideo = new Privilege("can_remove_any_video");
+        public static Privilege CanSeeAllAnnotations = new Privilege("can_see_all_annotations");
 
         public static ISet<Privilege> All()
         {
@@ -24,6 +25,7 @@ namespace ToBeRenamed.Models
                 CanSubmitVideo,
                 CanRemoveOwnVideo,
                 CanRemoveAnyVideo,
+                CanSeeAllAnnotations
             }.ToHashSet();
         }
 
