@@ -22,9 +22,9 @@ namespace ToBeRenamed.Tests.Commands
             var request = new CreateUserWithoutAuth("Alice");
             var result = await _fixture.SendAsync(request);
 
-            //change name Alice to Bob
+            //change name Alice of resultId to Bob
             var request1 = new UpdateDisplayName(result.Id, "Bob");
-            await _fixture.SendAsync(request1);
+            var result2 = await _fixture.SendAsync(request1);
 
             //retrieve user info through same id 
             var request2 = new GetUserByUserId(result.Id);
