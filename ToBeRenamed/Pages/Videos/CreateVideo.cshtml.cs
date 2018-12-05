@@ -1,8 +1,11 @@
-﻿using MediatR;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Threading.Tasks;
+using ToBeRenamed.Attributes;
 using ToBeRenamed.Commands;
 using ToBeRenamed.Models;
 using ToBeRenamed.Queries;
@@ -21,9 +24,12 @@ namespace ToBeRenamed.Pages.Videos
         }
 
         [BindProperty]
+        [Required]
         public string Title { get; set; }
 
         [BindProperty]
+        [Required]
+        [YoutubeLink]
         public string Link { get; set; }
 
         [BindProperty]
@@ -46,6 +52,11 @@ namespace ToBeRenamed.Pages.Videos
 
         public async Task<IActionResult> OnPostAsync()
         {
+            if (!ModelState.IsValid)
+            {
+                return Page();
+            }
+            
             var member = await _mediator.Send(new GetSignedInMember(User, LibraryId));
 
             if (!member.Role.Privileges.Contains(Privilege.CanSubmitVideo))
