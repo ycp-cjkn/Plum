@@ -20,19 +20,37 @@
     ViewData["Title"] = "Profile";
 }
 
-<h2>@ViewData["Title"]</h2>
+<div class="row">
+    <div class="col-md-12">
+        <div class="page-header">
+            <h1>Profile</h1>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-8">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    Profile Information
+                </h3>
+            </div>
+            <div class="panel-body">
+                <div><b>Display Name:</b> @Model.UserDto.DisplayName</div>
+                <div><b>User ID:</b> @Model.UserDto.Id</div>
+                <div><b>Account Created:</b> @Model.UserDto.CreatedAt</div>
+            </div>
+        </div>
+    </div>
+</div>
 
-<div>Display Name: <b>@Model.UserDto.DisplayName</b></div>
-<div>User ID: <b>@Model.UserDto.Id</b></div>
-<div>Account Created: <b>@Model.UserDto.CreatedAt</b></div>
-
-@if (User?.Identity?.IsAuthenticated ?? false)
-{
-    <p>
-        @foreach (var claim in User.Claims)
-        {
-            <div>@claimProperties[i]: <b>@claim.Value</b></div>
-            i++;
-        }
-    </p>
-}
+@*@if (User?.Identity?.IsAuthenticated ?? false)
+    {
+        <p>
+            @foreach (var claim in User.Claims)
+            {
+                <div>@claimProperties[i]: <b>@claim.Value</b></div>
+                i++;
+            }
+        </p>
+    }*@
