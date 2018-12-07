@@ -38,7 +38,7 @@ namespace ToBeRenamed.Queries
                 WHERE 
                     ann.video_id = @VideoId
                     AND ann.deleted_at IS NULL
-                ORDER BY ann.timestamp DESC";
+                ORDER BY ann.timestamp ASC";
 
             const string repliesSql = @"
                 SELECT
