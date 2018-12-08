@@ -5,6 +5,7 @@
 }
 
 <h2>Invitations</h2>
+<a asp-route-id="@Model.Library.Id" asp-page="/Library">Back to library</a>
 <hr />
 <div class="row">
     <div class="col-md-12">
@@ -36,6 +37,30 @@
                 <input type="submit" value="Create" class="btn btn-default" asp-page-handler="InviteUser" />
             </div>
         </form>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Url</th>
+                    <th>Role</th>
+                    <th>Created By</th>
+                    <th>Date Created</th>
+                    <th>Date Expires</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach(var invite in Model.Invitations)
+                {
+                    <tr>
+                        @*TODO: Better way to build link*@
+                        <td>@("http://" + HttpContext.Request.Host + "/Join/" + invite.UrlKey)</td>
+                        <td>@invite.RoleTitle</td>
+                        <td>@(string.IsNullOrWhiteSpace(invite.DisplayName) ? invite.FullName : invite.DisplayName)</td>
+                        <td>@invite.CreatedAt</td>
+                        <td>@invite.ExpiresAt</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     </div>
 </div>
 

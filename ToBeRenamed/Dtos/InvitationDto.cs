@@ -14,5 +14,6 @@ namespace ToBeRenamed.Dtos
         public int MembershipId { get; set; }
         public int RoleId { get; set; }
         public int LibraryId { get; set; }
+        public DateTime ExpiresAt { get; set; }
     }
 }

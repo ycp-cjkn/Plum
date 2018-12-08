@@ -27,6 +27,7 @@ namespace ToBeRenamed.Pages.Invitations
         public LibraryDto Library { get; set; }
         public Member Member { get; set; }
         public IEnumerable<Role> Roles { get; set; }
+        public IEnumerable<InvitationDto> Invitations { get; set; }
 
         public async Task OnGetAsync()
         {
@@ -53,10 +54,12 @@ namespace ToBeRenamed.Pages.Invitations
             var libraryTask = _mediator.Send(new GetLibraryDtoById(LibraryId));
             var memberTask = _mediator.Send(new GetSignedInMember(User, LibraryId));
             var rolesTask = _mediator.Send(new GetRolesForLibrary(LibraryId));
+            var invitationsTask = _mediator.Send(new GetInvitationsForLibrary(LibraryId));
 
             Library = await libraryTask.ConfigureAwait(false);
             Member = await memberTask.ConfigureAwait(false);
             Roles = await rolesTask.ConfigureAwait(false);
+            Invitations = await invitationsTask.ConfigureAwait(false);
         }
 
         public enum Expiration { OneHour, OneDay, SevenDays, ThirtyDays, Never };
