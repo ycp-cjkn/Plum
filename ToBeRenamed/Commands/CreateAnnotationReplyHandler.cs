@@ -25,9 +25,20 @@ namespace ToBeRenamed.Commands
                     VALUES (@UserId, @Text, @AnnotationId)
                     RETURNING id, text, user_id, annotation_id
                 )
-                SELECT REP.id, REP.text, REP.annotation_id, MEM.display_name FROM REP
+                SELECT
+                    REP.id,
+                    REP.text,
+                    REP.annotation_id,
+                    REP.user_id,
+                    (CASE
+                        WHEN mem.display_name = ''
+                        THEN USR.display_name
+                        ELSE mem.display_name END) AS display_name
+                FROM REP
                 INNER JOIN plum.memberships MEM
-                ON MEM.user_id = REP.user_id";
+                ON MEM.user_id = REP.user_id
+                INNER JOIN plum.users USR
+                ON REP.user_id = USR.id";
 
             using (var cnn = _sqlConnectionFactory.GetSqlConnection())
             {

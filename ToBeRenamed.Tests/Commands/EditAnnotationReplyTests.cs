@@ -72,21 +72,25 @@ namespace ToBeRenamed.Tests.Commands
             
             await _fixture.SendAsync(createReplyRequest1);
 
-            //edit reply
-            var editReplyRequest = new EditAnnotationReply(user.Id, annotation.Id, replyText1, new_replyText);
-
+            // get reply
+            var getReplyRequest = new GetAnnotationRepliesByVideoId(video.Id);
+            var replyResults1 = await _fixture.SendAsync(getReplyRequest);
+            var reply = replyResults1.Single();
+            
+            // edit reply
+            var editReplyRequest = new EditAnnotationReply(user.Id, reply.Id, new_replyText);
             await _fixture.SendAsync(editReplyRequest);
 
             // get replies
-            var getRepliesRequest = new GetAnnotationRepliesByAnnotationId(annotation.Id);
+            var getRepliesRequest = new GetAnnotationRepliesByVideoId(video.Id);
             var replyResults = await _fixture.SendAsync(getRepliesRequest);
             var replies = replyResults.ToList();
             var reply1 = replies.ElementAt(0);
 
             // Check that reply got created
-            Assert.Equal(1, replies.Count);
+            Assert.Single(replies);
 
-            //Check that reply returns right thing
+            // Check that reply returns right thing
             Assert.Equal(new_replyText, reply1.Text);
         }
     }
