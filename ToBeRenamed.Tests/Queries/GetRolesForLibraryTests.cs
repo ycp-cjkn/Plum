@@ -44,14 +44,17 @@ namespace ToBeRenamed.Tests.Queries
 
             // User creates role for that library
             var createRoleRequest = new CreateRole(roleTitle, libraryId);
-            var roleId = await _fixture.SendAsync(createRoleRequest);
+            await _fixture.SendAsync(createRoleRequest);
 
             // Retrieve that role
-            var getRoleRequest = new GetRolesForLibrary(roleId);
+            var getRoleRequest = new GetRolesForLibrary(libraryId);
             var role = await _fixture.SendAsync(getRoleRequest);
 
-            // Check that our role title equals the one returned 
-            Assert.Equal("Student", role.Single().Title);
+            var roleDtos = role.ToList();
+            
+            // Check that our role is the only role and that title equals the one returned 
+            Assert.Single(roleDtos);
+            Assert.Equal("Student", roleDtos.Single().Title);
         }
     }
 }

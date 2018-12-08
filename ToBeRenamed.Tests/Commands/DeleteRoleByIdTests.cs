@@ -44,21 +44,29 @@ namespace ToBeRenamed.Tests.Commands
 
             // User creates role for that library
             var createRoleRequest = new CreateRole(roleTitle, libraryId);
-            var roleId = await _fixture.SendAsync(createRoleRequest);
+            await _fixture.SendAsync(createRoleRequest);
 
             // Retrieve that role
-            var getRoleRequest = new GetRolesForLibrary(roleId);
+            var getRoleRequest = new GetRolesForLibrary(libraryId);
             var role = await _fixture.SendAsync(getRoleRequest);
 
+            // Make sure 1 role returned
+            var roleDtos = role.ToList();
+            Assert.Single(roleDtos);
+
+            var roleId = roleDtos.ToList().ElementAt(0).Id;
+
             // Delete that role
-            var deleteRoleRequest = new DeleteRoleById(role.Single().Id);
+            var deleteRoleRequest = new DeleteRoleById(roleId);
             await _fixture.SendAsync(deleteRoleRequest);
 
             // Try to retrieve that role
-            var getRoleRequest1 = new GetRolesForLibrary(role.Single().Id);
-            var role1 = await _fixture.SendAsync(getRoleRequest1);
+            var getRolesLeftRequest = new GetRolesForLibrary(libraryId);
+            var roleLeft = await _fixture.SendAsync(getRolesLeftRequest);
 
-            Assert.Empty(role1);
+            var roleCount = roleLeft.Count();
+
+            Assert.Equal(0, roleCount);
         }
     }
 }
