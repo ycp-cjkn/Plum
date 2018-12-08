@@ -4,20 +4,20 @@ using ToBeRenamed.Commands;
 using ToBeRenamed.Queries;
 using Xunit;
 
-namespace ToBeRenamed.Tests.Commands
+namespace ToBeRenamed.Tests.Queries
 {
-    public class DeleteRoleByIdTests : IClassFixture<DatabaseFixture>
+    public class GetRolesForLibraryTests : IClassFixture<DatabaseFixture>
     {
         private readonly DatabaseFixture _fixture;
 
-        public DeleteRoleByIdTests(DatabaseFixture fixture)
+        public GetRolesForLibraryTests(DatabaseFixture fixture)
         {
             _fixture = fixture;
         }
 
         [Fact]
         [ResetDatabase]
-        public async Task ItDeletesRoleById()
+        public async Task Should_Get_Roles_For_Library()
         {
             // Create a test user
             var userRequest = new CreateUserWithoutAuth("Alice");
@@ -50,15 +50,8 @@ namespace ToBeRenamed.Tests.Commands
             var getRoleRequest = new GetRolesForLibrary(roleId);
             var role = await _fixture.SendAsync(getRoleRequest);
 
-            // Delete that role
-            var deleteRoleRequest = new DeleteRoleById(role.Single().Id);
-            await _fixture.SendAsync(deleteRoleRequest);
-
-            // Try to retrieve that role
-            var getRoleRequest1 = new GetRolesForLibrary(role.Single().Id);
-            var role1 = await _fixture.SendAsync(getRoleRequest1);
-
-            Assert.Empty(role1);
+            // Check that our role title equals the one returned 
+            Assert.Equal("Student", role.Single().Title);
         }
     }
 }
