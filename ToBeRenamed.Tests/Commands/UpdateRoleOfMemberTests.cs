@@ -53,15 +53,14 @@ namespace ToBeRenamed.Tests.Commands
             var createRoleRequest = new CreateRole(roleTitle, libraryId);
             await _fixture.SendAsync(createRoleRequest);
 
-            // Retrieve that role
+            // Retrieve roles
             var getRoleRequest = new GetRolesForLibrary(libraryId);
             var role = await _fixture.SendAsync(getRoleRequest);
 
             // Make sure 1 role returned
             var roleDtos = role.ToList();
-            Assert.Single(roleDtos);
-
-            var roleId = roleDtos.ToList().ElementAt(0).Id;
+            // RoleId of role after default (our created role)
+            var roleId = roleDtos.ToList().ElementAt(1).Id;
 
             // Update that role 
             var newRoleRequest = new UpdateRoleOfMember( memberUserId, roleId, newRoleTitle);
@@ -72,7 +71,9 @@ namespace ToBeRenamed.Tests.Commands
             var newRole = await _fixture.SendAsync(getNewRoleRequest);
 
             // Make sure the role was updated
-            Assert.Equal(newRoleTitle, newRole.Single().Title);
+            //Assert.Equal(newRoleTitle, newRole.Single().Title);
+
+            Assert.Contains(newRoleTitle, newRole.Select(r => r.Title));
         }
     }
 }
