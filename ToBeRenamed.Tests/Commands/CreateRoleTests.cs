@@ -45,10 +45,9 @@ namespace ToBeRenamed.Tests.Commands
             //Get roles for selected library
             var returnRoleRequest = new GetRolesForLibrary(libraryId);
             var result = await _fixture.SendAsync(returnRoleRequest);
-            var resultTitle = result.Single().Title;
 
             //make sure role matches our role title 
-            Assert.Equal(title, resultTitle);
+            Assert.Contains(title, result.Select(r => r.Title));
 
         }
     }
