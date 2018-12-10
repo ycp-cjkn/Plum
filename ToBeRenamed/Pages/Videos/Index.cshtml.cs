@@ -21,23 +21,17 @@ namespace ToBeRenamed.Pages.Videos
             _mediator = mediator;
         }
 
-        public LibraryDto Library;
         public VideoDto Video { get; set; }
         public IEnumerable<AnnotationDto> Annotations { get; set; }
         public IEnumerable<ReplyDto> Replies { get; set; }
         public Member CurrentMember { get; set; }
-        public int LibraryId { get; set; }
-
-        public async Task<IActionResult> OnGetAsyncReturnPage()
-        {
-            await SetUp();
-            return Page();
-        }
-
+        public Role Role { get; set; }
+        
         public async Task OnGetAsync(int id)
         {
             Video = await _mediator.Send(new GetVideoById(id));
             CurrentMember = await _mediator.Send(new GetSignedInMember(User, Video.LibraryId));
+            Role = await _mediator.Send(new GetRoleForMember(CurrentMember.Id));
             Annotations = await _mediator.Send(new GetAnnotationsByVideoId(id));
             Replies = await _mediator.Send(new GetAnnotationRepliesByVideoId(id));
         }
@@ -77,10 +71,27 @@ namespace ToBeRenamed.Pages.Videos
             await _mediator.Send(new DeleteAnnotation(userId, annotationId));
             return Content("{ \"response\": true }", "application/json");
         }
-        private async Task SetUp()
+        
+        public async Task<ContentResult> OnPostEditReply(int userId, int replyId, string text)
         {
-            var libraryTask = _mediator.Send(new GetLibraryDtoById(LibraryId));
-            Library = await libraryTask.ConfigureAwait(false);
+            await _mediator.Send(new EditAnnotationReply(userId, replyId, text));
+            return Content("{ \"response\": true }", "application/json");
+        }
+
+        public async Task<ContentResult> OnPostDeleteReply(int userId, int replyId)
+        {
+            await _mediator.Send(new DeleteAnnotationReply(userId, replyId));
+            return Content("{ \"response\": true }", "application/json");
+        }
+
+        public async Task<JsonResult> OnPostFetchRole(int libraryId)
+        {
+            var member = await _mediator.Send(new GetSignedInMember(User, libraryId));
+            var memberList = new List<int>();
+            memberList.Add(member.Id);
+            var role = await _mediator.Send(new GetRolesForMembers(memberList));
+            
+            return new JsonResult(role);
         }
     }
 }

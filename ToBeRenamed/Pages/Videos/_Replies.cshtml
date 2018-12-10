@@ -1,17 +1,24 @@
 @model Dtos.ReplyDto
-
-<div class="panel panel-default">
-    <div class="panel panel-heading reply-header">
-        <span class="reply-options glyphicon glyphicon-option-horizontal" aria-hidden="true"></span>
-        <span class="reply-author block">
-            @Model.DisplayName
-        </span>
-    </div>
-    <div class="panel-body reply-body">
-        <div class="reply-text-wrapper row">
-            <span class="reply-text">
-                @Model.Text
+<div class="reply-container" data-id="@Model.Id" data-author-id="@Model.UserId">
+    <div class="panel panel-default">
+        <div class="panel panel-heading reply-header">
+            <div class="dropdown" style="display: inline-block">
+                <span class="reply-options glyphicon glyphicon-option-horizontal" aria-hidden="true"
+                      data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></span>
+                <ul class="reply-options-ul dropdown-menu">
+                        
+                </ul>
+            </div>
+            <span class="reply-author block">
+                @Model.DisplayName
             </span>
+        </div>
+        <div class="panel-body reply-body">
+            <div class="reply-text-wrapper row">
+                <span class="reply-text">
+                    @Model.Text
+                </span>
+            </div>
         </div>
     </div>
 </div>
