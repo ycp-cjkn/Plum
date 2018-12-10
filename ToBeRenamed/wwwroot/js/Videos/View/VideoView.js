@@ -594,7 +594,10 @@ export function getAnnotationTimestamp(annotationElement) {
 export function insertNewAnnotation(thisAnnotation, annotationHTML) {
     let annotationElements = videoController.state.annotationElements.children;
     let priorAnnotationElement;
-    let lastAnnotationTimestamp = parseInt(annotationElements[annotationElements.length - 1].dataset['timestamp']);
+    let lastAnnotationTimestamp;
+    if(annotationElements[annotationElements.length - 1].dataset['timestamp']) {
+        lastAnnotationTimestamp = parseInt(annotationElements[annotationElements.length - 1].dataset['timestamp']);
+    }
     
     if(thisAnnotation.timestamp > lastAnnotationTimestamp) {
         // New annotation has largest timestamp, must be added to end
