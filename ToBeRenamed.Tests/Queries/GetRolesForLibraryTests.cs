@@ -50,11 +50,8 @@ namespace ToBeRenamed.Tests.Queries
             var getRoleRequest = new GetRolesForLibrary(libraryId);
             var role = await _fixture.SendAsync(getRoleRequest);
 
-            var roleDtos = role.ToList();
-            
             // Check that our role is the only role and that title equals the one returned 
-            Assert.Single(roleDtos);
-            Assert.Equal("Student", roleDtos.Single().Title);
+            Assert.Contains(roleTitle, role.Select(r => r.Title));
         }
     }
 }

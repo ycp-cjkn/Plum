@@ -40,9 +40,6 @@ namespace ToBeRenamed.Pages
         [Required]
         public int Id { get; set; }
 
-        [BindProperty(SupportsGet = true)]
-        public int LibraryId { get; set; }
-
         public async Task OnGetAsync()
         {
             await SetUpPage();
@@ -60,9 +57,9 @@ namespace ToBeRenamed.Pages
             return RedirectToPage();
         }
 
-        public async Task<IActionResult> OnPostDeleteVideo(int videoId)
+        public async Task<IActionResult> OnPostDeleteVideo(int videoId, int libraryId)
         {
-            var member = await _mediator.Send(new GetSignedInMember(User, LibraryId));
+            var member = await _mediator.Send(new GetSignedInMember(User, libraryId));
 
             if (!member.Role.Privileges.Contains(Privilege.CanRemoveAnyVideo))
             {

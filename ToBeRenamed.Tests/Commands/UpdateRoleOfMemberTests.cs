@@ -59,6 +59,7 @@ namespace ToBeRenamed.Tests.Commands
 
             // Make sure 1 role returned
             var roleDtos = role.ToList();
+
             // RoleId of role after default (our created role)
             var roleId = roleDtos.ToList().ElementAt(1).Id;
 
@@ -71,8 +72,6 @@ namespace ToBeRenamed.Tests.Commands
             var newRole = await _fixture.SendAsync(getNewRoleRequest);
 
             // Make sure the role was updated
-            //Assert.Equal(newRoleTitle, newRole.Single().Title);
-
             Assert.Contains(newRoleTitle, newRole.Select(r => r.Title));
         }
     }

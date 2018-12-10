@@ -52,6 +52,7 @@ namespace ToBeRenamed.Tests.Commands
 
             // Return roles
             var roleDtos = role.ToList();
+
             // RoleId of role after default (our created role)
             var roleId = roleDtos.ToList().ElementAt(1).Id;
 
