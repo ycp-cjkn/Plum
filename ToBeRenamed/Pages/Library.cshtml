@@ -1,4 +1,4 @@
-﻿@page "{id:int}"
+@page "{id:int}"
 @using Models
 @model LibraryModel
 @{
@@ -100,6 +100,13 @@
                         <a asp-page="/Videos/CreateVideo" asp-route-libraryId="@Model.Library.Id">
                             <span class="glyphicon glyphicon-plus-sign pull-right" aria-hidden="true"></span>
                         </a>
+                        <div class="dropdown pull-right" style="margin-right : 5px">
+                            <button type="button" class="btn btn-xs btn-default" aria-hidden="true" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Sort By <span class="caret"></span></button>
+                            <ul class="dropdown-menu">
+                                <li><a href="#">Title</a></li>
+                                <li><a href="#">Date Added</a></li>
+                            </ul>
+                        </div>
                     }
                 </h3>
             </div>
@@ -113,7 +120,7 @@
                     }
                     @foreach (var video in Model.Videos)
                     {
-                        <div class="col-md-4">
+                        <div class="col-md-4 video-wrapper">
                             <a class="thumbnail" asp-page="/Videos/Index" asp-route-id="@video.Id">
                                 <img class="media-object"
                                      src="http://identicon.rmhdev.net/@(Uri.EscapeDataString(video.Title)).png" alt="">
