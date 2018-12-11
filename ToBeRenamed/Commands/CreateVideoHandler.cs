@@ -37,7 +37,9 @@ namespace ToBeRenamed.Commands
                 RETURNING id, url
             )
             INSERT INTO plum.videos (title, description, video_url_id, library_id)
-            SELECT @title, @description, id, @libraryId FROM videoURLS"; 
+            SELECT @title, @description, id, @libraryId FROM videoURLS
+            INNER JOIN plum.videotags VTAGS 
+            ON VTAGS.video_id = videoURLS.id"; 
 
             using (var cnn = _sqlConnectionFactory.GetSqlConnection())
             {

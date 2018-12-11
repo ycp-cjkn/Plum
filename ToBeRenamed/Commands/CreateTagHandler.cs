@@ -23,9 +23,14 @@ namespace ToBeRenamed.Commands
         public async Task<TagDto> Handle(CreateTag request, CancellationToken cancellationToken)
         {
             const string sql = @"
-                INSERT INTO plum.tags (id, text)
-                VALUES (@tag)
-                RETURNING id, text";
+            WITH TAG AS(
+               INSERT INTO plum.tags (text)
+               VALUES (@Tag)
+               RETURNING id, text)
+            SELECT TAG.id 
+            FROM TAG
+            INNER JOIN plum.video_tags VTAGS
+            ON VTAGS.tag_id = TAG.id";
 
             using (var cnn = _sqlConnectionFactory.GetSqlConnection())
             {

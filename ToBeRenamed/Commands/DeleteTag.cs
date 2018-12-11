@@ -3,12 +3,13 @@ using ToBeRenamed.Dtos;
 
 namespace ToBeRenamed.Commands
 {
-    public class CreateTag : IRequest<TagDto>
+    public class DeleteTag : IRequest
     {
+
         public int Id { get; }
         public string Tag { get; }
 
-        public CreateTag(int id, string tag)
+        public DeleteTag(int id, string tag)
         {
             Id = id;
             Tag = tag;
