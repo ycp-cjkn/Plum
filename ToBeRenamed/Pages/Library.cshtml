@@ -1,4 +1,4 @@
-@page "{id:int}"
+﻿@page "{id:int}"
 @using Models
 @model LibraryModel
 @{
@@ -100,18 +100,20 @@
                         <a asp-page="/Videos/CreateVideo" asp-route-libraryId="@Model.Library.Id">
                             <span class="glyphicon glyphicon-plus-sign pull-right" aria-hidden="true"></span>
                         </a>
-                        <div class="dropdown pull-right" style="margin-right : 5px">
-                            <button type="button" class="btn btn-xs btn-default" aria-hidden="true" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Sort By <span class="caret"></span></button>
-                            <ul class="dropdown-menu">
-                                <li><a href="#">Title</a></li>
-                                <li><a href="#">Date Added</a></li>
-                            </ul>
-                        </div>
                     }
                 </h3>
             </div>
             <div class="panel-body">
-                <div class="row">
+                <div style="width: 30%; margin-bottom: 5px;">
+                    <select id="sort-videos" class="form-control">
+                        <option value="" disabled selected>Sort By</option>
+                        <option value="titleDesc">Title (A to Z)</option>
+                        <option value="titleAsc">Title (Z to A)</option>
+                        <option value="dateAddedDesc">Date Added (Newest to Oldest)</option>
+                        <option value="dateAddedAsc">Date Added (Oldest to Newest)</option>
+                    </select>
+                </div>
+                <div id="videos-wrapper" class="row">
                     @if (!Model.Videos.Any())
                     {
                         <div class="col-md-12">
@@ -120,7 +122,7 @@
                     }
                     @foreach (var video in Model.Videos)
                     {
-                        <div class="col-md-4 video-wrapper">
+                        <div class="col-md-4 video-wrapper" data-title="@video.Title" data-id="@video.Id">
                             <a class="thumbnail" asp-page="/Videos/Index" asp-route-id="@video.Id">
                                 <img class="media-object"
                                      src="http://identicon.rmhdev.net/@(Uri.EscapeDataString(video.Title)).png" alt="">
@@ -133,7 +135,7 @@
                             @if (Model.Member.Role.Privileges.Contains(Privilege.CanRemoveAnyVideo))
                             {
                                 <form method="post">
-                                    <input type="hidden" name="VideoId" value="@video.Id" />
+                                    <input type="hidden" name="VideoId" value="@video.Id"/>
                                     <button class="btn btn-link btn-xs" type="submit" asp-page-handler="DeleteVideo">Remove</button>
                                 </form>
                             }
@@ -145,6 +147,62 @@
     </div>
 </div>
 
+@* TODO - Remove this and use the jQuery in lib/jquery/dist *@
+<script src="https://code.jquery.com/jquery-3.3.1.js"
+        integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+        crossorigin="anonymous"></script>
+
+<script>
+    var state = {
+        videoElements: null
+    }
+
+    state.videoElements = document.getElementsByClassName('video-wrapper');
+    
+    
+    
+    document.getElementById('sort-videos').addEventListener('change', function(e) {
+        var $wrapper = $('#videos-wrapper');
+        
+        if (e.target.value === 'titleDesc') {
+            $wrapper.find('.video-wrapper').sort(function(a, b) {
+                var nameA = a.dataset.title.toUpperCase(); // ignore upper and lowercase
+                var nameB = b.dataset.title.toUpperCase(); // ignore upper and lowercase
+                if (nameA < nameB) {
+                    return -1;
+                }
+                if (nameA > nameB) {
+                    return 1;
+                }
+
+                // names must be equal
+                return 0;
+            }).appendTo($wrapper);
+        } else if (e.target.value === 'titleAsc') {
+            $wrapper.find('.video-wrapper').sort(function(a, b) {
+                var nameA = a.dataset.title.toUpperCase(); // ignore upper and lowercase
+                var nameB = b.dataset.title.toUpperCase(); // ignore upper and lowercase
+                if (nameA < nameB) {
+                    return 1;
+                }
+                if (nameA > nameB) {
+                    return -1;
+                }
+
+                // names must be equal
+                return 0;
+            }).appendTo($wrapper);
+        } else if (e.target.value === 'dateAddedDesc') {
+            $wrapper.find('.video-wrapper').sort(function(a, b) {
+                return b.dataset.id - a.dataset.id;
+            }).appendTo($wrapper);
+        } else if (e.target.value === 'dateAddedAsc') {
+            $wrapper.find('.video-wrapper').sort(function(a, b) {
+                return a.dataset.id - b.dataset.id;
+            }).appendTo($wrapper);
+        }
+    });
+</script>
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
