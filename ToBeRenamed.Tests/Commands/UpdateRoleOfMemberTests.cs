@@ -58,14 +58,14 @@ namespace ToBeRenamed.Tests.Commands
             var role = await _fixture.SendAsync(getRoleRequest);
 
             // Make sure 1 role returned
-            var roleDtos = role.ToList();
+            //var roleDtos = role.ToList();
 
             // RoleId of role after default (our created role)
-            var roleId = roleDtos.ToList().ElementAt(1).Id;
-
+            var roleId = role.ToList().ElementAt(1).Id;
+            
             // Update that role 
             var newRoleRequest = new UpdateRoleOfMember( memberUserId, roleId, newRoleTitle);
-            await _fixture.SendAsync(getRoleRequest);
+            await _fixture.SendAsync(newRoleRequest);
 
             // Retrieve that updated role
             var getNewRoleRequest = new GetRolesForLibrary(libraryId);
