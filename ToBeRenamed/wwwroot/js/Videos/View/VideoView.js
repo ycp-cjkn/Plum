@@ -595,7 +595,7 @@ export function insertNewAnnotation(thisAnnotation, annotationHTML) {
     let annotationElements = videoController.state.annotationElements.children;
     let priorAnnotationElement;
     let lastAnnotationTimestamp;
-    if(annotationElements[annotationElements.length - 1].dataset['timestamp']) {
+    if(annotationElements[annotationElements.length - 1] && annotationElements[annotationElements.length - 1].dataset['timestamp']) {
         lastAnnotationTimestamp = parseInt(annotationElements[annotationElements.length - 1].dataset['timestamp']);
     }
     
