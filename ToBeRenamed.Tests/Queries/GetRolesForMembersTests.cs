@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using ToBeRenamed.Commands;
 using ToBeRenamed.Queries;
@@ -24,7 +25,6 @@ namespace ToBeRenamed.Tests.Queries
             var user = await _fixture.SendAsync(userRequest);
 
             const string title = "My Fantastic Library";
-            const string roleTitle = "Student";
             const string description = "A suitable description.";
 
             // User creates library
@@ -42,8 +42,23 @@ namespace ToBeRenamed.Tests.Queries
             // Get id of the single library
             var libraryId = libraryDtos.ToList().ElementAt(0).Id;
 
-            // Get roles for members 
-            
+            // Return member
+            var getMembersRequest = new GetMembersOfLibrary(libraryId);
+            var members = await _fixture.SendAsync(getMembersRequest);
+
+            // Get that member's id
+            var memberId = members.ToList().ElementAt(0).Id;
+
+            // Put membership Id's into list
+            var memberIds = new List<int>();
+            memberIds.Add(memberId);
+
+            // Retrieve roles from list
+            var getRolesForMembersRequest = new GetRolesForMembers(memberIds);
+            var memberRolesReturn = await _fixture.SendAsync(getRolesForMembersRequest);
+
+            // Check to make sure roles returned from list
+            Assert.Contains("Instructor", memberRolesReturn.Single().Value.Title);
 
         }
     }

@@ -24,7 +24,7 @@ namespace ToBeRenamed.Tests.Commands
 
             const string title = "My Fantastic Library";
             const string roleTitle = "Student";
-            const string newRoleTitle = "Teaching Assistant";
+            const string newDisplayName = "Some guy";
             const string description = "A suitable description.";
 
             // User creates library
@@ -47,7 +47,7 @@ namespace ToBeRenamed.Tests.Commands
             var members = await _fixture.SendAsync(getMembersRequest);
 
             // Get that member's id
-            var memberUserId = members.ToList().ElementAt(0).UserId;
+            var memberUserId = members.ToList().ElementAt(0).Id;
 
             // User creates role for that library
             var createRoleRequest = new CreateRole(roleTitle, libraryId);
@@ -64,15 +64,15 @@ namespace ToBeRenamed.Tests.Commands
             var roleId = role.ToList().ElementAt(1).Id;
             
             // Update that role 
-            var newRoleRequest = new UpdateRoleOfMember( memberUserId, roleId, newRoleTitle);
+            var newRoleRequest = new UpdateRoleOfMember( memberUserId, roleId, newDisplayName);
             await _fixture.SendAsync(newRoleRequest);
 
-            // Retrieve that updated role
-            var getNewRoleRequest = new GetRolesForLibrary(libraryId);
-            var newRole = await _fixture.SendAsync(getNewRoleRequest);
+            // Retrieve that member
+            var getMemberRequest = new GetRoleForMember(memberUserId);
+            var updatedRole = await _fixture.SendAsync(getMemberRequest);
 
             // Make sure the role was updated
-            Assert.Contains(newRoleTitle, newRole.Select(r => r.Title));
+            Assert.Equal(roleId, updatedRole.Id);
         }
     }
 }
