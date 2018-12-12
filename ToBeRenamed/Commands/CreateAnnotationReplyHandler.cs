@@ -35,8 +35,12 @@ namespace ToBeRenamed.Commands
                         THEN USR.display_name
                         ELSE mem.display_name END) AS display_name
                 FROM REP
+                INNER JOIN plum.annotations ANN
+                ON ANN.id = @AnnotationId
+                INNER JOIN plum.videos VID
+                ON VID.id = ANN.video_id
                 INNER JOIN plum.memberships MEM
-                ON MEM.user_id = REP.user_id
+                ON MEM.user_id = REP.user_id AND VID.library_id = MEM.library_id
                 INNER JOIN plum.users USR
                 ON REP.user_id = USR.id";
 
