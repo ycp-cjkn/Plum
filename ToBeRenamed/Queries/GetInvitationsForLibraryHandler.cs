@@ -44,7 +44,8 @@ namespace ToBeRenamed.Queries
                 WHERE
                     inv.deleted_at IS NULL
                     AND (inv.expires_at > NOW() OR inv.expires_at IS NULL)
-                    AND lib.id = @LibraryId";
+                    AND lib.id = @LibraryId
+                ORDER BY inv.created_at DESC";
 
             using (var cnn = _sqlConnectionFactory.GetSqlConnection())
             {

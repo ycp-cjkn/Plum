@@ -1,13 +1,17 @@
 ﻿@page
 @model ToBeRenamed.Pages.IndexModel
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home";
     
 }
 
-<h2>@ViewData["Title"]</h2>
-
-@if (User?.Identity?.IsAuthenticated ?? false)
+@*@if (User?.Identity?.IsAuthenticated ?? false)
 {
     <h1>Welcome, @User.Identity.Name</h1>
-}
+}*@
+
+<div class="jumbotron">
+    <h1>Welcome to Plum!</h1>
+    <p>Plum allows you to create a private library of videos to annotate and share with others.</p>
+    <p><a class="btn btn-primary btn-lg" asp-page="/Authentication/SignIn" asp-route-returnUrl="/Libraries">Get Started</a></p>
+</div>

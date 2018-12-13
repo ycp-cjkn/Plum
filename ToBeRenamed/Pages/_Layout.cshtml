@@ -30,13 +30,15 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li><a asp-page="/Index">Home</a></li>
                     @if (User?.Identity?.IsAuthenticated ?? false)
                     {
                         <li><a asp-page="/Libraries/Index">Libraries</a></li>
                     }
+                    else
+                    {
+                        <li><a asp-page="/Index">Home</a></li>
+                    }
                     <li><a asp-page="/About">About</a></li>
-                    <li><a asp-page="/Contact">Contact</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
 
@@ -60,14 +62,17 @@
                         <li><a asp-page="/Authentication/SignIn" asp-route-returnUrl="@Context.Request.Path">Sign In</a></li>
                     }
                 </ul>
-                <form class="navbar-form navbar-right navbar-inverse" method="get">
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Search" name="Query" value="@ViewBag.Query">
-                        <span class="input-group-btn">
-                            <button class="btn btn-default" type="submit" asp-page="/Search">Go!</button>
-                        </span>
-                    </div>
-                </form>
+                @if (User?.Identity?.IsAuthenticated ?? false)
+                {
+                    <form class="navbar-form navbar-right navbar-inverse" method="get">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Search" name="Query" value="@ViewBag.Query">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="submit" asp-page="/Search">Go!</button>
+                            </span>
+                        </div>
+                    </form>
+                }
             </div>
         </div>
     </nav>
