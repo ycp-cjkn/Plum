@@ -17,9 +17,11 @@ namespace ToBeRenamed.Tests.Commands
         [ResetDatabase]
         public async Task ItRuns()
         {
+            //Create test user named Alice
             var request = new CreateUserWithoutAuth("Alice");
             var result = await _fixture.SendAsync(request);
 
+            // Check that the fields match the fields we set
             Assert.NotNull(result);
             Assert.Equal("Alice", result.DisplayName);
             Assert.Null(result.GoogleClaimNameIdentifier);
