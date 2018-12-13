@@ -1,0 +1,76 @@
+﻿@page
+@model ToBeRenamed.Pages.SearchModel
+@{
+    var title = $"Results for \"{Model.Query}\"";
+    ViewData["Title"] = title;
+    ViewBag.Query = Model.Query;
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="page-header">
+            <h1>@title</h1>
+            @if (Model.SearchResults.TotalCount != 0)
+            {
+                <p>Found <b>@Model.SearchResults.TotalCount</b> items</p>
+            }
+        </div>
+
+        @if (Model.SearchResults.TotalCount == 0)
+        {
+            <p>No items found!</p>
+        }
+
+        @if (Model.SearchResults.Libraries.Any())
+        {
+            <div class="panel panel-info">
+                <div class="panel-heading"><h3 class="panel-title">Libraries <small>@Model.SearchResults.Libraries.Count found</small></h3></div>
+                <div class="panel-body">
+                    @foreach (var library in Model.SearchResults.Libraries)
+                    {
+                        <div class="media">
+                            <div class="media-left">
+                                <a asp-page="/Library" asp-route-id="@library.Id">
+                                    <img height="64" width="64" class="media-object"
+                                         src="http://identicon.rmhdev.net/@(Uri.EscapeDataString(library.Title)).png" alt="">
+                                </a>
+                            </div>
+                            <div class="media-body">
+                                <h4 class="media-heading">
+                                    <a asp-page="/Library" asp-route-id="@library.Id">@library.Title</a>
+                                </h4>
+                                @library.Description
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+
+        @if (Model.SearchResults.Videos.Any())
+        {
+            <div class="panel panel-info">
+                <div class="panel-heading"><h3 class="panel-title">Videos <small>@Model.SearchResults.Videos.Count found</small></h3></div>
+                <div class="panel-body">
+                    @foreach (var video in Model.SearchResults.Videos)
+                    {
+                        <div class="media">
+                            <div class="media-left">
+                                <a asp-page="/Videos/Index" asp-route-id="@video.Id">
+                                    <img height="64" width="64" class="media-object"
+                                         src="http://identicon.rmhdev.net/@(Uri.EscapeDataString(video.Title)).png" alt="">
+                                </a>
+                            </div>
+                            <div class="media-body">
+                                <h4 class="media-heading">
+                                    <a asp-page="/Videos/Index" asp-route-id="@video.Id">@video.Title</a>
+                                </h4>
+                                @video.Description
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</div>
