@@ -9,6 +9,7 @@ export function Annotation(videoId, comment, timestamp) {
 }
 
 Annotation.prototype.submit = function() {
+    let that = this;
     $.ajax({
         url: videoBase.apiUrls.submitAnnotation,
         data: {
@@ -24,8 +25,8 @@ Annotation.prototype.submit = function() {
                 $('input:hidden[name="__RequestVerificationToken"]').val());
         },
         success: function(annotationHTML) {
-            videoView.prependAnnotationToAnnotationsBody(annotationHTML);
             videoView.hideCreateAnnotationControls();
+            videoView.insertNewAnnotation(that, annotationHTML);
 
             if (videoController.state.hasAnnotations === false) {
                 // Remove element, since there is now annotations to show

@@ -31,14 +31,16 @@ namespace ToBeRenamed.Queries
                         THEN usr.display_name
                         ELSE mem.display_name END)
                 FROM plum.annotations ann
+                INNER JOIN plum.videos vid
+                ON ann.video_id = vid.id
                 INNER JOIN plum.users usr
                 ON ann.user_id = usr.id
                 INNER JOIN plum.memberships mem
-                ON ann.user_id = mem.user_id
+                ON ann.user_id = mem.user_id AND mem.library_id = vid.library_id
                 WHERE 
                     ann.video_id = @VideoId
                     AND ann.deleted_at IS NULL
-                ORDER BY ann.timestamp DESC";
+                ORDER BY ann.timestamp ASC";
 
             const string repliesSql = @"
                 SELECT
@@ -53,10 +55,12 @@ namespace ToBeRenamed.Queries
                 FROM plum.replies rep
                 INNER JOIN plum.annotations ann
                 ON ann.id = rep.annotation_id
+                INNER JOIN plum.videos vid
+                ON ann.video_id = vid.id
                 INNER JOIN plum.users usr
                 ON rep.user_id = usr.id
                 INNER JOIN plum.memberships mem
-                ON rep.user_id = mem.user_id
+                ON rep.user_id = mem.user_id AND mem.library_id = vid.library_id
                 WHERE ann.video_id = @videoId AND rep.deleted_at IS NULL
                 ORDER BY rep.annotation_id ASC, rep.created_at DESC, rep.modified_at DESC";
             

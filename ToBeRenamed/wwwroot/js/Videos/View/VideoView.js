@@ -585,3 +585,45 @@ export function removeToggleRepliesWrapper(annotationElement) {
 export function getAnnotationTimestamp(annotationElement) {
     return annotationElement.dataset['timestamp'];
 }
+
+/**
+ * Insert the new annotation after it's created
+ * @param thisAnnotation - The 'this' keyword for the Annotation object
+ * @param annotationHTML - The new annotation HTML
+ */
+export function insertNewAnnotation(thisAnnotation, annotationHTML) {
+    let annotationElements = videoController.state.annotationElements.children;
+    let priorAnnotationElement;
+    let lastAnnotationTimestamp;
+    if(annotationElements[annotationElements.length - 1] && annotationElements[annotationElements.length - 1].dataset['timestamp']) {
+        lastAnnotationTimestamp = parseInt(annotationElements[annotationElements.length - 1].dataset['timestamp']);
+    }
+    
+    if(thisAnnotation.timestamp > lastAnnotationTimestamp) {
+        // New annotation has largest timestamp, must be added to end
+        priorAnnotationElement = annotationElements[annotationElements.length - 1];
+    } else {
+        // Find annotation where new annotation will be added in front of it
+        for(let i = 0; i < annotationElements.length; i++) {
+            let timestamp = annotationElements[i].dataset['timestamp'];
+            if(thisAnnotation.timestamp > parseInt(timestamp) && i !== 0) {
+                // Found annotation with larger timestamp, will need to insert new annotation right before this one
+                priorAnnotationElement = annotationElements[i];
+            }
+        }
+    }
+    
+    // If priorAnnotationElement is undefined, then there are no annotations except the new one
+    if(priorAnnotationElement !== undefined) {
+        priorAnnotationElement.insertAdjacentHTML('afterend', annotationHTML);
+
+        // Scroll to new annotation
+        let annotationsElement = document.getElementById(videoBase.idNames.annotations);
+        let newAnnotationElement = priorAnnotationElement.nextSibling;
+        $(annotationsElement).animate({ scrollTop: newAnnotationElement.offsetTop}, 1000);
+
+    } else if (priorAnnotationElement === undefined) {
+        // Add new annotation, which will be only annotation
+        prependAnnotationToAnnotationsBody(annotationHTML);
+    }
+}

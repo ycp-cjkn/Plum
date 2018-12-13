@@ -44,7 +44,10 @@ namespace ToBeRenamed.Queries
 	                mem.id,
 	                mem.user_id,
 	                mem.library_id,
-                    mem.display_name,
+                    (CASE
+                        WHEN mem.display_name = ''
+                        THEN usr.display_name
+                        ELSE mem.display_name END) AS display_name,
                     usr.display_name AS full_name,
                     mem.created_at,
 	                usr.id = lib.created_by AS is_creator
