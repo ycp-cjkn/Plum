@@ -41,6 +41,7 @@ namespace ToBeRenamed.Queries
 	                to_tsvector(title || ' ' || description)
 	                @@ plainto_tsquery(@Query)
 	                AND mem.user_id = @UserId
+                    AND lib.deleted_at IS NULL
                 ORDER BY lib.created_at DESC";
 
             using (var cnn = _sqlConnectionFactory.GetSqlConnection())
@@ -60,6 +61,7 @@ namespace ToBeRenamed.Queries
 	                to_tsvector(title || ' ' || description)
 	                @@ plainto_tsquery(@Query)
 	                AND mem.user_id = @UserId
+                    AND vid.deleted_at IS NULL
                 ORDER BY vid.created_at DESC";
 
             using (var cnn = _sqlConnectionFactory.GetSqlConnection())
