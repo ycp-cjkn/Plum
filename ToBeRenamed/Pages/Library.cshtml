@@ -108,15 +108,18 @@
                 </h3>
             </div>
             <div class="panel-body">
-                <div style="width: 30%; margin-bottom: 5px;">
-                    <select id="sort-videos" class="form-control">
-                        <option value="" disabled selected>Sort By</option>
-                        <option value="titleDesc">Title (A to Z)</option>
-                        <option value="titleAsc">Title (Z to A)</option>
-                        <option value="dateAddedDesc">Date Added (Newest to Oldest)</option>
-                        <option value="dateAddedAsc">Date Added (Oldest to Newest)</option>
-                    </select>
-                </div>
+                @if (Model.Videos.Count() > 1)
+                {
+                    <div style="width: 30%; margin-bottom: 5px;">
+                        <select id="sort-videos" class="form-control">
+                            <option value="" disabled selected>Sort By</option>
+                            <option value="titleDesc">Title (A to Z)</option>
+                            <option value="titleAsc">Title (Z to A)</option>
+                            <option value="dateAddedDesc">Date Added (Newest to Oldest)</option>
+                            <option value="dateAddedAsc">Date Added (Oldest to Newest)</option>
+                        </select>
+                    </div>
+                }
                 <div id="videos-wrapper" class="row">
                     @if (!Model.Videos.Any())
                     {
