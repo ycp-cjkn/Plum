@@ -25,12 +25,20 @@ namespace ToBeRenamed.Pages.Libraries
         [BindProperty(SupportsGet = true)]
         public int LibraryId { get; set; }
 
-        public IEnumerable<LibraryDto> Libraries { get; set; }
+        public IDictionary<LibraryDto, Member> Libraries { get; set; }
 
-        public async Task OnGet()
+        public async Task OnGetAsync()
         {
             var userDto = await _mediator.Send(new GetSignedInUserDto(User));
-            Libraries = await _mediator.Send(new GetLibrariesForUser(userDto.Id));
+            var libraries = await _mediator.Send(new GetLibrariesForUser(userDto.Id));
+
+            Libraries = new Dictionary<LibraryDto, Member>();
+
+            foreach (var library in libraries)
+            {
+                var member = await _mediator.Send(new GetSignedInMember(User, library.Id));
+                Libraries.Add(library, member);
+            }
         }
 
         public async Task<IActionResult> OnPostDeleteLibrary(int libraryId)

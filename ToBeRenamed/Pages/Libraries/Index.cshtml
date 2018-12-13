@@ -35,24 +35,27 @@
                     <p>You are not a member of any libraries!</p>
                 }
 
-                @foreach (var library in Model.Libraries)
+                @foreach (var pair in Model.Libraries)
                 {
                     <div class="media">
                         <div class="media-left">
-                            <a asp-page="/Library" asp-route-id="@library.Id">
+                            <a asp-page="/Library" asp-route-id="@pair.Key.Id">
                                 <img height="64" width="64" class="media-object"
-                                     src="http://identicon.rmhdev.net/@(Uri.EscapeDataString(library.Title)).png" alt="">
+                                     src="http://identicon.rmhdev.net/@(Uri.EscapeDataString(pair.Key.Title)).png" alt="">
                             </a>
                         </div>
                         <div class="media-body">
                             <h4 class="media-heading">
-                                <a asp-page="/Library" asp-route-id="@library.Id">@library.Title</a>
+                                <a asp-page="/Library" asp-route-id="@pair.Key.Id">@pair.Key.Title</a>
                             </h4>
-                            @library.Description
+                            @pair.Key.Description
+                            @if (pair.Value.Role.Privileges.Contains(Privilege.CanRemoveLibrary))
+                            {
                                 <form method="post">
-                                    <input type="hidden" name="LibraryId" value="@library.Id" />
+                                    <input type="hidden" name="LibraryId" value="@pair.Key.Id" />
                                     <button class="btn btn-link btn-xs" type="submit" asp-page-handler="DeleteLibrary">Remove</button>
                                 </form>
+                            }
                         </div>
                     </div>
                 }
