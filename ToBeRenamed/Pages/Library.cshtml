@@ -21,6 +21,7 @@
                 <a asp-page="Libraries/Edit"><span class="glyphicon glyphicon-edit pull-right" aria-hidden="true"></span></a>
             }
             <h1>@Model.Library.Title</h1>
+            <a asp-page="/Libraries/Index">Back to libraries</a>
         </div>
     </div>
 </div>
@@ -36,7 +37,10 @@
                         <a asp-page="/Roles/Index" asp-route-libraryId="@Model.Library.Id">
                             <span class="glyphicon glyphicon-edit pull-right" aria-hidden="true"></span>
                         </a>
-                    }
+                    }                    
+                    <a asp-page="/Invitations/Index" asp-route-libraryId="@Model.Library.Id">
+                        <span class="glyphicon glyphicon-plus pull-right" aria-hidden="true"></span>
+                    </a>
                 </h3>
             </div>
             <div class="panel-body">
@@ -134,10 +138,11 @@
                             </a>
                             @if (Model.Member.Role.Privileges.Contains(Privilege.CanRemoveAnyVideo))
                             {
-                                <form method="post">
-                                    <input type="hidden" name="VideoId" value="@video.Id"/>
-                                    <button class="btn btn-link btn-xs" type="submit" asp-page-handler="DeleteVideo">Remove</button>
-                                </form>
+                            <form method="post">
+                                <input type="hidden" name="VideoId" value="@video.Id" />
+                                <input type="hidden" name="LibraryId" value="@Model.Library.Id" />
+                                <button class="btn btn-link btn-xs" type="submit" asp-page-handler="DeleteVideo">Remove</button>
+                            </form>
                             }
                         </div>
                     }

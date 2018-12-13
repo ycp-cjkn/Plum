@@ -40,13 +40,14 @@ namespace ToBeRenamed.Tests.Queries
             // Check that the created library only has one member, the creator
             var libraryId = libraries.ToList().ElementAt(0).Id;
             
+            //Return that member
             var getMembersRequest = new GetMembersOfLibrary(libraryId);
             var members = await _fixture.SendAsync(getMembersRequest);
 
             Assert.Single(members);
 
+            //Check that member by id
             var memberUserId = members.ToList().ElementAt(0).UserId;
-            
             Assert.Equal(user.Id, memberUserId);
         }
     }
