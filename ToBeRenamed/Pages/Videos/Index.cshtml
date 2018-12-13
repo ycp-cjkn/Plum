@@ -30,7 +30,7 @@
                 <a asp-page="/Videos/Edit"><span class="glyphicon glyphicon-edit pull-right" aria-hidden="true"></span></a>
             }
             <h4>@Model.Video.Description</h4>
-            <a asp-page="/Library">Back to library</a>
+            <a asp-page="/Library" asp-route-Id="@Model.Video.LibraryId">Back to library</a>
             <br>
             @* 1. The <iframe> (and video player) will replace this <div> tag.  *@
             <div id="player">
