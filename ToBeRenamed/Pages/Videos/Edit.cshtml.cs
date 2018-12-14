@@ -36,7 +36,7 @@ namespace ToBeRenamed.Pages.Videos
         public async Task<IActionResult> OnGetAsync(int id)
         {
             Video = await _mediator.Send(new GetVideoById(id));
-            Member = await _mediator.Send(new GetSignedInMember(User, id));
+            Member = await _mediator.Send(new GetSignedInMember(User, Video.LibraryId));
 
             if (!Member.Role.Privileges.Contains(Privilege.CanEditVideo))
             {
@@ -53,7 +53,8 @@ namespace ToBeRenamed.Pages.Videos
                 return Page();
             }
 
-            Member = await _mediator.Send(new GetSignedInMember(User, id));
+            Video = await _mediator.Send(new GetVideoById(id));
+            Member = await _mediator.Send(new GetSignedInMember(User, Video.LibraryId));
 
             if (!Member.Role.Privileges.Contains(Privilege.CanEditVideo))
             {
